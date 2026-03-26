@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Login — Refugio de Perros</title>
+        <link rel="stylesheet" href="login.css" />
+    </head>
+    <body>
+
+        <div class="contenedor-login">
+            <div class="tarjeta-login">
+
+                <div class="encabezado-marca">
+                    <div class="icono-marca">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="18" height="18" rx="3" />
+                            <line x1="8" y1="8" x2="16" y2="8" />
+                            <circle cx="12" cy="13" r="3" />
+                            <line x1="7" y1="19" x2="17" y2="19" />
+                        </svg>
+                    </div>
+                    <h1 class="titulo-marca">Refugio de Perros</h1>
+                    <span class="subtitulo-marca">Sistema de Gestión</span>
+                </div>
+
+                <h2>Iniciar Sesión</h2>
+
+                <form onsubmit="login(event)">
+
+                    <div class="grupo-campo">
+                        <label class="etiqueta">Cédula</label>
+                        <input id="cedula" class="campo-texto" type="text"
+                            placeholder="Ingrese su cédula" required />
+                    </div>
+
+                    <div class="grupo-campo">
+                        <label class="etiqueta">Contraseña</label>
+                        <input id="password" class="campo-contrasena"
+                            type="password" placeholder="Ingrese su contraseña"
+                            required />
+                    </div>
+
+                    <div class="fila-botones">
+                        <button class="boton boton-primario">
+                            Iniciar Sesión
+                        </button>
+
+                        <a class="boton boton-secundario" href="registro.html">
+                            Registrarse
+                        </a>
+                    </div>
+
+                </form>
+
+                <div class="separador">
+                    <span class="separador-linea"></span>
+                    <span class="separador-texto">O</span>
+                    <span class="separador-linea"></span>
+                </div>
+
+                <div class="fila-administrador">
+                    <a class="boton boton-admin" href="admin.html">
+                        Administrador
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <script>
+
+function login(event){
+
+event.preventDefault();
+
+let cedula = document.getElementById("cedula").value;
+let password = document.getElementById("password").value;
+
+let cedulaGuardada = localStorage.getItem("cedula");
+let passwordGuardada = localStorage.getItem("password");
+
+if(cedula === cedulaGuardada && password === passwordGuardada){
+
+window.location.href = "refugio.html";
+
+}else{
+
+alert("Cédula o contraseña incorrecta");
+
+}
+
+}
+
+</script>
+
+    </body>
+</html>
