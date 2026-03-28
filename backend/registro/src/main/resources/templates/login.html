@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Registro — Refugio de Perros</title>
-        <link rel="stylesheet" href="css/login.css" />
+        <title>Login — Refugio de Perros</title>
+        <link rel="stylesheet" href="../static/css/login.css" th:href="@{/css/login.css}" />
     </head>
     <body>
 
@@ -24,9 +24,9 @@
                     <span class="subtitulo-marca">Sistema de Gestión</span>
                 </div>
 
-                <h2>Registrarse</h2>
+                <h2>Iniciar Sesión</h2>
 
-                <form onsubmit="registrar(event)">
+                <form onsubmit="login(event)">
 
                     <div class="grupo-campo">
                         <label class="etiqueta">Cédula</label>
@@ -35,66 +35,53 @@
                     </div>
 
                     <div class="grupo-campo">
-                        <label class="etiqueta">Nombre Completo</label>
-                        <input id="nombre" class="campo-texto" type="text"
-                            placeholder="Ingrese su nombre completo" required />
-                    </div>
-
-                    <div class="grupo-campo">
                         <label class="etiqueta">Contraseña</label>
                         <input id="password" class="campo-contrasena"
-                            type="password" placeholder="Cree una contraseña"
-                            required />
-                    </div>
-
-                    <div class="grupo-campo">
-                        <label class="etiqueta">Confirmar Contraseña</label>
-                        <input id="confirmar" class="campo-contrasena"
-                            type="password" placeholder="Repita la contraseña"
+                            type="password" placeholder="Ingrese su contraseña"
                             required />
                     </div>
 
                     <div class="fila-botones">
                         <button class="boton boton-primario">
-                            Crear Cuenta
+                            Iniciar Sesión
                         </button>
 
-                        <a class="boton boton-secundario" href="login.html">
-                            Volver a Iniciar Sesión
+                        <a class="boton boton-secundario" th:href="@{/pda/registro}">
+                            Registrarse
                         </a>
                     </div>
 
                 </form>
 
+                <div class="separador">
+                    <span class="separador-linea"></span>
+                    <span class="separador-texto">O</span>
+                    <span class="separador-linea"></span>
+                </div>
+
+                <div class="fila-administrador">
+                    <a class="boton boton-admin" th:href="@{/pda/admin}">
+                        Administrador
+                    </a>
+                </div>
+
             </div>
         </div>
 
         <script>
-
-function registrar(event){
-
-event.preventDefault();
-
-let cedula = document.getElementById("cedula").value;
-let nombre = document.getElementById("nombre").value;
-let password = document.getElementById("password").value;
-let confirmar = document.getElementById("confirmar").value;
-
-if(password !== confirmar){
-alert("Las contraseñas no coinciden");
-return;
+function login(event) {
+    event.preventDefault();
+    let cedula = document.getElementById("cedula").value;
+    let password = document.getElementById("password").value;
+    let cedulaGuardada = localStorage.getItem("cedula");
+    let passwordGuardada = localStorage.getItem("password");
+    if (cedula === cedulaGuardada && password === passwordGuardada) {
+        window.location.href = "/refugio";
+    } else {
+        alert("Cédula o contraseña incorrecta");
+    }
 }
-
-localStorage.setItem("cedula", cedula);
-localStorage.setItem("password", password);
-
-alert("Usuario registrado correctamente");
-
-window.location.href = "login.html";
-
-}
-
-</script>
+        </script>
 
     </body>
 </html>

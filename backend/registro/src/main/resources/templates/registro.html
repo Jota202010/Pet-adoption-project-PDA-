@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Registro — Refugio de Perros</title>
+        <link rel="stylesheet" href="../static/css/login.css" th:href="@{/css/login.css}" />
+    </head>
+    <body>
+
+        <div class="contenedor-login">
+            <div class="tarjeta-login">
+
+                <div class="encabezado-marca">
+                    <div class="icono-marca">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="18" height="18" rx="3" />
+                            <line x1="8" y1="8" x2="16" y2="8" />
+                            <circle cx="12" cy="13" r="3" />
+                            <line x1="7" y1="19" x2="17" y2="19" />
+                        </svg>
+                    </div>
+                    <h1 class="titulo-marca">Refugio de Perros</h1>
+                    <span class="subtitulo-marca">Sistema de Gestión</span>
+                </div>
+
+                <h2>Registrarse</h2>
+
+                <form onsubmit="registrar(event)">
+
+                    <div class="grupo-campo">
+                        <label class="etiqueta">Cédula</label>
+                        <input id="cedula" class="campo-texto" type="text"
+                            placeholder="Ingrese su cédula" required />
+                    </div>
+
+                    <div class="grupo-campo">
+                        <label class="etiqueta">Nombre Completo</label>
+                        <input id="nombre" class="campo-texto" type="text"
+                            placeholder="Ingrese su nombre completo" required />
+                    </div>
+
+                    <div class="grupo-campo">
+                        <label class="etiqueta">Contraseña</label>
+                        <input id="password" class="campo-contrasena"
+                            type="password" placeholder="Cree una contraseña"
+                            required />
+                    </div>
+
+                    <div class="grupo-campo">
+                        <label class="etiqueta">Confirmar Contraseña</label>
+                        <input id="confirmar" class="campo-contrasena"
+                            type="password" placeholder="Repita la contraseña"
+                            required />
+                    </div>
+
+                    <div class="fila-botones">
+                        <button class="boton boton-primario">
+                            Crear Cuenta
+                        </button>
+
+                        <a class="boton boton-secundario" th:href="@{/pda/login}">
+                            Volver a Iniciar Sesión
+                        </a>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+        <script>
+function registrar(event) {
+    event.preventDefault();
+    let cedula = document.getElementById("cedula").value;
+    let nombre = document.getElementById("nombre").value;
+    let password = document.getElementById("password").value;
+    let confirmar = document.getElementById("confirmar").value;
+    if (password !== confirmar) {
+        alert("Las contraseñas no coinciden");
+        return;
+    }
+    localStorage.setItem("cedula", cedula);
+    localStorage.setItem("password", password);
+    alert("Usuario registrado correctamente");
+    window.location.href = "/login";
+}
+        </script>
+
+    </body>
+</html>

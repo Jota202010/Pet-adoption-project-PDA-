@@ -7,46 +7,37 @@ public class PerroRegistro {
     private int edad;
     private String fechaIngreso;
     private String responsable;
+    private String peso;
+    private String sexo;
+    private String estadoSalud;
+    private String temperamento;
 
     public PerroRegistro() {}
 
-    public String getNombre() {
-        return nombre;
-    }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    public String getRaza() { return raza; }
+    public void setRaza(String raza) { this.raza = raza; }
 
-    public String getRaza() {
-        return raza;
-    }
+    public int getEdad() { return edad; }
+    public void setEdad(int edad) { this.edad = edad; }
 
-    public void setRaza(String raza) {
-        this.raza = raza;
-    }
+    public String getFechaIngreso() { return fechaIngreso; }
+    public void setFechaIngreso(String fechaIngreso) { this.fechaIngreso = fechaIngreso; }
 
-    public int getEdad() {
-        return edad;
-    }
+    public String getResponsable() { return responsable; }
+    public void setResponsable(String responsable) { this.responsable = responsable; }
 
-    public void setEdad(int edad) {
-        this.edad = edad;
-    }
+    public String getPeso() { return peso; }
+    public void setPeso(String peso) { this.peso = peso; }
 
-    public String getFechaIngreso() {
-        return fechaIngreso;
-    }
+    public String getSexo() { return sexo; }
+    public void setSexo(String sexo) { this.sexo = sexo; }
 
-    public void setFechaIngreso(String fechaIngreso) {
-        this.fechaIngreso = fechaIngreso;
-    }
+    public String getEstadoSalud() { return estadoSalud; }
+    public void setEstadoSalud(String estadoSalud) { this.estadoSalud = estadoSalud; }
 
-    public String getResponsable() {
-        return responsable;
-    }
-
-    public void setResponsable(String responsable) {
-        this.responsable = responsable;
-    }
+    public String getTemperamento() { return temperamento; }
+    public void setTemperamento(String temperamento) { this.temperamento = temperamento; }
 }

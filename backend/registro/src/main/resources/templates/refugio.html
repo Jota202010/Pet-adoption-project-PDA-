@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Refugio de Perros</title>
-  <link rel="stylesheet" href="css/refugio.css" />
+  <link rel="stylesheet" href="../static/css/refugio.css" th:href="@{/css/refugio.css}" />
 </head>
 <body>
 
   <div class="contenedor-pagina">
 
-  
+    <!-- Banner hero -->
     <div class="banner-hero">
       <div class="contenido-hero">
         <div class="iconos-hero">
@@ -23,32 +23,32 @@
           <p>Sistema de adopción y gestión de mascotas</p>
         </div>
         <div class="estadistica-hero">
-          <div class="numero-estadistica">3</div>
+          <div class="numero-estadistica" th:text="${totalPerros}">0</div>
           <div class="etiqueta-estadistica">Perros<br>disponibles</div>
         </div>
       </div>
     </div>
 
-    
+    <!-- Acciones -->
     <div class="tarjeta-acciones">
       <span class="etiqueta-acciones">Acciones:</span>
 
-      <a class="boton boton-amarillo" href="#">
+      <a class="boton boton-amarillo" th:href="@{/pda/refugio}">
         <svg class="boton-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
           <circle cx="12" cy="12" r="3"/>
         </svg>
-        Ver Perro
+        Ver Perros
       </a>
 
-      <a class="boton boton-verde" href="#">
+      <a class="boton boton-verde" th:href="@{/pda/refugio}">
         <svg class="boton-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
         </svg>
         Adoptar
       </a>
 
-      <a class="boton boton-gris" href="login.html">
+      <a class="boton boton-gris" th:href="@{/pda/login}">
         <svg class="boton-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
           <polyline points="16 17 21 12 16 7"/>
@@ -58,11 +58,11 @@
       </a>
     </div>
 
-  
+    <!-- Tabla dinámica -->
     <div class="tarjeta-tabla">
       <div class="encabezado-tabla">
         <span class="titulo-tabla">Perros en Adopción</span>
-        <span class="contador-perros">3 registros</span>
+        <span class="contador-perros" th:text="${totalPerros} + ' registros'">0 registros</span>
       </div>
       <table>
         <thead>
@@ -77,33 +77,39 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Ralfi</td>
-            <td>Mestizado</td>
-            <td>8 años</td>
-            <td>25.0 kg</td>
-            <td>MACHO</td>
-            <td><span class="insignia insignia-sano">SANO</span></td>
-            <td><span class="insignia insignia-amigable">AMIGABLE</span></td>
+
+          <!-- Fila dinámica por cada perro -->
+          <tr th:each="perro : ${perros}">
+            <td th:text="${perro.nombre}">-</td>
+            <td th:text="${perro.raza}">-</td>
+            <td th:text="${perro.edad} + ' años'">-</td>
+            <td th:text="${perro.peso} + ' kg'">-</td>
+            <td th:text="${perro.sexo}">-</td>
+            <td>
+              <span th:text="${perro.estadoSalud}"
+                    th:classappend="${perro.estadoSalud == 'SANO'} ? 'insignia-sano' :
+                                    (${perro.estadoSalud == 'ENFERMO'} ? 'insignia-enfermo' : 'insignia-recuperacion')"
+                    class="insignia">-</span>
+            </td>
+            <td>
+              <span th:text="${perro.temperamento}"
+                    th:classappend="${perro.temperamento == 'AMIGABLE'}  ? 'insignia-amigable'  :
+                                    (${perro.temperamento == 'AGRESIVO'} ? 'insignia-agresivo'  :
+                                    (${perro.temperamento == 'TIMIDO'}   ? 'insignia-timido'    : 'insignia-jugueton'))"
+                    class="insignia">-</span>
+            </td>
           </tr>
-          <tr>
-            <td>Rocky</td>
-            <td>Labrador</td>
-            <td>5 años</td>
-            <td>27.0 kg</td>
-            <td>MACHO</td>
-            <td><span class="insignia insignia-sano">SANO</span></td>
-            <td><span class="insignia insignia-agresivo">AGRESIVO</span></td>
+
+          <!-- Estado vacío si no hay perros -->
+          <tr th:if="${#lists.isEmpty(perros)}">
+            <td colspan="7">
+              <div class="estado-vacio">
+                <span class="estado-vacio-icono">🐶</span>
+                No hay perros registrados todavía.
+              </div>
+            </td>
           </tr>
-          <tr>
-            <td>Zeus</td>
-            <td>Pastor Alemán</td>
-            <td>6 años</td>
-            <td>30.0 kg</td>
-            <td>MACHO</td>
-            <td><span class="insignia insignia-sano">SANO</span></td>
-            <td><span class="insignia insignia-timido">TÍMIDO</span></td>
-          </tr>
+
         </tbody>
       </table>
     </div>
