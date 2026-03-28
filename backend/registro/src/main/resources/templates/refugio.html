@@ -10,17 +10,17 @@
 
   <div class="contenedor-pagina">
 
-    <!-- Banner hero -->
+    
     <div class="banner-hero">
       <div class="contenido-hero">
         <div class="iconos-hero">
-          <span class="icono-patita">🐾</span>
-          <span class="icono-casa">🏠</span>
-          <span class="icono-patita-derecha">🐾</span>
+          <span class="icono-patita"></span>
+          <span class="icono-casa"></span>
+          <span class="icono-patita-derecha"></span>
         </div>
         <div class="texto-hero">
           <h1>Refugio de Perros</h1>
-          <p>Sistema de adopción y gestión de mascotas</p>
+          <p>Sistema de adopcion y gestion de mascotas</p>
         </div>
         <div class="estadistica-hero">
           <div class="numero-estadistica" th:text="${totalPerros}">0</div>
@@ -29,7 +29,7 @@
       </div>
     </div>
 
-    <!-- Acciones -->
+    
     <div class="tarjeta-acciones">
       <span class="etiqueta-acciones">Acciones:</span>
 
@@ -58,10 +58,10 @@
       </a>
     </div>
 
-    <!-- Tabla dinámica -->
+    
     <div class="tarjeta-tabla">
       <div class="encabezado-tabla">
-        <span class="titulo-tabla">Perros en Adopción</span>
+        <span class="titulo-tabla">Perros en Adopcion</span>
         <span class="contador-perros" th:text="${totalPerros} + ' registros'">0 registros</span>
       </div>
       <table>
@@ -78,7 +78,7 @@
         </thead>
         <tbody>
 
-          <!-- Fila dinámica por cada perro -->
+         
           <tr th:each="perro : ${perros}">
             <td th:text="${perro.nombre}">-</td>
             <td th:text="${perro.raza}">-</td>
@@ -100,12 +100,12 @@
             </td>
           </tr>
 
-          <!-- Estado vacío si no hay perros -->
+         
           <tr th:if="${#lists.isEmpty(perros)}">
             <td colspan="7">
               <div class="estado-vacio">
-                <span class="estado-vacio-icono">🐶</span>
-                No hay perros registrados todavía.
+                <span class="estado-vacio-icono"></span>
+                No hay perros registrados todavia.
               </div>
             </td>
           </tr>

@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin View — Refugio de Perros</title>
+  <title>Admin View  Refugio de Perros</title>
   <link rel="stylesheet" href="../static/css/admin.css" th:href="@{/css/admin.css}" />
 </head>
 <body>
 
   <div class="contenedor-pagina">
 
-    <!-- Encabezado -->
+    
     <div class="encabezado-pagina">
       <div class="icono-encabezado">
         <svg viewBox="0 0 24 24">
@@ -23,11 +23,11 @@
       </div>
       <div class="texto-encabezado">
         <h1>Admin View</h1>
-        <p>Gestión y registro de perros en el refugio</p>
+        <p>Gestion y registro de perros en el refugio</p>
       </div>
     </div>
 
-    <!-- Formulario para agregar perro -->
+    
     <div class="tarjeta-formulario">
       <form th:action="@{/pda/admin/agregar}" th:object="${nuevoPerro}" method="post">
         <div class="cuadricula-formulario">
@@ -43,7 +43,7 @@
             <select class="campo-seleccion" id="estadoSalud" th:field="*{estadoSalud}">
               <option value="SANO">SANO</option>
               <option value="ENFERMO">ENFERMO</option>
-              <option value="RECUPERACION">EN RECUPERACIÓN</option>
+              <option value="RECUPERACION">EN RECUPERACION</option>
             </select>
           </div>
 
@@ -58,13 +58,13 @@
             <select class="campo-seleccion" id="temperamento" th:field="*{temperamento}">
               <option value="AMIGABLE">AMIGABLE</option>
               <option value="AGRESIVO">AGRESIVO</option>
-              <option value="TIMIDO">TÍMIDO</option>
-              <option value="JUGUETON">JUGUETÓN</option>
+              <option value="TIMIDO">TIMIDO</option>
+              <option value="JUGUETON">JUGUETON</option>
             </select>
           </div>
 
           <div class="grupo-campo">
-            <label class="etiqueta" for="edad">Edad (años)</label>
+            <label class="etiqueta" for="edad">Edad (anos)</label>
             <input class="campo-numero" type="number" id="edad"
                    th:field="*{edad}" value="0" min="0" max="30" />
           </div>
@@ -97,7 +97,7 @@
 
         </div>
 
-        <!-- Barra de acciones -->
+        
         <div class="barra-acciones">
 
           <button type="submit" class="boton boton-azul">
@@ -131,7 +131,7 @@
       </form>
     </div>
 
-    <!-- Tabla dinámica de perros registrados -->
+    
     <div class="tarjeta-tabla">
       <div class="encabezado-tabla">
         <span class="titulo-tabla">Registro de Perros</span>
@@ -154,7 +154,7 @@
           <tr th:each="perro : ${perros}">
             <td th:text="${perro.nombre}">-</td>
             <td th:text="${perro.raza}">-</td>
-            <td th:text="${perro.edad} + ' años'">-</td>
+            <td th:text="${perro.edad} + ' anos'">-</td>
             <td th:text="${perro.peso} + ' kg'">-</td>
             <td th:text="${perro.sexo}">-</td>
             <td>
@@ -175,8 +175,8 @@
           <tr th:if="${#lists.isEmpty(perros)}">
             <td colspan="7">
               <div class="estado-vacio">
-                <span class="estado-vacio-icono">📋</span>
-                No hay perros registrados todavía.
+                <span class="estado-vacio-icono"></span>
+                No hay perros registrados todavia.
               </div>
             </td>
           </tr>
