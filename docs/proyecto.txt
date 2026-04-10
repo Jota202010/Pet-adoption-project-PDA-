@@ -1,0 +1,113 @@
+Nombre: Refugio nueva vida
+Colores:
+-Principal: Naranja (70%) 
+-Secundarios: Verde SEMÁNTICO (20%) #4ADE80
+-Neutros: AZUL = MUY OCASIONAL (10%)
+-fondo: #F9FAFB
+-texto: #1F2937
+-detalles: #D1D5DB
+
+ENTIDAD BASE: MASCOTA
+-idMascota (PK)
+-nombre --------------------------
+-edad --------------------------
+-fotos --------------------------
+-sexo --------------------------
+-estado (STRAY / RESCATADO / ABANDONADO / FOSTER) --------------------------
+-esterilizado (boolean) --------------------------
+-vacunado (boolean) --------------------------
+-descripcion --------------------------
+-nivel_salud (SANO / ENFERMO / CRITICO) --------------------------
+-sociabilidad (ALTA / MEDIA / BAJA) --------------------------
+- lista para adoptar y no lista) -------------------------
+- Adoptado -------------------------
+
+*** TIENE {CITA} CON {USUARIO(S)}  (RELACION)
+
+
+
+Entidad: Usuario
+idUsuario (PK) ------------------------
+nombre ------------------------
+email ---------------------
+telefono --------------------- 
+direccion ---------------------
+fecha_registro ---------------------
+contraseña ---------------------
+-rol  ---------------------
+
+
+*** TIENE {CITA} CON {MASCOTA(S)}  (RELACION)
+---------------------------------------- ------------------------------------------ ----------------------------------------------- ------------------------------
+
+----------------------------------------- ------------------------------------------ ----------------------------------------------- ------------------------------
+Entidad: Cita
+id_cita (PK)
+idUsuario (FK)
+-idMascota (PK)
+aprobado_por (FK → usuario admin)
+
+fecha --
+hora -- 
+estado -- 
+tipo_vivienda (casa/apto) --
+vivienda (propia/alquilada) --
+permite_mascotas (boolean) --
+
+num_personas -- 
+acuerdo_familiar (boolean) --
+ha_tenido_perros (boolean) --
+tiene_mascotas_actualmente (boolean) --
+historia_mascotas (texto)--
+horas_solo--
+
+tiempo_paseo (boolean) --
+responsable_nombre --
+cubre_veterinario (boolean) --
+cubre_emergencias (boolean)--
+motivo_adopcion (texto) --
+tipo_perro_deseado (texto) --
+
+
+
+
+acepta_no_abandono (boolean)
+acepta_seguimiento (boolean)
+acepta_evaluacion (boolean)
+
+----------------------------------------- ------------------------------------------ ----------------------------------------------- ------------------------------}
+
+
+Pantallas:
+Our Mission
+
+About Us
+
+Inicio de la pagina (Explorar perros)
+
+Detalle de Perro seleccionado por usuario 
+ 
+Detalle de perro desde Admin view (Muestra mas que el usuario, MUESTRA LAS CITAS QUE TIENE CON HUMANOS E HISTORIAL MEDICO) tiene cita con {humano} en {fecha}
+
+Detalle de Usuario desde Admin view (Tiene cita con {perro} en {fecha})
+
+Admin View (Muestra lista de mascotas e info superficial de ellos, consulta, registra y elimina mascotas )
+
+Login 
+
+Registro
+
+Agendar cita
+
+Agregar nueva mascota
+
+
+
+Funcionalidades: 
+
+- Admin: Registra y consulta mascota y sus detalles, registra  y consulta historial medico y sus detalles
+
+
+PENDIENTE: tabla de citas ?? fechas y horas disponbiles ???
+LE vuelvo a pedir todo lo del registro en agendar citas opcion ?
+
