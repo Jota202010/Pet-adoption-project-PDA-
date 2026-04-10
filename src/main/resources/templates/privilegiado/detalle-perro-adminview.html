@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title th:text="'Admin — '+${nombre}+' — Refugio Nueva Vida'">Admin — Detalle Perro — Refugio Nueva Vida</title>
+  <link rel="stylesheet" th:href="@{/css/detalle-perro-adminview.css}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav>
+    <div class="nav-left">
+      <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
+      <span class="admin-badge">⚙ Panel Admin</span>
+    </div>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a th:href="@{/inicio}">Inicio</a></li>
+        <li><a th:href="@{/nosotros}">Nosotros</a></li>
+        <li><a th:href="@{/mision}">Nuestra Misión</a></li>
+      </ul>
+      <a th:href="@{/admin/perfil}" class="btn-perfil-nav">👤 Mi Perfil</a>
+      <a th:href="@{/inicio}" class="btn-exit">← Salir de Admin</a>
+    </div>
+  </nav>
+
+  <div class="breadcrumb">
+    <a th:href="@{/inicio}">Inicio</a>
+    <span>›</span>
+    <a th:href="@{/admin/panel}">Gestión de perros</a>
+    <span>›</span>
+    <span style="color:var(--text);" th:text="${nombre}">Nombre</span>
+  </div>
+
+  <div class="page-wrapper">
+    <a th:href="@{/admin/panel}" class="back-link">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Volver a gestión de perros
+    </a>
+
+    <div class="admin-banner">
+      ⚙ <span>Estás editando el perfil de <strong th:text="${nombre}">Nombre</strong> como administrador.</span>
+    </div>
+
+    <div class="detail-card">
+      <div class="detail-top">
+        <div class="gallery">
+          <div class="gallery-main">
+            <div class="gallery-placeholder">
+              <span>🐶</span>
+              <p>Fotos de <span th:text="${nombre}">Nombre</span></p>
+            </div>
+          </div>
+          <div class="estado-badge" th:text="${estado}">Estado</div>
+          <button class="gallery-btn prev"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <button class="gallery-btn next"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+          <div class="gallery-dots">
+            <div class="gallery-dot active"></div>
+            <div class="gallery-dot"></div>
+            <div class="gallery-dot"></div>
+          </div>
+          <button class="gallery-edit-btn">
+            <svg viewBox="0 0 24 24" width="13" height="13" style="stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Modificar fotos
+          </button>
+        </div>
+
+        <div class="info-panel">
+          <div class="field-row" style="margin-bottom:8px;">
+            <h1 class="dog-name"><span class="dyn" th:text="${nombre}">Nombre</span></h1>
+          </div>
+
+          <div class="status-pills">
+            <div class="field-row" style="gap:6px;">
+              <span class="status-pill pill-adoptado-no">Estado adopción: <span style="color:var(--blue-dyn);font-weight:800;" th:text="${adoptado}">No</span></span>
+            </div>
+          </div>
+
+          <div style="background:linear-gradient(135deg,#1F2937 0%,#111827 100%);border-radius:14px;padding:20px 22px;margin:16px 0 20px;border:2px solid var(--orange);position:relative;overflow:hidden;">
+            <div style="position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+              <div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                  <span style="background:var(--orange);color:#fff;font-size:.65rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:999px;">🌐 Visibilidad pública</span>
+                </div>
+                <p style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:4px;">¿Publicar en adopciones?</p>
+                <p style="font-size:.78rem;color:#9CA3AF;font-weight:600;line-height:1.4;">Al activar esta opción, <span style="color:var(--orange-mid);font-weight:800;" th:text="${nombre}">Nombre</span> aparecerá en la pantalla de inicio.</p>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;">
+                <label style="position:relative;width:64px;height:34px;cursor:pointer;display:block;">
+                  <input type="checkbox" style="opacity:0;width:0;height:0;position:absolute;">
+                  <span style="position:absolute;inset:0;background:#374151;border-radius:999px;transition:background .25s;border:2px solid #4B5563;">
+                    <span style="position:absolute;width:26px;height:26px;left:2px;top:50%;transform:translateY(-50%);background:#fff;border-radius:50%;transition:transform .25s;box-shadow:0 2px 6px rgba(0,0,0,.3);"></span>
+                  </span>
+                </label>
+                <span style="font-size:.72rem;font-weight:800;color:var(--blue-dyn);letter-spacing:.5px;" th:text="${listaParaAdoptar}">Estado</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="attrs-grid">
+            <div class="attr-item">
+              <div class="attr-icon">🎂</div>
+              <div class="attr-content">
+                <span class="attr-label">Edad</span>
+                <span class="attr-value" th:text="${edad}">Edad</span>
+              </div>
+            </div>
+            <div class="attr-item">
+              <div class="attr-icon">⚧</div>
+              <div class="attr-content">
+                <span class="attr-label">Sexo</span>
+                <span class="attr-value" th:text="${sexo}">Sexo</span>
+              </div>
+            </div>
+            <div class="attr-item">
+              <div class="attr-icon">🏷️</div>
+              <div class="attr-content">
+                <span class="attr-label">Estado</span>
+                <span class="attr-value" th:text="${estado}">Estado</span>
+              </div>
+            </div>
+            <div class="attr-item">
+              <div class="attr-icon">🩺</div>
+              <div class="attr-content">
+                <span class="attr-label">Salud</span>
+                <span class="attr-value"><span class="health-badge health-SANO" th:text="${nivel_salud}">Salud</span></span>
+              </div>
+            </div>
+            <div class="attr-item">
+              <div class="attr-icon">🐾</div>
+              <div class="attr-content">
+                <span class="attr-label">Sociabilidad</span>
+                <span class="attr-value"><span class="social-badge social-ALTA" th:text="${sociabilidad}">Sociabilidad</span></span>
+              </div>
+            </div>
+            <div class="attr-item">
+              <div class="attr-icon">✂️</div>
+              <div class="attr-content">
+                <span class="attr-label">Esterilizado</span>
+                <span class="attr-value" th:text="${esterilizado}">Esterilizado</span>
+              </div>
+            </div>
+            <div class="attr-item">
+              <div class="attr-icon">💉</div>
+              <div class="attr-content">
+                <span class="attr-label">Vacunado</span>
+                <span class="attr-value" th:text="${vacunado}">Vacunado</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="desc-section">
+        <div class="section-header-row">
+          <div class="desc-label">Descripción de <span style="color:var(--blue-dyn);font-style:normal;margin-left:4px;" th:text="${nombre}">Nombre</span></div>
+        </div>
+        <p class="desc-text" th:text="${descripcion}">Descripción del perro.</p>
+      </div>
+
+      <div class="citas-section">
+        <div class="citas-header-row">
+          <div>
+            <div class="citas-title">Citas agendadas con <span style="color:var(--blue-dyn);" th:text="${nombre}">Nombre</span></div>
+            <p style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">Personas interesadas en adoptar o conocer a este perro</p>
+          </div>
+          <button class="btn-add-cita">
+            <svg viewBox="0 0 24 24" width="13" height="13" style="stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Nueva cita
+          </button>
+        </div>
+
+        <table class="citas-table">
+          <thead>
+            <tr>
+              <th>Persona</th>
+              <th>Fecha y hora</th>
+              <th>Motivo</th>
+              <th>Estado</th>
+              <th style="text-align:center;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="cita : ${citas}">
+              <td><span class="human-name" th:text="${cita.humano_nombre}">Persona</span><br /><span style="font-size:0.78rem;color:var(--text-muted);" th:text="${cita.humano_email}">email</span></td>
+              <td><span class="cita-date"><span th:text="${cita.fecha}">fecha</span> · <span th:text="${cita.hora}">hora</span></span></td>
+              <td style="color:var(--text-muted);font-size:0.85rem;" th:text="${cita.motivo}">Motivo</td>
+              <td><span class="cita-status status-pendiente" th:text="${cita.estado}">Estado</span></td>
+              <td>
+                <div class="cita-actions" style="justify-content:center;">
+                  <button class="cita-act-btn" title="Editar cita">
+                    <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  <button class="cita-act-btn del" title="Eliminar cita">
+                    <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="save-bar">
+        <p>⚠ Tienes cambios sin guardar en el perfil de <span style="color:var(--orange-dark);" th:text="${nombre}">Nombre</span></p>
+        <div class="save-buttons">
+          <button class="btn-cancel">Cancelar</button>
+          <button class="btn-save">
+            <svg viewBox="0 0 24 24" width="14" height="14" style="stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Guardar cambios
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 <span>Refugio Nueva Vida</span> · Panel de Administración</p>
+  </footer>
+</body>
+</html>

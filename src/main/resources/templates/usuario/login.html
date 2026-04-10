@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Iniciar Sesión — Refugio Nueva Vida</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" th:href="@{/css/login.css}"/>
+
+</head>
+<body>
+  <nav>
+    <div class="nav-left">
+      <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
+      <a th:href="@{/admin/panel}" class="btn-admin">Administrar</a>
+    </div>
+    <ul class="nav-links">
+      <li><a th:href="@{/inicio}">Inicio</a></li>
+      <li><a th:href="@{/nosotros}">Nosotros</a></li>
+      <li><a th:href="@{/mision}">Nuestra Misión</a></li>
+    </ul>
+  </nav>
+
+  <div class="login-page">
+    <div class="login-wrap">
+      <!-- Lado visual -->
+      <div class="login-side">
+        <div class="login-side-inner">
+          <h2>Bienvenido de vuelta a<br/><span>Refugio Nueva Vida</span></h2>
+          <p>Inicia sesión para ver tus citas agendadas, explorar perros disponibles y ser parte del cambio.</p>
+          <div class="side-paws">🐾🐾🐾</div>
+        </div>
+      </div>
+      <!-- Formulario -->
+      <div class="login-form-side">
+        <div class="form-eyebrow">🐶 Acceso al sistema</div>
+        <div class="form-title">Iniciar Sesión</div>
+
+        <div class="form-group">
+          <label class="form-label">Email o nombre de usuario</label>
+          <input class="form-input" type="text" placeholder="tu@email.com o tu_usuario"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contraseña</label>
+          <input class="form-input" type="password" placeholder="Tu contraseña"/>
+          <a href="#" class="forgot">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <button class="btn-login">Iniciar Sesión</button>
+
+        <div class="divider">o</div>
+
+        <div class="register-prompt">
+          ¿No tienes cuenta aún? <a th:href="@{/registro}">Regístrate aquí</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer><p>© 2025 <span>Refugio Nueva Vida</span> · Todos los derechos reservados</p></footer>
+</body>
+</html>

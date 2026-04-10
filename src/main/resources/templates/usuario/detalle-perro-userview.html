@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title th:text="''+${nombre}+' — Refugio Nueva Vida'">Detalle Perro — Refugio Nueva Vida</title>
+  <link rel="stylesheet" th:href="@{/css/detalle-perro-userview.css}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <nav>
+    <div class="nav-left">
+      <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
+      <a th:href="@{/admin/panel}" class="btn-admin">Administrar</a>
+    </div>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a th:href="@{/inicio}">Inicio</a></li>
+        <li><a th:href="@{/nosotros}">Nosotros</a></li>
+        <li><a th:href="@{/mision}">Nuestra Misión</a></li>
+      </ul>
+      <a th:href="@{/perfil}" class="btn-perfil">👤 Mi Perfil</a>
+      <a th:href="@{/login}" class="btn-nav">Iniciar Sesión</a>
+    </div>
+  </nav>
+
+  <div class="breadcrumb">
+    <a th:href="@{/inicio}">Inicio</a>
+    <span>›</span>
+    <a th:href="@{/inicio}">Perros disponibles</a>
+    <span>›</span>
+    <span style="color:var(--text);" th:text="${nombre}">Nombre</span>
+  </div>
+
+  <div class="page-wrapper">
+
+    <a th:href="@{/inicio}" class="back-link">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Volver al listado
+    </a>
+
+    <div class="detail-card">
+      <div class="detail-top">
+
+        <div class="gallery">
+          <div class="gallery-main">
+            <div class="gallery-placeholder">
+              <span>🐶</span>
+              <p>Fotos de <span th:text="${nombre}">Nombre</span></p>
+            </div>
+          </div>
+          <div class="estado-badge" th:text="${estado}">Estado</div>
+          <button class="gallery-btn prev" aria-label="Foto anterior">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button class="gallery-btn next" aria-label="Foto siguiente">
+            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <div class="gallery-dots">
+            <div class="gallery-dot active"></div>
+            <div class="gallery-dot"></div>
+            <div class="gallery-dot"></div>
+          </div>
+        </div>
+
+        <div class="info-panel">
+          <h1 class="dog-name"><span class="dyn" th:text="${nombre}">Nombre</span></h1>
+          <div class="attrs-grid">
+            <div class="attr-item">
+              <div class="attr-icon">🎂</div>
+              <div class="attr-content">
+                <span class="attr-label">Edad</span>
+                <span class="attr-value" th:text="${edad}">Edad</span>
+              </div>
+            </div>
+            <div class="attr-item">
+              <div class="attr-icon">⚧</div>
+              <div class="attr-content">
+                <span class="attr-label">Sexo</span>
+                <span class="attr-value" th:text="${sexo}">Sexo</span>
+              </div>
+            </div>
+            <div class="attr-item">
+              <div class="attr-icon">🩺</div>
+              <div class="attr-content">
+                <span class="attr-label">Salud</span>
+                <span class="attr-value">
+                  <span class="health-badge health-SANO" th:text="${nivel_salud}">Salud</span>
+                </span>
+              </div>
+            </div>
+            <div class="attr-item">
+              <div class="attr-icon">🐾</div>
+              <div class="attr-content">
+                <span class="attr-label">Sociabilidad</span>
+                <span class="attr-value">
+                  <span class="social-badge social-ALTA" th:text="${sociabilidad}">Sociabilidad</span>
+                </span>
+              </div>
+            </div>
+            <div class="attr-item">
+              <div class="attr-icon">✂️</div>
+              <div class="attr-content">
+                <span class="attr-label">Esterilizado</span>
+                <span class="attr-value" th:text="${esterilizado}">Esterilizado</span>
+              </div>
+            </div>
+            <div class="attr-item">
+              <div class="attr-icon">💉</div>
+              <div class="attr-content">
+                <span class="attr-label">Vacunado</span>
+                <span class="attr-value" th:text="${vacunado}">Vacunado</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="desc-section">
+        <div class="desc-label">Sobre <span style="color:var(--blue-dyn); font-style:normal;" th:text="${nombre}">Nombre</span></div>
+        <p class="desc-text" th:text="${descripcion}">Descripción del perro.</p>
+      </div>
+
+      <div class="action-bar">
+        <a th:href="@{/agendar-cita/1}" class="btn-adoptar">
+          <span class="btn-icon">📅</span> Agendar Cita
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 <span>Refugio Nueva Vida</span> · Todos los derechos reservados · Hecho con ❤️ para los perros</p>
+  </footer>
+
+</body>
+</html>

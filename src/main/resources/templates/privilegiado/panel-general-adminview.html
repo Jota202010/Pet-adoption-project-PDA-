@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Panel Admin — Refugio Nueva Vida</title>
+  <link rel="stylesheet" th:href="@{/css/panel-general-adminview.css}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <nav>
+    <div class="nav-left">
+      <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
+      <span class="admin-badge">⚙ Panel Admin</span>
+    </div>
+    <div class="nav-right">
+      <a th:href="@{/admin/perfil}" class="btn-perfil-nav">👤 Mi Perfil</a>
+      <a th:href="@{/inicio}" class="btn-exit">← Salir de Admin</a>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <h1 class="page-title">Panel de Administración</h1>
+    <p class="page-subtitle">Gestiona los perros, usuarios y citas del refugio desde aquí.</p>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-icon dogs">🐶</div><div class="stat-text"><div class="num" th:text="${totalPerros}">0</div><div class="lbl">Perros activos en el refugio</div></div></div>
+      <div class="stat-card"><div class="stat-icon users">👥</div><div class="stat-text"><div class="num" th:text="${totalUsuarios}">0</div><div class="lbl">Usuarios registrados</div></div></div>
+      <div class="stat-card"><div class="stat-icon citas">📅</div><div class="stat-text"><div class="num" th:text="${citasPendientes}">0</div><div class="lbl">Citas pendientes esta semana</div></div></div>
+    </div>
+
+    <div class="panel-grid">
+      <div class="panel-card">
+        <div class="panel-card-header">
+          <span class="panel-card-title">🐶 Lista de perros</span>
+          <span class="panel-card-count" th:text="${totalPerros}+' perros'">0 perros</span>
+        </div>
+        <div class="panel-search">
+          <input type="text" placeholder="Buscar perro por nombre o raza…"/>
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <a th:href="@{/admin/mascota/1}" class="list-item" th:each="perro : ${perros}">
+          <div class="item-avatar">🐶</div>
+          <div class="item-info">
+            <div class="item-name" th:text="${perro.nombre}">Nombre</div>
+            <div class="item-sub"><span th:text="${perro.raza}">Raza</span> · <span th:text="${perro.estado}">Estado</span></div>
+          </div>
+          <span class="item-badge" th:text="${perro.nivel_salud}">Salud</span>
+          <svg class="item-arrow" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-card-header">
+          <span class="panel-card-title">👥 Usuarios registrados</span>
+          <span class="panel-card-count" th:text="${totalUsuarios}+' usuarios'">0 usuarios</span>
+        </div>
+        <div class="panel-search">
+          <input type="text" placeholder="Buscar usuario por nombre o email…"/>
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <a th:href="@{/admin/usuario/1}" class="list-item" th:each="usuario : ${usuarios}">
+          <div class="item-avatar user">👤</div>
+          <div class="item-info">
+            <div class="item-name" th:text="${usuario.nombre}">Nombre</div>
+            <div class="item-sub"><span th:text="${usuario.email}">email</span> · Reg. <span th:text="${usuario.fecha_registro}">fecha</span></div>
+          </div>
+          <svg class="item-arrow" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="panel-card" style="grid-column:1/-1;margin-top:0;">
+      <div class="panel-card-header">
+        <span class="panel-card-title">📅 Citas agendadas</span>
+        <span class="panel-card-count">Todas las citas</span>
+      </div>
+      <div class="panel-search">
+        <input type="text" placeholder="Buscar cita por persona o perro…"/>
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-size:.87rem;">
+        <thead>
+          <tr style="background:#F3F4F6;">
+            <th style="padding:10px 16px;text-align:left;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#6B7280;border-bottom:2px solid #D1D5DB;">Persona</th>
+            <th style="padding:10px 16px;text-align:left;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#6B7280;border-bottom:2px solid #D1D5DB;">Perro</th>
+            <th style="padding:10px 16px;text-align:left;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#6B7280;border-bottom:2px solid #D1D5DB;">Fecha y hora</th>
+            <th style="padding:10px 16px;text-align:left;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#6B7280;border-bottom:2px solid #D1D5DB;">Estado</th>
+            <th style="padding:10px 16px;text-align:center;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#6B7280;border-bottom:2px solid #D1D5DB;">Detalle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid #F3F4F6;" th:each="cita : ${citas}">
+            <td style="padding:12px 16px;">
+              <span style="font-weight:800;color:#1F2937;" th:text="${cita.usuario.nombre}">Nombre</span><br/>
+              <span style="font-size:.75rem;color:#6B7280;" th:text="${cita.usuario.email}">email</span>
+            </td>
+            <td style="padding:12px 16px;"><span style="font-weight:800;color:#F97316;">🐶 <span th:text="${cita.perro.nombre}">Perro</span></span></td>
+            <td style="padding:12px 16px;color:#6B7280;font-weight:600;"><span th:text="${cita.fecha}">fecha</span> · <span th:text="${cita.hora}">hora</span></td>
+            <td style="padding:12px 16px;"><span style="display:inline-block;font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:999px;background:#FEF3C7;color:#92400E;" th:text="${cita.estado}">Estado</span></td>
+            <td style="padding:12px 16px;text-align:center;"><a th:href="@{/admin/cita/1}" style="display:inline-flex;align-items:center;gap:5px;background:#F3F4F6;border:1px solid #D1D5DB;border-radius:7px;padding:6px 14px;font-size:.78rem;font-weight:800;color:#1F2937;text-decoration:none;">Ver cita <svg viewBox="0 0 24 24" width="12" height="12" style="stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="9 18 15 12 9 6"/></svg></a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="add-dog-section">
+      <a th:href="@{/admin/agregar-mascota}" class="btn-add-dog">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Agregar nueva mascota al refugio
+      </a>
+    </div>
+
+  </div>
+
+  <footer><p>© 2025 <span>Refugio Nueva Vida</span> · Panel de Administración</p></footer>
+</body>
+</html>

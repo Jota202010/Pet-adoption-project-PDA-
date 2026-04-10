@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Admin — Detalle Cita — Refugio Nueva Vida</title>
+  <link rel="stylesheet" th:href="@{/css/detalle-cita-admin.css}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-left">
+      <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
+      <span class="admin-badge">⚙ Panel Admin</span>
+    </div>
+    <div class="nav-right">
+      <a th:href="@{/admin/perfil}" class="btn-perfil-nav">👤 Mi Perfil</a>
+      <a th:href="@{/admin/panel}" class="btn-exit">← Volver al panel</a>
+    </div>
+  </nav>
+
+  <div class="breadcrumb">
+    <a th:href="@{/admin/panel}">Panel Admin</a><span class="sep">›</span>
+    <a th:href="@{/admin/panel}">Citas</a><span class="sep">›</span>
+    <span style="color:var(--text);">Cita de <span th:text="${cita.usuario.nombre}">Usuario</span> con <span th:text="${cita.perro.nombre}">Perro</span></span>
+  </div>
+
+  <div class="page-wrapper">
+    <a th:href="@{/admin/panel}" class="back-link">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Volver a lista de citas
+    </a>
+
+    <div class="status-banner espera">
+      <div class="status-text espera">
+        <div class="status-dot dot-espera"></div>
+        Estado actual: <strong th:text="${cita.estado}">Estado</strong>
+      </div>
+      <span style="font-size:.78rem;color:#92400E;font-weight:600;">Solicitud recibida el <span th:text="${cita.fecha_solicitud}">fecha</span></span>
+    </div>
+
+    <div class="detail-card">
+      <div class="card-header">
+        <div class="card-header-left">
+          <h1>Solicitud de cita — <span th:text="${cita.perro.nombre}">Perro</span></h1>
+          <p>📅 <span th:text="${cita.fecha}">fecha</span> a las <span th:text="${cita.hora}">hora</span> · 📍 <span th:text="${cita.sede}">sede</span></p>
+        </div>
+      </div>
+
+      <div class="card-section">
+        <div class="section-label">Solicitante y perro</div>
+        <div class="summary-row">
+          <a th:href="@{/admin/usuario/1}" class="summary-card">
+            <div class="summary-card-icon user">👤</div>
+            <div class="summary-card-text">
+              <div class="lbl">Adoptante</div>
+              <div class="val" th:text="${cita.usuario.nombre}">Nombre</div>
+              <div class="sub"><span th:text="${cita.usuario.email}">email</span> · @<span th:text="${cita.usuario.usuario}">usuario</span></div>
+            </div>
+          </a>
+          <a th:href="@{/admin/mascota/1}" class="summary-card">
+            <div class="summary-card-icon">🐶</div>
+            <div class="summary-card-text">
+              <div class="lbl">Perro solicitado</div>
+              <div class="val" th:text="${cita.perro.nombre}">Nombre</div>
+              <div class="sub"><span th:text="${cita.perro.raza}">Raza</span> · <span th:text="${cita.perro.estado}">Estado</span></div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="card-section">
+        <div class="section-label">🏠 Información del hogar</div>
+        <div class="data-grid">
+          <div class="data-item"><div class="lbl">Tipo de vivienda</div><div class="val dyn" th:text="${cita.vivienda}">vivienda</div></div>
+          <div class="data-item"><div class="lbl">Vivienda</div><div class="val dyn" th:text="${cita.propiedad}">propiedad</div></div>
+          <div class="data-item"><div class="lbl">¿Permiten mascotas?</div><div class="val dyn" th:text="${cita.permiten_mascotas}">sí/no</div></div>
+          <div class="data-item"><div class="lbl">Personas en el hogar</div><div class="val dyn" th:text="${cita.num_personas}">num</div></div>
+          <div class="data-item"><div class="lbl">¿Todos de acuerdo?</div><div class="val dyn" th:text="${cita.todos_acuerdo}">sí/no</div></div>
+        </div>
+      </div>
+
+      <div class="card-section">
+        <div class="section-label">🐕 Experiencia con mascotas</div>
+        <div class="data-grid">
+          <div class="data-item"><div class="lbl">¿Ha tenido perros?</div><div class="val dyn" th:text="${cita.perros_antes}">sí/no</div></div>
+          <div class="data-item"><div class="lbl">¿Tiene mascotas ahora?</div><div class="val dyn" th:text="${cita.mascotas_actual}">sí/no</div></div>
+        </div>
+        <div class="qa-list" style="margin-top:14px;">
+          <div class="qa-item">
+            <div class="qa-q">¿Qué pasó con sus mascotas anteriores?</div>
+            <div class="qa-a dyn" th:text="${cita.mascotas_anteriores}">respuesta</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-section">
+        <div class="section-label">⏰ Tiempo y compromiso</div>
+        <div class="data-grid">
+          <div class="data-item"><div class="lbl">Horas solo el perro</div><div class="val dyn" th:text="${cita.horas_solo}">horas</div></div>
+          <div class="data-item"><div class="lbl">¿Puede pasearlo?</div><div class="val dyn" th:text="${cita.puede_pasear}">sí/no</div></div>
+          <div class="data-item"><div class="lbl">Responsable principal</div><div class="val dyn" th:text="${cita.responsable}">nombre</div></div>
+        </div>
+      </div>
+
+      <div class="card-section">
+        <div class="section-label">💰 Capacidad económica</div>
+        <div class="data-grid">
+          <div class="data-item"><div class="lbl">¿Cubre gastos veterinarios?</div><div class="val dyn" th:text="${cita.cubre_vet}">sí/no</div></div>
+          <div class="data-item"><div class="lbl">¿Puede asumir emergencias?</div><div class="val dyn" th:text="${cita.cubre_emergencias}">sí/no</div></div>
+        </div>
+      </div>
+
+      <div class="card-section">
+        <div class="section-label">❤️ Motivación de adopción</div>
+        <div class="qa-list">
+          <div class="qa-item">
+            <div class="qa-q">¿Por qué quiere adoptar?</div>
+            <div class="qa-a dyn" th:text="${cita.motivacion}">motivación</div>
+          </div>
+          <div class="qa-item">
+            <div class="qa-q">¿Qué tipo de perro busca?</div>
+            <div class="qa-a dyn" th:text="${cita.tipo_perro_buscado}">tipo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-section">
+        <div class="section-label">⚠️ Condiciones aceptadas</div>
+        <div class="cond-list">
+          <div class="cond-item ok"><span class="cond-icon">✔</span> Se compromete a no abandonar al animal</div>
+          <div class="cond-item ok"><span class="cond-icon">✔</span> Acepta el seguimiento del refugio</div>
+          <div class="cond-item ok"><span class="cond-icon">✔</span> Acepta el proceso de evaluación</div>
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <p>Revisa toda la información antes de tomar una decisión. Esta acción notificará al adoptante por correo electrónico.</p>
+        <div class="action-buttons">
+          <button class="btn-pending">↩ Dejar en espera</button>
+          <button class="btn-reject">✘ Rechazar solicitud</button>
+          <button class="btn-approve">✔ Aprobar solicitud</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer><p>© 2025 <span>Refugio Nueva Vida</span> · Panel de Administración</p></footer>
+</body>
+</html>

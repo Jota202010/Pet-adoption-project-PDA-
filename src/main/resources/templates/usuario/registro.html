@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Registro — Refugio Nueva Vida</title>
+  <link rel="stylesheet" th:href="@{/css/registro.css}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+</head>
+<body>
+  <nav>
+    <div class="nav-left">
+      <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
+      <a th:href="@{/admin/panel}" class="btn-admin">Administrar</a>
+    </div>
+    <ul class="nav-links">
+      <li><a th:href="@{/inicio}">Inicio</a></li>
+      <li><a th:href="@{/nosotros}">Nosotros</a></li>
+      <li><a th:href="@{/mision}">Nuestra Misión</a></li>
+    </ul>
+  </nav>
+
+  <div class="register-page">
+    <div class="register-card">
+      <div class="form-eyebrow">🐾 Únete al refugio</div>
+      <div class="form-title">Crear cuenta</div>
+      <p class="form-subtitle">Regístrate para agendar citas y seguir tus procesos de adopción.</p>
+
+      <div class="form-group">
+        <label class="form-label">Nombre de usuario</label>
+        <input class="form-input" type="text" placeholder="tu_usuario_unico"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nombre completo</label>
+        <input class="form-input" type="text" placeholder="Tu nombre y apellido"/>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Correo electrónico</label>
+          <input class="form-input" type="email" placeholder="tu@email.com"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Teléfono</label>
+          <input class="form-input" type="tel" placeholder="+57 300 000 0000"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Dirección</label>
+        <input class="form-input" type="text" placeholder="Barrio, ciudad o dirección completa"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contraseña</label>
+        <input class="form-input" type="password" placeholder="Mínimo 8 caracteres"/>
+      </div>
+
+      <button class="btn-register">Crear mi cuenta</button>
+      <div class="login-prompt">¿Ya tienes cuenta? <a th:href="@{/login}">Inicia sesión aquí</a></div>
+    </div>
+  </div>
+
+  <footer><p>© 2025 <span>Refugio Nueva Vida</span> · Todos los derechos reservados</p></footer>
+</body>
+</html>

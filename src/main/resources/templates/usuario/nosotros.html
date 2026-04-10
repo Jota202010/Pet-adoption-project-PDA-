@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nosotros — Refugio Nueva Vida</title>
+  <link rel="stylesheet" th:href="@{/css/nosotros.css}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+</head>
+<body>
+
+  <nav>
+    <div class="nav-left">
+      <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
+      <a href="#" class="btn-admin">Administrar</a>
+    </div>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a th:href="@{/inicio}">Inicio</a></li>
+        <li><a th:href="@{/nosotros}" class="active">Nosotros</a></li>
+        <li><a th:href="@{/mision}">Nuestra Misión</a></li>
+      </ul>
+      <a th:href="@{/perfil}" class="btn-perfil">👤 Mi Perfil</a>
+      <a href="#" class="btn-nav">Iniciar Sesión</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">🐾 Quiénes somos</div>
+      <h1>Un proyecto que nació del<br /><span>amor por los perros</span></h1>
+      <p>Somos un equipo de personas que decidió que el abandono canino no tenía que ser normal. Esta es nuestra historia.</p>
+    </div>
+  </section>
+
+  <section class="story-section">
+    <div class="story-card">
+      <p class="story-opener">Todo empezó con la incapacidad de seguir mirando hacia otro lado.</p>
+      <div class="story-body">
+        <p>Un día cualquiera, en una calle cualquiera de Cartagena, alguien decidió que no podía pasar de largo. Recogió a un perro que nadie quería, lo llevó a casa y, sin saberlo, puso en marcha algo mucho más grande que un rescate.</p>
+        <p>Lo que comenzó como un gesto espontáneo fue creciendo con la suma de más personas que compartían la misma convicción: que cada perro merece una oportunidad. No había una oficina, ni un plan formal, ni recursos garantizados. Solo había voluntad, y con eso resultó ser suficiente para empezar.</p>
+        <div class="story-quote">
+          <p>"Una sociedad que aprende a cuidar a sus animales, aprende también a cuidarse entre sí."</p>
+        </div>
+        <p>Con el tiempo, el grupo fue tomando forma. Se sumaron veterinarios, estudiantes, familias y personas de distintos oficios que aportaban lo que podían: tiempo, conocimiento, un espacio, una compra de alimento. Nadie pedía reconocimiento. Todos compartían el mismo propósito.</p>
+        <p>Hoy Refugio Nueva Vida es un espacio donde los perros llegan asustados y salen con nombre, con salud y con un hogar que los espera. Es también una comunidad: una red de familias que adoptaron con responsabilidad, de voluntarios que dedican sus fines de semana, de aliados que creen que el bienestar animal y el bienestar humano no son cosas separadas.</p>
+        <p>No somos una organización perfecta ni pretendemos serlo. Somos un proyecto vivo, que aprende, que comete errores y que sigue adelante porque los perros que esperan en el refugio no pueden esperar que seamos perfectos. Solo necesitan que sigamos intentándolo.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="valores-grid">
+    <div class="valor-card"><div class="emoji">🛡️</div><p>Rescatamos con responsabilidad</p></div>
+    <div class="valor-card"><div class="emoji">❤️</div><p>Rehabilitamos con paciencia</p></div>
+    <div class="valor-card"><div class="emoji">🏡</div><p>Adoptamos con cuidado</p></div>
+  </div>
+
+  <section class="cta-section">
+    <h2>Tú también puedes ser parte</h2>
+    <p>Adopta, apadrina, dona o simplemente comparte. Cada gesto cuenta más de lo que imaginas.</p>
+    <div class="cta-buttons">
+      <a th:href="@{/inicio}" class="btn-white">🐶 Ver perros en adopción</a>
+      <a th:href="@{/mision}" class="btn-outline">Nuestra Misión</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 <span>Refugio Nueva Vida</span> · Todos los derechos reservados · Hecho con ❤️ para los perros</p>
+  </footer>
+
+</body>
+</html>

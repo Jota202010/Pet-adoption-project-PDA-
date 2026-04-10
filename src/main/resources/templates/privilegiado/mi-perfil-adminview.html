@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Mi Perfil — Admin — Refugio Nueva Vida</title>
+  <link rel="stylesheet" th:href="@{/css/mi-perfil-adminview.css}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-left">
+      <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
+      <span class="admin-badge">⚙ Panel Admin</span>
+    </div>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a th:href="@{/admin/panel}">Panel</a></li>
+        <li><a th:href="@{/inicio}">Inicio</a></li>
+      </ul>
+      <a th:href="@{/admin/perfil}" class="btn-perfil-nav active">👤 Mi Perfil</a>
+      <a th:href="@{/inicio}" class="btn-exit">← Salir de Admin</a>
+    </div>
+  </nav>
+
+  <div class="breadcrumb">
+    <a th:href="@{/admin/panel}">Panel Admin</a>
+    <span class="sep">›</span>
+    <span style="color:var(--text);">Mi Perfil</span>
+  </div>
+
+  <div class="page-wrapper">
+    <a th:href="@{/admin/panel}" class="back-link">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Volver al panel
+    </a>
+
+    <div class="profile-hero">
+      <div class="hero-left">
+        <div class="avatar">⚙️</div>
+        <div class="profile-meta">
+          <h1 th:text="${admin.nombre}">Nombre</h1>
+          <p class="username"><span>@</span><span th:text="${admin.usuario}">usuario</span></p>
+          <p th:text="${admin.email}">email</p>
+          <span class="role-badge">⚙ Administrador · Refugio Nueva Vida</span>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="num num-aprobadas" th:text="${total_aprobadas}">0</div>
+          <div class="lbl">Citas<br/>aprobadas</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num num-rechazadas" th:text="${total_rechazadas}">0</div>
+          <div class="lbl">Citas<br/>rechazadas</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num num-espera" th:text="${total_espera}">0</div>
+          <div class="lbl">Citas en<br/>espera</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-title">Mis datos</span>
+      </div>
+      <div class="data-grid">
+        <div class="data-item"><div class="lbl">Usuario</div><div class="val" th:text="${admin.usuario}">usuario</div></div>
+        <div class="data-item"><div class="lbl">Nombre completo</div><div class="val" th:text="${admin.nombre}">nombre</div></div>
+        <div class="data-item"><div class="lbl">Correo electrónico</div><div class="val" th:text="${admin.email}">email</div></div>
+        <div class="data-item"><div class="lbl">Teléfono</div><div class="val" th:text="${admin.telefono}">telefono</div></div>
+        <div class="data-item"><div class="lbl">Rol</div><div class="val" style="color:#F97316;">Administrador</div></div>
+        <div class="data-item"><div class="lbl">Miembro desde</div><div class="val" th:text="${admin.fecha_registro}">fecha</div></div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-title">Citas aprobadas</span>
+        <span class="count-pill" style="background:#DCFCE7;color:#15803D;border-color:#86EFAC;"><span th:text="${total_aprobadas}">0</span> aprobadas</span>
+      </div>
+      <div class="citas-table-wrap">
+        <table class="citas-table">
+          <thead>
+            <tr>
+              <th>Adoptante</th><th>Perro</th><th>Fecha de cita</th><th>Fecha de decisión</th><th>Estado</th><th style="text-align:center;">Detalle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="cita : ${citasAprobadas}">
+              <td><span class="user-name" th:text="${cita.usuario.nombre}">Nombre</span><br/><span class="user-sub">@<span th:text="${cita.usuario.usuario}">usuario</span></span></td>
+              <td><a th:href="@{/admin/mascota/1}" class="dog-link">🐶 <span th:text="${cita.perro.nombre}">Perro</span></a></td>
+              <td><span class="date-text"><span th:text="${cita.fecha}">fecha</span> · <span th:text="${cita.hora}">hora</span></span></td>
+              <td><span class="date-text" th:text="${cita.fecha_decision}">fecha</span></td>
+              <td><span class="status-badge s-aprobada">✔ Aprobada</span></td>
+              <td style="text-align:center;"><a th:href="@{/admin/cita/1}" class="action-link">Ver <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-title">Citas rechazadas</span>
+        <span class="count-pill" style="background:#FEE2E2;color:#991B1B;border-color:#FCA5A5;"><span th:text="${total_rechazadas}">0</span> rechazadas</span>
+      </div>
+      <div class="citas-table-wrap">
+        <table class="citas-table">
+          <thead>
+            <tr>
+              <th>Adoptante</th><th>Perro</th><th>Fecha de cita</th><th>Fecha de decisión</th><th>Estado</th><th style="text-align:center;">Detalle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="cita : ${citasRechazadas}">
+              <td><span class="user-name" th:text="${cita.usuario.nombre}">Nombre</span><br/><span class="user-sub">@<span th:text="${cita.usuario.usuario}">usuario</span></span></td>
+              <td><a th:href="@{/admin/mascota/1}" class="dog-link">🐶 <span th:text="${cita.perro.nombre}">Perro</span></a></td>
+              <td><span class="date-text"><span th:text="${cita.fecha}">fecha</span> · <span th:text="${cita.hora}">hora</span></span></td>
+              <td><span class="date-text" th:text="${cita.fecha_decision}">fecha</span></td>
+              <td><span class="status-badge s-rechazada">✘ Rechazada</span></td>
+              <td style="text-align:center;"><a th:href="@{/admin/cita/1}" class="action-link">Ver <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <footer><p>© 2025 <span>Refugio Nueva Vida</span> · Panel de Administración</p></footer>
+</body>
+</html>

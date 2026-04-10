@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nuestra Misión — Refugio Nueva Vida</title>
+  <link rel="stylesheet" th:href="@{/css/mision.css}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <div class="nav-left">
+      <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
+      <a href="#" class="btn-admin">Administrar</a>
+    </div>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a th:href="@{/inicio}">Inicio</a></li>
+        <li><a th:href="@{/nosotros}">Nosotros</a></li>
+        <li><a th:href="@{/mision}" class="active">Nuestra Misión</a></li>
+      </ul>
+      <a th:href="@{/perfil}" class="btn-perfil">👤 Mi Perfil</a>
+      <a href="#" class="btn-nav">Iniciar Sesión</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow">🐾 Por qué existimos</div>
+    <h1>Cada vida animal<br />merece una <span>segunda oportunidad</span></h1>
+    <p>En Refugio Nueva Vida creemos que el abandono animal no es un destino inevitable. Con educación, amor y comunidad, podemos cambiar la realidad de miles de mascotas en Colombia.</p>
+  </section>
+
+  <!-- PILLARS -->
+  <section class="pillars-section">
+    <div class="section-label"><span>Nuestros pilares</span></div>
+    <h2>Lo que nos mueve cada día</h2>
+
+    <div class="pillars-grid">
+
+      <div class="pillar-card">
+        <div class="pillar-icon">🛡️</div>
+        <h3>Rescate responsable</h3>
+        <p>Atendemos llamadas de emergencia las 24 horas. Nuestro equipo de voluntarios capacitados actúa con rapidez y empatía para rescatar animales en situación de riesgo en calles, lotes abandonados y hogares de maltrato.</p>
+        <span class="pillar-tag">+1.400 rescatados</span>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-icon">❤️‍🩹</div>
+        <h3>Rehabilitación integral</h3>
+        <p>Cada animal que llega al refugio recibe atención veterinaria completa, vacunación, esterilización y, cuando es necesario, acompañamiento psicológico conductual para superar el trauma del abandono.</p>
+        <span class="pillar-tag">100% atención médica</span>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-icon">🏡</div>
+        <h3>Adopción consciente</h3>
+        <p>No buscamos solo colocar animales: buscamos familias. Realizamos entrevistas, visitas domiciliarias y seguimiento post-adopción durante 3 meses para garantizar que cada mascota llegue a un hogar para siempre.</p>
+        <span class="pillar-tag">+920 hogares encontrados</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats-section">
+    <div class="stats-inner">
+      <h2>Nuestro impacto en números</h2>
+      <p>Desde 2019 trabajamos sin descanso para transformar vidas, una mascota a la vez.</p>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number">1.4K+</div>
+          <div class="stat-label">Animales rescatados desde nuestra fundación</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">920</div>
+          <div class="stat-label">Adopciones exitosas verificadas</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">48</div>
+          <div class="stat-label">Voluntarios activos en red</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">6</div>
+          <div class="stat-label">Años de impacto continuo en la región</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALORES -->
+  <section class="valores-section">
+    <div class="valores-text">
+      <div class="section-label"><span>Nuestros valores</span></div>
+      <h2>Principios que guían cada decisión</h2>
+      <p>Más allá de los perros, Refugio Nueva Vida es un proyecto de construcción de comunidad. Creemos que una sociedad que cuida a sus animales es una sociedad más justa y empática para todos.</p>
+      <div class="valor-list">
+        <div class="valor-item">
+          <div class="valor-dot"></div>
+          <div>
+            <strong>Transparencia total</strong>
+            <span>Publicamos informes mensuales de ingresos, egresos y estado de cada perro a nuestra comunidad de seguidores y donantes.</span>
+          </div>
+        </div>
+        <div class="valor-item">
+          <div class="valor-dot"></div>
+          <div>
+            <strong>Cero eutanasia por espacio</strong>
+            <span>Nunca sacrificamos un animal saludable por falta de cupo. Gestionamos redes de hogares de paso antes de tomar cualquier decisión difícil.</span>
+          </div>
+        </div>
+        <div class="valor-item">
+          <div class="valor-dot"></div>
+          <div>
+            <strong>Educación comunitaria</strong>
+            <span>Realizamos talleres en colegios y barrios sobre tenencia responsable, bienestar animal y el impacto del abandono en el ecosistema urbano.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="valores-visual">
+      <p class="visual-quote">"Rescatar a un animal no cambia el mundo, pero para ese animal <span>cambia su mundo entero.</span>"</p>
+      <p class="visual-author">— Julio Cabrera Schamun , Fundador</p>
+      <div class="visual-divider"></div>
+      <div class="commitment-list">
+        <div class="commitment-item">Seguimiento post-adopción por 90 días</div>
+        <div class="commitment-item">Esterilización incluida en cada adopción</div>
+        <div class="commitment-item">Red de veterinarios aliados en Cartagena</div>
+        <div class="commitment-item">Atención de urgencias las 24 horas</div>
+        <div class="commitment-item">Programa de padrinos para animales especiales</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Tú también puedes cambiar una vida</h2>
+    <p>Ya sea adoptando, apadrinando, donando o siendo voluntario, cada acción suma en nuestra misión.</p>
+    <div class="cta-buttons">
+      <a href="refugio-nueva-vida.html" class="btn-cta-white">🐾 Ver perros en adopción</a>
+      <a th:href="@{/nosotros}" class="btn-cta-outline">Nosotros</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 <span>Refugio Nueva Vida</span> · Todos los derechos reservados · Hecho con ❤️ para los perros</p>
+  </footer>
+
+</body>
+</html>

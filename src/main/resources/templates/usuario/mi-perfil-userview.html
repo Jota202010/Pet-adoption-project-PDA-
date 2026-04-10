@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Mi Perfil — Refugio Nueva Vida</title>
+  <link rel="stylesheet" th:href="@{/css/mi-perfil-userview.css}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-left">
+      <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
+      <a th:href="@{/admin/panel}" class="btn-admin">Administrar</a>
+    </div>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a th:href="@{/inicio}">Inicio</a></li>
+        <li><a th:href="@{/nosotros}">Nosotros</a></li>
+        <li><a th:href="@{/mision}">Nuestra Misión</a></li>
+      </ul>
+      <a th:href="@{/perfil}" class="btn-perfil active">👤 Mi Perfil</a>
+      <a th:href="@{/login}" class="btn-nav">Iniciar Sesión</a>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <a th:href="@{/inicio}" class="back-link">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Volver al inicio
+    </a>
+
+    <div class="profile-hero">
+      <div class="avatar">👤</div>
+      <div class="profile-meta">
+        <h1 th:text="${nombre}">Nombre</h1>
+        <p class="username"><span>@</span><span th:text="${usuario}">usuario</span></p>
+        <p th:text="${email}">email@example.com</p>
+        <span class="reg-badge">📅 Miembro desde <span th:text="${fecha_registro}">fecha</span></span>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-title">Mis datos personales</span>
+      </div>
+      <div class="data-grid">
+        <div class="data-item"><div class="lbl">Usuario</div><div class="val" th:text="${usuario}">usuario</div></div>
+        <div class="data-item"><div class="lbl">Nombre completo</div><div class="val" th:text="${nombre}">nombre</div></div>
+        <div class="data-item"><div class="lbl">Correo electrónico</div><div class="val" th:text="${email}">email</div></div>
+        <div class="data-item"><div class="lbl">Teléfono</div><div class="val" th:text="${telefono}">telefono</div></div>
+        <div class="data-item"><div class="lbl">Dirección</div><div class="val" th:text="${direccion}">direccion</div></div>
+        <div class="data-item"><div class="lbl">Fecha de registro</div><div class="val" th:text="${fecha_registro}">fecha</div></div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-title">Mis citas agendadas</span>
+        <a th:href="@{/inicio}" style="font-size:.78rem;font-weight:800;color:var(--orange);text-decoration:none;">+ Agendar nueva cita</a>
+      </div>
+      <div class="citas-body">
+        <a th:href="@{/agendar-cita/1}" class="cita-row" th:each="cita : ${citas}">
+          <div class="cita-dog-icon">🐶</div>
+          <div class="cita-info">
+            <div class="cita-dog" th:text="${cita.perro_nombre}">Perro</div>
+            <div class="cita-date">📅 <span th:text="${cita.fecha}">fecha</span> · <span th:text="${cita.hora}">hora</span> · 📍 <span th:text="${cita.sede}">sede</span></div>
+          </div>
+          <span class="cita-status" th:text="${cita.estado}">Estado</span>
+          <svg class="cita-arrow" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <footer><p>© 2025 <span>Refugio Nueva Vida</span> · Todos los derechos reservados · Hecho con ❤️ para los perros</p></footer>
+</body>
+</html>
