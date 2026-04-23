@@ -1,37 +1,31 @@
 package com.refugio.nueva_vida.proyecto_de_aula.controller;
 
+import com.refugio.nueva_vida.proyecto_de_aula.model.Perro;
+import com.refugio.nueva_vida.proyecto_de_aula.service.PerroService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.*;
 
 @Controller
 public class AdminController {
 
-    private List<Map<String, String>> getPerrosFake() {
-        List<Map<String, String>> lista = new ArrayList<>();
-        String[][] datos = {
-            {"Toby",   "Labrador Retriever", "RESCATADO", "SANO"},
-            {"Luna",   "Beagle",             "ABANDONADO","SANO"},
-            {"Rocky",  "Pastor Alemán",      "STRAY",     "ENFERMO"},
-            {"Canela", "Golden Retriever",   "FOSTER",    "SANO"}
-        };
-        for (String[] d : datos) {
-            Map<String, String> p = new HashMap<>();
-            p.put("nombre", d[0]); p.put("raza", d[1]);
-            p.put("estado", d[2]); p.put("nivel_salud", d[3]);
-            lista.add(p);
-        }
-        return lista;
+    private final PerroService perroService;
+
+    public AdminController(PerroService perroService) {
+        this.perroService = perroService;
     }
+
+    // ── Datos falsos temporales para usuarios y citas (aún no conectados a BD) ──
 
     private List<Map<String, String>> getUsuariosFake() {
         List<Map<String, String>> lista = new ArrayList<>();
         String[][] datos = {
             {"María López",    "maria@email.com",   "12 ene 2025"},
             {"Carlos Pérez",   "carlos@email.com",  "20 feb 2025"},
-            {"Ana Martínez",   "ana@email.com",     "05 mar 2025"}
+            {"Ana Martínez",   "ana@email.com",      "05 mar 2025"}
         };
         for (String[] d : datos) {
             Map<String, String> u = new HashMap<>();
@@ -61,16 +55,21 @@ public class AdminController {
         return lista;
     }
 
+    // ── Panel principal ───────────────────────────────────────────────────────
+
     @GetMapping("/admin/panel")
     public String panelAdmin(Model model) {
-        model.addAttribute("perros", getPerrosFake());
+        List<Perro> perros = perroService.listarTodos();
+        model.addAttribute("perros", perros);
+        model.addAttribute("totalPerros", perros.size());
         model.addAttribute("usuarios", getUsuariosFake());
         model.addAttribute("citas", getCitasFake());
-        model.addAttribute("totalPerros", getPerrosFake().size());
-        model.addAttribute("totalUsuarios", 138);
+        model.addAttribute("totalUsuarios", getUsuariosFake().size());
         model.addAttribute("citasPendientes", 12);
         return "privilegiado/panel-general-adminview";
     }
+
+    // ── Perfil de administrador ───────────────────────────────────────────────
 
     @GetMapping("/admin/perfil")
     public String perfilAdmin(Model model) {
@@ -98,8 +97,10 @@ public class AdminController {
         return "privilegiado/mi-perfil-adminview";
     }
 
+    // ── Detalle de usuario ────────────────────────────────────────────────────
+
     @GetMapping("/admin/usuario/{id}")
-    public String detalleUsuario(Model model) {
+    public String detalleUsuario(@PathVariable String id, Model model) {
         model.addAttribute("nombre", "María López");
         model.addAttribute("usuario", "maria_lopez");
         model.addAttribute("email", "maria@email.com");

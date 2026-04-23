@@ -5,7 +5,6 @@
   <title>Agregar Mascota — Admin — Refugio Nueva Vida</title>
   <link rel="stylesheet" th:href="@{/css/agregar-mascota-adminview.css}"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-
 </head>
 <body>
   <nav>
@@ -20,10 +19,12 @@
   </nav>
 
   <div class="page-content">
-    <a th:href="@{/admin/panel}" class="back-link"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Volver al panel de administración</a>
+    <a th:href="@{/admin/panel}" class="back-link">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Volver al panel de administración
+    </a>
     <div class="admin-banner">⚙ <span>Estás <strong>agregando una nueva mascota</strong> al refugio. Completa todos los campos requeridos y guarda para publicar.</span></div>
 
-    <div class="form-card">
+    <form th:action="@{/admin/agregar-mascota}" th:object="${perro}" method="post" class="form-card">
 
       <!-- Header -->
       <div class="card-top">
@@ -34,91 +35,102 @@
         <div class="card-top-icon">🐶</div>
       </div>
 
-      <!-- Foto de perfil -->
-      <div class="form-section">
-        <div class="section-title"><span>Foto de perfil</span></div>
-        <div class="photo-upload-area">
-          <div class="upload-icon">📷</div>
-          <p>Foto principal del perro (aparecerá en la tarjeta de listado)</p>
-          <button class="upload-btn">Subir foto de perfil</button>
-        </div>
-      </div>
-
-      <!-- Galería de fotos -->
-      <div class="form-section">
-        <div class="section-title"><span>Galería de fotos</span></div>
-        <div class="photo-upload-area">
-          <div class="upload-icon">🖼️</div>
-          <p>Agrega más fotos para el carrusel del perfil del perro</p>
-          <button class="upload-btn">Subir fotos adicionales</button>
-        </div>
-        <div class="photos-row">
-          <div class="photo-slot">+</div>
-          <div class="photo-slot">+</div>
-          <div class="photo-slot">+</div>
-          <div class="photo-slot">+</div>
-        </div>
-      </div>
-
       <!-- Datos básicos -->
       <div class="form-section">
         <div class="section-title"><span>Datos básicos</span></div>
         <div class="form-grid">
-          <div class="form-group"><label class="form-label">Nombre *</label><input class="form-input" type="text" placeholder="Nombre del perro"/></div>
-          <div class="form-group"><label class="form-label">Edad *</label><input class="form-input" type="text" placeholder="Ej: 2 años, 6 meses"/></div>
+
           <div class="form-group">
-            <label class="form-label">Sexo *</label>
-            <select class="form-select"><option value="">Seleccionar...</option><option>Macho</option><option>Hembra</option></select>
+            <label class="form-label" for="nombre">Nombre *</label>
+            <input class="form-input" type="text" id="nombre" th:field="*{nombre}" placeholder="Nombre del perro" required/>
           </div>
+
           <div class="form-group">
-            <label class="form-label">Estado *</label>
-            <select class="form-select"><option value="">Seleccionar...</option><option>STRAY</option><option>RESCATADO</option><option>ABANDONADO</option><option>FOSTER</option></select>
+            <label class="form-label" for="edad">Edad *</label>
+            <input class="form-input" type="text" id="edad" th:field="*{edad}" placeholder="Ej: 2 años, 6 meses" required/>
           </div>
+
+          <div class="form-group">
+            <label class="form-label" for="sexo">Sexo *</label>
+            <select class="form-select" id="sexo" th:field="*{sexo}" required>
+              <option value="">Seleccionar...</option>
+              <option th:each="s : ${sexos}" th:value="${s}" th:text="${s}"></option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="estado">Estado *</label>
+            <select class="form-select" id="estado" th:field="*{estado}" required>
+              <option value="">Seleccionar...</option>
+              <option th:each="e : ${estados}" th:value="${e}" th:text="${e}"></option>
+            </select>
+          </div>
+
         </div>
       </div>
 
-      <!-- Condición -->
+      <!-- Condición y salud -->
       <div class="form-section">
         <div class="section-title"><span>Condición y salud</span></div>
         <div class="form-grid col3">
+
           <div class="form-group">
-            <label class="form-label">Nivel de salud *</label>
-            <select class="form-select"><option value="">Seleccionar...</option><option>SANO</option><option>ENFERMO</option><option>CRITICO</option></select>
+            <label class="form-label" for="nivelSalud">Nivel de salud *</label>
+            <select class="form-select" id="nivelSalud" th:field="*{nivelSalud}" required>
+              <option value="">Seleccionar...</option>
+              <option th:each="n : ${nivelesS}" th:value="${n}" th:text="${n}"></option>
+            </select>
           </div>
+
           <div class="form-group">
-            <label class="form-label">Sociabilidad *</label>
-            <select class="form-select"><option value="">Seleccionar...</option><option>ALTA</option><option>MEDIA</option><option>BAJA</option></select>
+            <label class="form-label" for="sociabilidad">Sociabilidad *</label>
+            <select class="form-select" id="sociabilidad" th:field="*{sociabilidad}" required>
+              <option value="">Seleccionar...</option>
+              <option th:each="sc : ${sociabilidades}" th:value="${sc}" th:text="${sc}"></option>
+            </select>
           </div>
+
         </div>
-        <div class="form-grid" style="margin-top:16px;">
+
+        <!-- Checkboxes funcionales reemplazando los toggles CSS que no respondían -->
+        <div class="form-grid" style="margin-top:20px;">
+
           <div class="form-group">
             <label class="form-label" style="margin-bottom:10px;">Esterilizado</label>
-            <label class="toggle-row">
-              <span class="toggle-label">¿Está esterilizado?</span>
-              <div class="toggle-switch"><input type="checkbox"/><span class="toggle-slider"></span></div>
-            </label>
+            <div style="display:flex;align-items:center;gap:12px;padding:12px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;">
+              <input type="checkbox" id="esterilizado" th:field="*{esterilizado}"
+                     style="width:20px;height:20px;cursor:pointer;accent-color:#F97316;"/>
+              <label for="esterilizado" style="cursor:pointer;font-weight:600;color:#374151;">¿Está esterilizado?</label>
+            </div>
           </div>
+
           <div class="form-group">
             <label class="form-label" style="margin-bottom:10px;">Vacunado</label>
-            <label class="toggle-row">
-              <span class="toggle-label">¿Está vacunado?</span>
-              <div class="toggle-switch"><input type="checkbox"/><span class="toggle-slider"></span></div>
-            </label>
+            <div style="display:flex;align-items:center;gap:12px;padding:12px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;">
+              <input type="checkbox" id="vacunado" th:field="*{vacunado}"
+                     style="width:20px;height:20px;cursor:pointer;accent-color:#F97316;"/>
+              <label for="vacunado" style="cursor:pointer;font-weight:600;color:#374151;">¿Está vacunado?</label>
+            </div>
           </div>
+
           <div class="form-group">
             <label class="form-label" style="margin-bottom:10px;">Adoptado</label>
-            <label class="toggle-row">
-              <span class="toggle-label">¿Ya fue adoptado?</span>
-              <div class="toggle-switch"><input type="checkbox"/><span class="toggle-slider"></span></div>
-            </label>
+            <div style="display:flex;align-items:center;gap:12px;padding:12px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;">
+              <input type="checkbox" id="adoptado" th:field="*{adoptado}"
+                     style="width:20px;height:20px;cursor:pointer;accent-color:#F97316;"/>
+              <label for="adoptado" style="cursor:pointer;font-weight:600;color:#374151;">¿Ya fue adoptado?</label>
+            </div>
           </div>
+
           <div class="form-group">
             <label class="form-label" style="margin-bottom:10px;">Listo para adoptar</label>
-            <label class="toggle-row">
-              <span class="toggle-label">¿Está listo para adopción?</span>
-              <div class="toggle-switch"><input type="checkbox"/><span class="toggle-slider"></span></div>
-            </label>
+            <div style="display:flex;align-items:center;gap:12px;padding:12px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;">
+              <input type="checkbox" id="listaParaAdoptar" th:field="*{listaParaAdoptar}"
+                     style="width:20px;height:20px;cursor:pointer;accent-color:#F97316;"/>
+              <label for="listaParaAdoptar" style="cursor:pointer;font-weight:600;color:#374151;">¿Está listo para adopción?</label>
+            </div>
           </div>
+
         </div>
       </div>
 
@@ -126,8 +138,11 @@
       <div class="form-section">
         <div class="section-title"><span>Descripción</span></div>
         <div class="form-group">
-          <label class="form-label">Historia y personalidad del perro *</label>
-          <textarea class="form-textarea" style="min-height:130px;" placeholder="Describe la personalidad, historia y cualquier detalle relevante del perro…"></textarea>
+          <label class="form-label" for="descripcion">Historia y personalidad del perro *</label>
+          <textarea class="form-textarea" id="descripcion" th:field="*{descripcion}"
+                    style="min-height:130px;"
+                    placeholder="Describe la personalidad, historia y cualquier detalle relevante del perro…"
+                    required></textarea>
         </div>
       </div>
 
@@ -137,8 +152,9 @@
         <div class="medical-note">ℹ️ Esta información es interna para el equipo del refugio y no será visible en el perfil público del perro.</div>
         <div class="form-grid col1">
           <div class="form-group">
-            <label class="form-label">Notas del historial médico</label>
-            <textarea class="form-textarea" placeholder="Diagnósticos, tratamientos, procedimientos, vacunas aplicadas, alergias conocidas…"></textarea>
+            <label class="form-label" for="registroMedico">Notas del historial médico</label>
+            <textarea class="form-textarea" id="registroMedico" th:field="*{registroMedico}"
+                      placeholder="Diagnósticos, tratamientos, procedimientos, vacunas aplicadas, alergias conocidas…"></textarea>
           </div>
         </div>
       </div>
@@ -147,15 +163,15 @@
       <div class="save-bar">
         <p>🐶 El perro será visible en el sistema una vez guardado</p>
         <div class="save-buttons">
-          <button class="btn-cancel">Cancelar</button>
-          <button class="btn-save">
+          <a th:href="@{/admin/panel}" class="btn-cancel">Cancelar</a>
+          <button type="submit" class="btn-save">
             <svg viewBox="0 0 24 24" width="14" height="14" style="stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
             Guardar mascota
           </button>
         </div>
       </div>
 
-    </div><!-- /form-card -->
+    </form>
   </div>
 
   <footer><p>© 2025 <span>Refugio Nueva Vida</span> · Panel de Administración</p></footer>

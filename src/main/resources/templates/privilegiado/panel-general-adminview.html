@@ -22,6 +22,14 @@
     <h1 class="page-title">Panel de Administración</h1>
     <p class="page-subtitle">Gestiona los perros, usuarios y citas del refugio desde aquí.</p>
 
+    <!-- ── Mensaje de éxito tras registrar perro ─── -->
+    <div th:if="${mensajeExito}" style="
+        background:#D1FAE5;border:1px solid #6EE7B7;border-radius:10px;
+        padding:14px 20px;margin-bottom:20px;font-weight:700;color:#065F46;
+        display:flex;align-items:center;gap:10px;">
+      ✅ <span th:text="${mensajeExito}"></span>
+    </div>
+
     <div class="stats-row">
       <div class="stat-card"><div class="stat-icon dogs">🐶</div><div class="stat-text"><div class="num" th:text="${totalPerros}">0</div><div class="lbl">Perros activos en el refugio</div></div></div>
       <div class="stat-card"><div class="stat-icon users">👥</div><div class="stat-text"><div class="num" th:text="${totalUsuarios}">0</div><div class="lbl">Usuarios registrados</div></div></div>
@@ -29,26 +37,42 @@
     </div>
 
     <div class="panel-grid">
+
+      <!-- ── Lista de perros (DESDE LA BASE DE DATOS) ─── -->
       <div class="panel-card">
         <div class="panel-card-header">
           <span class="panel-card-title">🐶 Lista de perros</span>
           <span class="panel-card-count" th:text="${totalPerros}+' perros'">0 perros</span>
         </div>
         <div class="panel-search">
-          <input type="text" placeholder="Buscar perro por nombre o raza…"/>
+          <input type="text" placeholder="Buscar perro por nombre…"/>
           <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </div>
-        <a th:href="@{/admin/mascota/1}" class="list-item" th:each="perro : ${perros}">
+
+        <!-- Sin perros registrados aún -->
+        <div th:if="${#lists.isEmpty(perros)}" style="padding:24px 16px;text-align:center;color:#9CA3AF;font-size:.9rem;">
+          Aún no hay perros registrados. ¡Agrega el primero! 🐶
+        </div>
+
+        <!-- Lista dinámica desde BD -->
+        <a th:each="perro : ${perros}"
+           th:href="@{/admin/mascota/{id}(id=${perro.idPerro})}"
+           class="list-item">
           <div class="item-avatar">🐶</div>
           <div class="item-info">
             <div class="item-name" th:text="${perro.nombre}">Nombre</div>
-            <div class="item-sub"><span th:text="${perro.raza}">Raza</span> · <span th:text="${perro.estado}">Estado</span></div>
+            <div class="item-sub">
+              <span th:text="${perro.sexo}">Sexo</span> ·
+              <span th:text="${perro.estado}">Estado</span> ·
+              <span th:text="${perro.edad}">Edad</span>
+            </div>
           </div>
-          <span class="item-badge" th:text="${perro.nivel_salud}">Salud</span>
+          <span class="item-badge" th:text="${perro.nivelSalud}">Salud</span>
           <svg class="item-arrow" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
         </a>
       </div>
 
+      <!-- ── Lista de usuarios ─── -->
       <div class="panel-card">
         <div class="panel-card-header">
           <span class="panel-card-title">👥 Usuarios registrados</span>
@@ -69,14 +93,11 @@
       </div>
     </div>
 
+    <!-- ── Tabla de citas ─── -->
     <div class="panel-card" style="grid-column:1/-1;margin-top:0;">
       <div class="panel-card-header">
         <span class="panel-card-title">📅 Citas agendadas</span>
         <span class="panel-card-count">Todas las citas</span>
-      </div>
-      <div class="panel-search">
-        <input type="text" placeholder="Buscar cita por persona o perro…"/>
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       </div>
       <table style="width:100%;border-collapse:collapse;font-size:.87rem;">
         <thead>
