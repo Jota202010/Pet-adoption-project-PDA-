@@ -1,120 +1,115 @@
 package com.refugio.nueva_vida.proyecto_de_aula.controller;
 
-import com.refugio.nueva_vida.proyecto_de_aula.model.Perro;
-import com.refugio.nueva_vida.proyecto_de_aula.service.PerroService;
+import com.refugio.nueva_vida.proyecto_de_aula.model.Cita;
+import com.refugio.nueva_vida.proyecto_de_aula.service.*;
+import com.refugio.nueva_vida.proyecto_de_aula.model.Usuario;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
-import java.util.*;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Controller
 public class AdminController {
 
     private final PerroService perroService;
+    private final UsuarioService usuarioService;
+    private final CitaService citaService;
+    private final HorarioService horarioService;
 
-    public AdminController(PerroService perroService) {
+    public AdminController(PerroService perroService, UsuarioService usuarioService,
+                           CitaService citaService, HorarioService horarioService) {
         this.perroService = perroService;
-    }
-
-    // ── Datos falsos temporales para usuarios y citas (aún no conectados a BD) ──
-
-    private List<Map<String, String>> getUsuariosFake() {
-        List<Map<String, String>> lista = new ArrayList<>();
-        String[][] datos = {
-            {"María López",    "maria@email.com",   "12 ene 2025"},
-            {"Carlos Pérez",   "carlos@email.com",  "20 feb 2025"},
-            {"Ana Martínez",   "ana@email.com",      "05 mar 2025"}
-        };
-        for (String[] d : datos) {
-            Map<String, String> u = new HashMap<>();
-            u.put("nombre", d[0]); u.put("email", d[1]); u.put("fecha_registro", d[2]);
-            lista.add(u);
-        }
-        return lista;
-    }
-
-    private List<Map<String, Object>> getCitasFake() {
-        List<Map<String, Object>> lista = new ArrayList<>();
-        Object[][] datos = {
-            {"María López",  "maria@email.com",  "Toby",   "2025-05-10", "10:00 AM", "En espera"},
-            {"Carlos Pérez", "carlos@email.com", "Luna",   "2025-05-12", "02:00 PM", "Aprobada"},
-            {"Ana Martínez", "ana@email.com",    "Canela", "2025-05-15", "11:00 AM", "Rechazada"}
-        };
-        for (Object[] d : datos) {
-            Map<String, Object> c = new HashMap<>();
-            Map<String, String> user = new HashMap<>();
-            user.put("nombre", (String)d[0]); user.put("email", (String)d[1]);
-            Map<String, String> perro = new HashMap<>();
-            perro.put("nombre", (String)d[2]);
-            c.put("usuario", user); c.put("perro", perro);
-            c.put("fecha", d[3]); c.put("hora", d[4]); c.put("estado", d[5]);
-            lista.add(c);
-        }
-        return lista;
+        this.usuarioService = usuarioService;
+        this.citaService = citaService;
+        this.horarioService = horarioService;
     }
 
     // ── Panel principal ───────────────────────────────────────────────────────
-
     @GetMapping("/admin/panel")
     public String panelAdmin(Model model) {
-        List<Perro> perros = perroService.listarTodos();
-        model.addAttribute("perros", perros);
-        model.addAttribute("totalPerros", perros.size());
-        model.addAttribute("usuarios", getUsuariosFake());
-        model.addAttribute("citas", getCitasFake());
-        model.addAttribute("totalUsuarios", getUsuariosFake().size());
-        model.addAttribute("citasPendientes", 12);
+        model.addAttribute("perros",          perroService.listarTodos());
+        model.addAttribute("totalPerros",     perroService.contarTodos());
+        model.addAttribute("usuarios",        usuarioService.listarTodos());
+        model.addAttribute("totalUsuarios",   usuarioService.contarTodos());
+        model.addAttribute("citas",           citaService.listarTodas());
+        model.addAttribute("citasPendientes", citaService.contarPendientes());
+        model.addAttribute("horarios",        horarioService.listarDisponibles());
         return "privilegiado/panel-general-adminview";
     }
 
-    // ── Perfil de administrador ───────────────────────────────────────────────
-
+    // ── Perfil del admin ──────────────────────────────────────────────────────
     @GetMapping("/admin/perfil")
-    public String perfilAdmin(Model model) {
-        Map<String, String> admin = new HashMap<>();
-        admin.put("nombre", "Administrador Principal");
-        admin.put("usuario", "admin_refugio");
-        admin.put("email", "admin@refugionuevavida.com");
-        admin.put("telefono", "+57 300 999 0001");
-        admin.put("fecha_registro", "10 de enero de 2019");
-        model.addAttribute("admin", admin);
-        model.addAttribute("total_aprobadas", 47);
-        model.addAttribute("total_rechazadas", 13);
-        model.addAttribute("total_espera", 12);
-
-        List<Map<String, Object>> citasAprobadas = new ArrayList<>();
-        List<Map<String, Object>> citasRechazadas = new ArrayList<>();
-        for (Map<String, Object> c : getCitasFake()) {
-            String estado = (String)c.get("estado");
-            c.put("fecha_decision", "2025-05-01");
-            if ("Aprobada".equals(estado)) citasAprobadas.add(c);
-            else if ("Rechazada".equals(estado)) citasRechazadas.add(c);
-        }
-        model.addAttribute("citasAprobadas", citasAprobadas);
-        model.addAttribute("citasRechazadas", citasRechazadas);
+    public String perfilAdmin(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        Usuario admin = usuarioService.buscarPorUsername(userDetails.getUsername()).orElseThrow();
+        var todas = citaService.listarTodas();
+        long aprobadas  = todas.stream().filter(c -> c.getEstado() == Cita.EstadoCita.confirmada).count();
+        long rechazadas = todas.stream().filter(c -> c.getEstado() == Cita.EstadoCita.rechazada).count();
+        long espera     = todas.stream().filter(c -> c.getEstado() == Cita.EstadoCita.en_espera).count();
+        model.addAttribute("admin",            admin);
+        model.addAttribute("total_aprobadas",  aprobadas);
+        model.addAttribute("total_rechazadas", rechazadas);
+        model.addAttribute("total_espera",     espera);
+        model.addAttribute("citasAprobadas",   todas.stream().filter(c -> c.getEstado() == Cita.EstadoCita.confirmada).toList());
+        model.addAttribute("citasRechazadas",  todas.stream().filter(c -> c.getEstado() == Cita.EstadoCita.rechazada).toList());
         return "privilegiado/mi-perfil-adminview";
     }
 
     // ── Detalle de usuario ────────────────────────────────────────────────────
-
     @GetMapping("/admin/usuario/{id}")
-    public String detalleUsuario(@PathVariable String id, Model model) {
-        model.addAttribute("nombre", "María López");
-        model.addAttribute("usuario", "maria_lopez");
-        model.addAttribute("email", "maria@email.com");
-        model.addAttribute("telefono", "+57 300 123 4567");
-        model.addAttribute("direccion", "Calle 25 #14-32, Manga, Cartagena");
-        model.addAttribute("fecha_registro", "12 de enero de 2025");
-
-        List<Map<String, String>> citas = new ArrayList<>();
-        Map<String, String> c1 = new HashMap<>();
-        c1.put("perro_nombre", "Toby"); c1.put("perro_raza", "Labrador Retriever");
-        c1.put("fecha", "2025-05-10"); c1.put("hora", "10:00 AM");
-        c1.put("motivo", "Visita de adopción"); c1.put("estado", "EN ESPERA");
-        citas.add(c1);
-        model.addAttribute("citas", citas);
+    public String detalleUsuario(@PathVariable Integer id, Model model) {
+        Usuario u = usuarioService.buscarPorId(id).orElseThrow();
+        model.addAttribute("usuario", u);
+        model.addAttribute("citas", citaService.citasDeUsuario(u));
         return "privilegiado/detalle-usuario-adminview";
+    }
+
+    // ── Pre-aprobar cita ──────────────────────────────────────────────────────
+    @PostMapping("/admin/cita/{id}/pre-aprobar")
+    public String preAprobar(@PathVariable Integer id,
+                             @AuthenticationPrincipal UserDetails userDetails,
+                             RedirectAttributes ra) {
+        Usuario admin = usuarioService.buscarPorUsername(userDetails.getUsername()).orElseThrow();
+        citaService.preAprobar(id, admin);
+        ra.addFlashAttribute("mensajeExito", "Solicitud pre-aprobada. El usuario podrá elegir su horario.");
+        return "redirect:/admin/panel";
+    }
+
+    // ── Rechazar cita ─────────────────────────────────────────────────────────
+    @PostMapping("/admin/cita/{id}/rechazar")
+    public String rechazar(@PathVariable Integer id,
+                           @AuthenticationPrincipal UserDetails userDetails,
+                           RedirectAttributes ra) {
+        Usuario admin = usuarioService.buscarPorUsername(userDetails.getUsername()).orElseThrow();
+        citaService.rechazar(id, admin);
+        ra.addFlashAttribute("mensajeExito", "Solicitud rechazada.");
+        return "redirect:/admin/panel";
+    }
+
+    // ── Crear horario disponible ──────────────────────────────────────────────
+    @PostMapping("/admin/horario/crear")
+    public String crearHorario(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fecha,
+            @RequestParam @DateTimeFormat(pattern = "HH:mm")      LocalTime hora,
+            RedirectAttributes ra) {
+        horarioService.crear(fecha, hora);
+        ra.addFlashAttribute("mensajeExito", "Horario " + fecha + " a las " + hora + " creado correctamente.");
+        return "redirect:/admin/panel";
+    }
+
+    // ── Eliminar horario disponible ───────────────────────────────────────────
+    @PostMapping("/admin/horario/{id}/eliminar")
+    public String eliminarHorario(@PathVariable Integer id, RedirectAttributes ra) {
+        try {
+            horarioService.eliminar(id);
+            ra.addFlashAttribute("mensajeExito", "Horario eliminado.");
+        } catch (IllegalStateException e) {
+            ra.addFlashAttribute("errorMsg", e.getMessage());
+        }
+        return "redirect:/admin/panel";
     }
 }

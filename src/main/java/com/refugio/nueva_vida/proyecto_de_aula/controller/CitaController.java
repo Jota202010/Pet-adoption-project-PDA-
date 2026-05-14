@@ -1,63 +1,127 @@
 package com.refugio.nueva_vida.proyecto_de_aula.controller;
 
+import com.refugio.nueva_vida.proyecto_de_aula.model.Cita;
+import com.refugio.nueva_vida.proyecto_de_aula.model.Perro;
+import com.refugio.nueva_vida.proyecto_de_aula.model.Usuario;
+import com.refugio.nueva_vida.proyecto_de_aula.service.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
-import java.util.*;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import java.beans.PropertyEditorSupport;
 
 @Controller
 public class CitaController {
 
-    private Map<String, Object> getCitaFake() {
-        Map<String, Object> cita = new HashMap<>();
-        cita.put("id", 1);
-        cita.put("fecha", "2025-05-10");
-        cita.put("hora", "10:00 AM");
-        cita.put("sede", "Refugio Central — Cartagena");
-        cita.put("estado", "EN ESPERA");
-        cita.put("fecha_solicitud", "2025-04-20");
+    private final CitaService citaService;
+    private final PerroService perroService;
+    private final UsuarioService usuarioService;
+    private final HorarioService horarioService;
 
-        Map<String, String> usuario = new HashMap<>();
-        usuario.put("nombre", "María López");
-        usuario.put("email", "maria@email.com");
-        usuario.put("usuario", "maria_lopez");
-        cita.put("usuario", usuario);
-
-        Map<String, String> perro = new HashMap<>();
-        perro.put("nombre", "Toby");
-        perro.put("raza", "Labrador Retriever");
-        perro.put("estado", "RESCATADO");
-        cita.put("perro", perro);
-
-        cita.put("vivienda", "Casa");
-        cita.put("propiedad", "Propia");
-        cita.put("permiten_mascotas", "Sí");
-        cita.put("num_personas", "4");
-        cita.put("todos_acuerdo", "Sí");
-        cita.put("perros_antes", "Sí");
-        cita.put("mascotas_actual", "No");
-        cita.put("mascotas_anteriores", "Tuve un perro llamado Max que falleció de vejez hace 2 años.");
-        cita.put("horas_solo", "2-4 horas");
-        cita.put("puede_pasear", "Sí");
-        cita.put("responsable", "María López");
-        cita.put("cubre_vet", "Sí");
-        cita.put("cubre_emergencias", "Sí");
-        cita.put("motivacion", "Quiero darle un hogar a un perro que lo necesite. Siempre he amado los animales.");
-        cita.put("tipo_perro_buscado", "Perro adulto, de tamaño mediano, tranquilo y afectuoso.");
-        return cita;
+    public CitaController(CitaService citaService, PerroService perroService,
+                          UsuarioService usuarioService, HorarioService horarioService) {
+        this.citaService = citaService;
+        this.perroService = perroService;
+        this.usuarioService = usuarioService;
+        this.horarioService = horarioService;
     }
 
+    // ── Convierte strings vacíos a null para evitar 400 en LocalDate/LocalTime ──
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(java.time.LocalDate.class, new PropertyEditorSupport() {
+            @Override public void setAsText(String text) {
+                setValue((text == null || text.trim().isEmpty()) ? null :
+                    java.time.LocalDate.parse(text.trim()));
+            }
+        });
+        binder.registerCustomEditor(java.time.LocalTime.class, new PropertyEditorSupport() {
+            @Override public void setAsText(String text) {
+                setValue((text == null || text.trim().isEmpty()) ? null :
+                    java.time.LocalTime.parse(text.trim()));
+            }
+        });
+    }
+
+    // ── Formulario solicitud adopción (GET) ───────────────────────────────────
     @GetMapping("/agendar-cita/{perroId}")
-    public String agendarCita(@PathVariable int perroId, Model model) {
-        model.addAttribute("nombre", "Toby");
+    public String agendarForm(@PathVariable Integer perroId, Model model) {
+        Perro perro = perroService.buscarPorId(perroId).orElseThrow();
+        model.addAttribute("perro", perro);
+        model.addAttribute("cita", new Cita());
+        model.addAttribute("tiposVivienda",    Cita.TipoVivienda.values());
+        model.addAttribute("propiedades",      Cita.Propiedad.values());
+        model.addAttribute("opcionesMascotas", Cita.PermitenMascotas.values());
         return "usuario/agendar-cita";
     }
 
+    // ── Enviar solicitud adopción (POST) — sin fecha ni hora ──────────────────
+    @PostMapping("/agendar-cita/{perroId}")
+    public String enviarSolicitud(@PathVariable Integer perroId,
+                                  @ModelAttribute Cita cita,
+                                  @AuthenticationPrincipal UserDetails userDetails,
+                                  RedirectAttributes ra) {
+        Perro perro = perroService.buscarPorId(perroId).orElseThrow();
+        Usuario usuario = usuarioService.buscarPorUsername(userDetails.getUsername()).orElseThrow();
+        cita.setPerro(perro);
+        cita.setUsuario(usuario);
+        cita.setEstado(Cita.EstadoCita.en_espera);
+        cita.setFechaCita(null);
+        cita.setHoraCita(null);
+        try {
+            citaService.guardar(cita);
+            ra.addFlashAttribute("mensajeExito",
+                "¡Solicitud enviada! Te notificaremos cuando sea pre-aprobada para que elijas tu horario.");
+        } catch (IllegalStateException e) {
+            ra.addFlashAttribute("errorMsg", e.getMessage());
+        }
+        return "redirect:/perfil";
+    }
+
+    // ── Elegir horario (GET) — solo si cita está pre_aprobada ─────────────────
+    @GetMapping("/cita/{citaId}/elegir-horario")
+    public String elegirHorarioForm(@PathVariable Integer citaId,
+                                    @AuthenticationPrincipal UserDetails userDetails,
+                                    Model model) {
+        Cita cita = citaService.buscarPorId(citaId).orElseThrow();
+        Usuario usuario = usuarioService.buscarPorUsername(userDetails.getUsername()).orElseThrow();
+
+        // Validar que la cita pertenece al usuario y está pre-aprobada
+        if (!cita.getUsuario().getIdUsuario().equals(usuario.getIdUsuario())) {
+            return "redirect:/perfil";
+        }
+        if (cita.getEstado() != Cita.EstadoCita.pre_aprobada) {
+            return "redirect:/perfil";
+        }
+
+        model.addAttribute("cita", cita);
+        model.addAttribute("horariosDisponibles", horarioService.listarDisponibles());
+        return "usuario/elegir-horario";
+    }
+
+    // ── Confirmar horario elegido (POST) ──────────────────────────────────────
+    @PostMapping("/cita/{citaId}/confirmar-horario")
+    public String confirmarHorario(@PathVariable Integer citaId,
+                                   @RequestParam Integer idHorario,
+                                   @AuthenticationPrincipal UserDetails userDetails,
+                                   RedirectAttributes ra) {
+        try {
+            citaService.confirmar(citaId, idHorario);
+            ra.addFlashAttribute("mensajeExito", "¡Cita confirmada! Ya tienes tu fecha y hora reservada.");
+        } catch (IllegalStateException e) {
+            ra.addFlashAttribute("errorMsg", e.getMessage());
+        }
+        return "redirect:/perfil";
+    }
+
+    // ── Detalle de cita (admin) ───────────────────────────────────────────────
     @GetMapping("/admin/cita/{id}")
-    public String detalleCita(@PathVariable int id, Model model) {
-        model.addAttribute("cita", getCitaFake());
+    public String detalleCita(@PathVariable Integer id, Model model) {
+        Cita cita = citaService.buscarPorId(id).orElseThrow();
+        model.addAttribute("cita", cita);
         return "privilegiado/detalle-cita-admin";
     }
 }

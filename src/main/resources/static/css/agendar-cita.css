@@ -70,6 +70,22 @@
 
     .btn-perfil{display:inline-block;text-decoration:none;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;background:var(--orange-light);color:var(--orange-dark);border:1.5px solid var(--orange-mid);border-radius:7px;padding:7px 16px;margin-left:4px;transition:all .2s;white-space:nowrap;}
     .btn-perfil:hover{background:var(--orange);color:#fff;border-color:var(--orange);}
+
+    /* Card top header */
+    .card-top{display:flex;align-items:center;justify-content:space-between;padding:28px 36px 0;gap:20px;}
+    .card-top-text h1{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:6px;}
+    .card-top-text p{font-size:.88rem;color:var(--text-muted);font-weight:600;max-width:480px;}
+    .card-top-icon{font-size:2.8rem;flex-shrink:0;}
+
+    /* Save / confirm bar */
+    .save-bar{padding:22px 36px;background:var(--orange-light);border-top:2px solid var(--orange-mid);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-radius:0 0 var(--radius) var(--radius);}
+    .save-bar p{font-size:.83rem;color:var(--orange-dark);font-weight:700;max-width:460px;}
+    .save-buttons{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+    .btn-cancel{display:inline-flex;align-items:center;text-decoration:none;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:800;background:#F3F4F6;border:1.5px solid #D1D5DB;color:#374151;border-radius:999px;padding:11px 24px;transition:all .2s;}
+    .btn-cancel:hover{background:#E5E7EB;}
+    .btn-save{display:inline-flex;align-items:center;gap:8px;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:800;background:var(--orange);color:#fff;border:none;border-radius:999px;padding:13px 32px;cursor:pointer;transition:background .2s,transform .15s;}
+    .btn-save:hover{background:var(--orange-dark);transform:translateY(-1px);}
+
     footer{background:#1F2937;color:#9CA3AF;text-align:center;padding:22px 48px;font-size:.82rem;}
     footer span{color:var(--orange);}
-    @media(max-width:680px){.form-grid,.form-grid.col3{grid-template-columns:1fr;}.form-section{padding:24px 20px;}.submit-bar{padding:20px;}.page-content{padding:24px 16px 60px;}nav{padding:12px 20px;}}
+    @media(max-width:680px){.form-grid,.form-grid.col3{grid-template-columns:1fr;}.form-section{padding:24px 20px;}.submit-bar{padding:20px;}.page-content{padding:24px 16px 60px;}nav{padding:12px 20px;}.card-top{padding:20px 20px 0;flex-direction:column;text-align:center;}.save-bar{padding:18px 20px;}}

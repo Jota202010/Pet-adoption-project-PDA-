@@ -5,13 +5,11 @@
   <title>Registro — Refugio Nueva Vida</title>
   <link rel="stylesheet" th:href="@{/css/registro.css}"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-
 </head>
 <body>
   <nav>
     <div class="nav-left">
       <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
-      <a th:href="@{/admin/panel}" class="btn-admin">Administrar</a>
     </div>
     <ul class="nav-links">
       <li><a th:href="@{/inicio}">Inicio</a></li>
@@ -26,35 +24,61 @@
       <div class="form-title">Crear cuenta</div>
       <p class="form-subtitle">Regístrate para agendar citas y seguir tus procesos de adopción.</p>
 
-      <div class="form-group">
-        <label class="form-label">Nombre de usuario</label>
-        <input class="form-input" type="text" placeholder="tu_usuario_unico"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Nombre completo</label>
-        <input class="form-input" type="text" placeholder="Tu nombre y apellido"/>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Correo electrónico</label>
-          <input class="form-input" type="email" placeholder="tu@email.com"/>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Teléfono</label>
-          <input class="form-input" type="tel" placeholder="+57 300 000 0000"/>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Dirección</label>
-        <input class="form-input" type="text" placeholder="Barrio, ciudad o dirección completa"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Contraseña</label>
-        <input class="form-input" type="password" placeholder="Mínimo 8 caracteres"/>
+      <!-- Mensaje de error -->
+      <div th:if="${errorMsg}"
+           style="background:#FEE2E2;border:1px solid #FCA5A5;border-radius:8px;
+                  padding:12px 16px;margin-bottom:16px;color:#991B1B;font-weight:700;font-size:.87rem;">
+        ⚠️ <span th:text="${errorMsg}"></span>
       </div>
 
-      <button class="btn-register">Crear mi cuenta</button>
-      <div class="login-prompt">¿Ya tienes cuenta? <a th:href="@{/login}">Inicia sesión aquí</a></div>
+      <form th:action="@{/registro}" method="post">
+        <!-- CSRF obligatorio -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <div class="form-group">
+          <label class="form-label">Nombre de usuario *</label>
+          <!-- name="usuarioNombre" para evitar conflicto con el objeto Usuario -->
+          <input class="form-input" type="text" name="usuarioNombre"
+                 placeholder="tu_usuario_unico" required/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Nombre completo *</label>
+          <input class="form-input" type="text" name="nombre"
+                 placeholder="Tu nombre y apellido" required/>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Correo electrónico *</label>
+            <input class="form-input" type="email" name="email"
+                   placeholder="tu@email.com" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Teléfono</label>
+            <input class="form-input" type="tel" name="telefono"
+                   placeholder="+57 300 000 0000"/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Dirección</label>
+          <input class="form-input" type="text" name="direccion"
+                 placeholder="Barrio, ciudad o dirección completa"/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Contraseña *</label>
+          <input class="form-input" type="password" name="contrasena"
+                 placeholder="Mínimo 8 caracteres" required/>
+        </div>
+
+        <button type="submit" class="btn-register">Crear mi cuenta</button>
+      </form>
+
+      <div class="login-prompt">
+        ¿Ya tienes cuenta? <a th:href="@{/login}">Inicia sesión aquí</a>
+      </div>
     </div>
   </div>
 

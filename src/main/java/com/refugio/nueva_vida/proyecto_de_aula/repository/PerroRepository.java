@@ -12,6 +12,9 @@ public interface PerroRepository extends JpaRepository<Perro, Integer> {
     // Buscar perros no adoptados (disponibles para adopción)
     List<Perro> findByAdoptadoFalse();
 
+    // Buscar perros disponibles Y listos para adoptar
+    List<Perro> findByAdoptadoFalseAndListaParaAdoptarTrue();
+
     // Buscar por estado
     List<Perro> findByEstado(Perro.Estado estado);
 

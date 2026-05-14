@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Elegir Horario — Refugio Nueva Vida</title>
+  <link rel="stylesheet" th:href="@{/css/agendar-cita.css}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    /* ── Carrusel de horarios ──────────────────────────────────── */
+    .horario-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+      margin: 24px 36px;
+    }
+    .horario-card {
+      border: 2px solid #E5E7EB;
+      border-radius: 14px;
+      padding: 20px 18px;
+      cursor: pointer;
+      transition: border-color .2s, background .2s, transform .15s, box-shadow .15s;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 4px;
+    }
+    .horario-card:hover {
+      border-color: #F97316;
+      background: #FFF7ED;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(249,115,22,.15);
+    }
+    .horario-card input[type=radio] { display: none; }
+    .horario-card.selected {
+      border-color: #F97316;
+      background: #FFF7ED;
+      box-shadow: 0 6px 20px rgba(249,115,22,.2);
+    }
+    .horario-fecha { font-size: .88rem; font-weight: 800; color: #6B7280; margin-top: 2px; }
+    .horario-hora  { font-size: 1.5rem; font-weight: 800; color: #F97316; margin: 4px 0; }
+    .horario-libre { font-size: .72rem; color: #10B981; font-weight: 700;
+                     background: #DCFCE7; padding: 2px 10px; border-radius: 999px; }
+    .success-banner {
+      background: #D1FAE5; border: 1px solid #6EE7B7; border-radius: 12px;
+      padding: 16px 20px; margin-bottom: 24px; color: #065F46; font-weight: 700;
+      display: flex; align-items: center; gap: 10px;
+    }
+    @media(max-width:600px) {
+      .horario-grid { grid-template-columns: 1fr 1fr; margin: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-left">
+      <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
+      <a th:href="@{/admin/panel}" class="btn-admin" sec:authorize="hasRole('administrador')">Administrar</a>
+    </div>
+    <div class="nav-right">
+      <a th:href="@{/perfil}" class="btn-perfil" sec:authorize="isAuthenticated()">👤 Mi Perfil</a>
+      <form th:action="@{/logout}" method="post" style="display:inline;" sec:authorize="isAuthenticated()">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit" class="btn-nav">Cerrar Sesión</button>
+      </form>
+    </div>
+  </nav>
+
+  <div class="page-content">
+    <a th:href="@{/perfil}" class="back-link">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Volver a mi perfil
+    </a>
+
+    <!-- Banner de pre-aprobación -->
+    <div class="success-banner">
+      🎉 ¡Tu solicitud para adoptar a <strong th:text="${cita.perro.nombre}">Perro</strong> fue <strong>pre-aprobada</strong>!
+      Elige el horario que más te convenga para la visita al refugio.
+    </div>
+
+    <div class="form-card">
+      <div class="card-top">
+        <div class="card-top-text">
+          <h1>Elige tu horario</h1>
+          <p>Selecciona uno de los horarios disponibles. Una vez confirmes, quedará reservado solo para ti.</p>
+        </div>
+        <div class="card-top-icon">📅</div>
+      </div>
+
+      <!-- Sin horarios disponibles -->
+      <div th:if="${#lists.isEmpty(horariosDisponibles)}"
+           style="padding:32px;text-align:center;color:#9CA3AF;font-size:.95rem;">
+        😔 No hay horarios disponibles en este momento.<br/>
+        El equipo del refugio pronto publicará nuevas opciones. Vuelve a revisar más tarde.
+      </div>
+
+      <!-- Con horarios disponibles -->
+      <form th:if="${not #lists.isEmpty(horariosDisponibles)}"
+            th:action="@{/cita/{id}/confirmar-horario(id=${cita.idCita})}"
+            method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <div class="horario-grid">
+          <label th:each="h : ${horariosDisponibles}"
+                 class="horario-card"
+                 th:for="${'horario-'+h.idHorario}">
+            <input type="radio" name="idHorario"
+                   th:id="${'horario-'+h.idHorario}"
+                   th:value="${h.idHorario}" required/>
+            <div style="font-size:1.6rem;">📅</div>
+            <div class="horario-fecha" th:text="${h.fecha}">fecha</div>
+            <div class="horario-hora" th:text="${h.hora}">hora</div>
+            <div class="horario-libre">✅ Disponible</div>
+          </label>
+        </div>
+
+        <div class="save-bar" style="margin-top:28px;">
+          <p>⚠️ Una vez confirmes, este horario queda reservado y no podrá ser elegido por otro usuario.</p>
+          <div class="save-buttons">
+            <a th:href="@{/perfil}" class="btn-cancel">Cancelar</a>
+            <button type="submit" class="btn-save">
+              📅 Confirmar horario
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer><p>© 2025 <span>Refugio Nueva Vida</span> · Todos los derechos reservados</p></footer>
+
+  <script>
+    // Solo un radio seleccionado visualmente
+    document.querySelectorAll('.horario-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.horario-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        card.querySelector('input[type=radio]').checked = true;
+      });
+    });
+  </script>
+</body>
+</html>

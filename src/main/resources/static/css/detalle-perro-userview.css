@@ -171,26 +171,26 @@
     }
     .attr-content { display: flex; flex-direction: column; min-width: 0; }
     .attr-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 2px; }
-    .attr-value { font-size: 0.9rem; font-weight: 800; color: var(--blue-dyn); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .attr-value { font-size: 0.9rem; font-weight: 800; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     /* Valores booleanos */
     .check-yes { color: #16A34A; }
     .check-no  { color: #DC2626; }
 
-    /* Nivel de salud badge */
+    /* Nivel de salud badge — mismo peso visual que otros attr-value */
     .health-badge {
-      display: inline-flex; align-items: center; gap: 6px;
+      display: inline-block;
       font-size: 0.82rem; font-weight: 800;
-      padding: 3px 10px; border-radius: 999px;
+      padding: 2px 8px; border-radius: 5px;
     }
     .health-SANO    { background: #DCFCE7; color: #15803D; }
     .health-ENFERMO { background: #FEF9C3; color: #854D0E; }
     .health-CRITICO { background: #FEE2E2; color: #991B1B; }
 
-    /* Sociabilidad badge */
+    /* Sociabilidad badge — ídem */
     .social-badge {
-      display: inline-flex; align-items: center; gap: 6px;
+      display: inline-block;
       font-size: 0.82rem; font-weight: 800;
-      padding: 3px 10px; border-radius: 999px;
+      padding: 2px 8px; border-radius: 5px;
     }
     .social-ALTA  { background: #DBEAFE; color: #1D4ED8; }
     .social-MEDIA { background: #FEF3C7; color: #92400E; }

@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 </head>
 <body>
-
   <nav>
     <div class="nav-left">
       <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
@@ -21,13 +20,12 @@
 
   <div class="breadcrumb">
     <a th:href="@{/admin/panel}">Panel Admin</a><span class="sep">›</span>
-    <a th:href="@{/admin/panel}">Citas</a><span class="sep">›</span>
     <span style="color:var(--text);">Cita de <span th:text="${cita.usuario.nombre}">Usuario</span> con <span th:text="${cita.perro.nombre}">Perro</span></span>
   </div>
 
   <div class="page-wrapper">
     <a th:href="@{/admin/panel}" class="back-link">
-      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Volver a lista de citas
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Volver al panel
     </a>
 
     <div class="status-banner espera">
@@ -35,21 +33,24 @@
         <div class="status-dot dot-espera"></div>
         Estado actual: <strong th:text="${cita.estado}">Estado</strong>
       </div>
-      <span style="font-size:.78rem;color:#92400E;font-weight:600;">Solicitud recibida el <span th:text="${cita.fecha_solicitud}">fecha</span></span>
+      <span style="font-size:.78rem;color:#92400E;font-weight:600;">Solicitud recibida el <span th:text="${cita.fechaSolicitud}">fecha</span></span>
     </div>
 
     <div class="detail-card">
       <div class="card-header">
         <div class="card-header-left">
           <h1>Solicitud de cita — <span th:text="${cita.perro.nombre}">Perro</span></h1>
-          <p>📅 <span th:text="${cita.fecha}">fecha</span> a las <span th:text="${cita.hora}">hora</span> · 📍 <span th:text="${cita.sede}">sede</span></p>
+          <p>📅 <span th:text="${cita.fechaCita}">fecha</span> a las <span th:text="${cita.horaCita}">hora</span>
+             <span th:if="${cita.sede}"> · 📍 <span th:text="${cita.sede}">sede</span></span>
+          </p>
         </div>
       </div>
 
+      <!-- Solicitante y perro -->
       <div class="card-section">
         <div class="section-label">Solicitante y perro</div>
         <div class="summary-row">
-          <a th:href="@{/admin/usuario/1}" class="summary-card">
+          <a th:href="@{/admin/usuario/{id}(id=${cita.usuario.idUsuario})}" class="summary-card">
             <div class="summary-card-icon user">👤</div>
             <div class="summary-card-text">
               <div class="lbl">Adoptante</div>
@@ -57,88 +58,121 @@
               <div class="sub"><span th:text="${cita.usuario.email}">email</span> · @<span th:text="${cita.usuario.usuario}">usuario</span></div>
             </div>
           </a>
-          <a th:href="@{/admin/mascota/1}" class="summary-card">
+          <a th:href="@{/admin/mascota/{id}(id=${cita.perro.idPerro})}" class="summary-card">
             <div class="summary-card-icon">🐶</div>
             <div class="summary-card-text">
               <div class="lbl">Perro solicitado</div>
               <div class="val" th:text="${cita.perro.nombre}">Nombre</div>
-              <div class="sub"><span th:text="${cita.perro.raza}">Raza</span> · <span th:text="${cita.perro.estado}">Estado</span></div>
+              <div class="sub"><span th:text="${cita.perro.estado}">Estado</span> · <span th:text="${cita.perro.sexo}">Sexo</span></div>
             </div>
           </a>
         </div>
       </div>
 
+      <!-- Hogar -->
       <div class="card-section">
         <div class="section-label">🏠 Información del hogar</div>
         <div class="data-grid">
-          <div class="data-item"><div class="lbl">Tipo de vivienda</div><div class="val dyn" th:text="${cita.vivienda}">vivienda</div></div>
-          <div class="data-item"><div class="lbl">Vivienda</div><div class="val dyn" th:text="${cita.propiedad}">propiedad</div></div>
-          <div class="data-item"><div class="lbl">¿Permiten mascotas?</div><div class="val dyn" th:text="${cita.permiten_mascotas}">sí/no</div></div>
-          <div class="data-item"><div class="lbl">Personas en el hogar</div><div class="val dyn" th:text="${cita.num_personas}">num</div></div>
-          <div class="data-item"><div class="lbl">¿Todos de acuerdo?</div><div class="val dyn" th:text="${cita.todos_acuerdo}">sí/no</div></div>
+          <div class="data-item"><div class="lbl">Tipo de vivienda</div><div class="val dyn" th:text="${cita.tipoVivienda}">-</div></div>
+          <div class="data-item"><div class="lbl">Propiedad</div><div class="val dyn" th:text="${cita.propiedad}">-</div></div>
+          <div class="data-item"><div class="lbl">¿Permiten mascotas?</div><div class="val dyn" th:text="${cita.permitenMascotas}">-</div></div>
+          <div class="data-item"><div class="lbl">Personas en el hogar</div><div class="val dyn" th:text="${cita.numPersonas}">-</div></div>
+          <div class="data-item"><div class="lbl">¿Todos de acuerdo?</div><div class="val dyn" th:text="${cita.todosAcuerdo} ? 'Sí' : 'No'">-</div></div>
         </div>
       </div>
 
+      <!-- Experiencia -->
       <div class="card-section">
         <div class="section-label">🐕 Experiencia con mascotas</div>
         <div class="data-grid">
-          <div class="data-item"><div class="lbl">¿Ha tenido perros?</div><div class="val dyn" th:text="${cita.perros_antes}">sí/no</div></div>
-          <div class="data-item"><div class="lbl">¿Tiene mascotas ahora?</div><div class="val dyn" th:text="${cita.mascotas_actual}">sí/no</div></div>
+          <div class="data-item"><div class="lbl">¿Ha tenido perros?</div><div class="val dyn" th:text="${cita.perrosAntes} ? 'Sí' : 'No'">-</div></div>
+          <div class="data-item"><div class="lbl">¿Tiene mascotas ahora?</div><div class="val dyn" th:text="${cita.mascotasActual} ? 'Sí' : 'No'">-</div></div>
         </div>
         <div class="qa-list" style="margin-top:14px;">
           <div class="qa-item">
             <div class="qa-q">¿Qué pasó con sus mascotas anteriores?</div>
-            <div class="qa-a dyn" th:text="${cita.mascotas_anteriores}">respuesta</div>
+            <div class="qa-a dyn" th:text="${cita.mascotasAnteriores} ?: 'No especificado'">-</div>
           </div>
         </div>
       </div>
 
+      <!-- Tiempo -->
       <div class="card-section">
         <div class="section-label">⏰ Tiempo y compromiso</div>
         <div class="data-grid">
-          <div class="data-item"><div class="lbl">Horas solo el perro</div><div class="val dyn" th:text="${cita.horas_solo}">horas</div></div>
-          <div class="data-item"><div class="lbl">¿Puede pasearlo?</div><div class="val dyn" th:text="${cita.puede_pasear}">sí/no</div></div>
-          <div class="data-item"><div class="lbl">Responsable principal</div><div class="val dyn" th:text="${cita.responsable}">nombre</div></div>
+          <div class="data-item"><div class="lbl">Horas solo el perro</div><div class="val dyn" th:text="${cita.horasSolo} ?: '-'">-</div></div>
+          <div class="data-item"><div class="lbl">¿Puede pasearlo?</div><div class="val dyn" th:text="${cita.puedePasear} ? 'Sí' : 'No'">-</div></div>
+          <div class="data-item"><div class="lbl">Responsable principal</div><div class="val dyn" th:text="${cita.responsable} ?: '-'">-</div></div>
         </div>
       </div>
 
+      <!-- Económico -->
       <div class="card-section">
         <div class="section-label">💰 Capacidad económica</div>
         <div class="data-grid">
-          <div class="data-item"><div class="lbl">¿Cubre gastos veterinarios?</div><div class="val dyn" th:text="${cita.cubre_vet}">sí/no</div></div>
-          <div class="data-item"><div class="lbl">¿Puede asumir emergencias?</div><div class="val dyn" th:text="${cita.cubre_emergencias}">sí/no</div></div>
+          <div class="data-item"><div class="lbl">¿Cubre gastos veterinarios?</div><div class="val dyn" th:text="${cita.cubreVet} ? 'Sí' : 'No'">-</div></div>
+          <div class="data-item"><div class="lbl">¿Puede asumir emergencias?</div><div class="val dyn" th:text="${cita.cubreEmergencias} ? 'Sí' : 'No'">-</div></div>
         </div>
       </div>
 
+      <!-- Motivación -->
       <div class="card-section">
         <div class="section-label">❤️ Motivación de adopción</div>
         <div class="qa-list">
           <div class="qa-item">
             <div class="qa-q">¿Por qué quiere adoptar?</div>
-            <div class="qa-a dyn" th:text="${cita.motivacion}">motivación</div>
+            <div class="qa-a dyn" th:text="${cita.motivacion} ?: 'No especificado'">-</div>
           </div>
           <div class="qa-item">
             <div class="qa-q">¿Qué tipo de perro busca?</div>
-            <div class="qa-a dyn" th:text="${cita.tipo_perro_buscado}">tipo</div>
+            <div class="qa-a dyn" th:text="${cita.tipoPerroBuscado} ?: 'No especificado'">-</div>
           </div>
         </div>
       </div>
 
+      <!-- Condiciones -->
       <div class="card-section">
         <div class="section-label">⚠️ Condiciones aceptadas</div>
         <div class="cond-list">
-          <div class="cond-item ok"><span class="cond-icon">✔</span> Se compromete a no abandonar al animal</div>
-          <div class="cond-item ok"><span class="cond-icon">✔</span> Acepta el seguimiento del refugio</div>
-          <div class="cond-item ok"><span class="cond-icon">✔</span> Acepta el proceso de evaluación</div>
+          <div th:class="${cita.condNoAbandono} ? 'cond-item ok' : 'cond-item no'">
+            <span class="cond-icon" th:text="${cita.condNoAbandono} ? '✔' : '✘'">✔</span> Se compromete a no abandonar al animal
+          </div>
+          <div th:class="${cita.condSeguimiento} ? 'cond-item ok' : 'cond-item no'">
+            <span class="cond-icon" th:text="${cita.condSeguimiento} ? '✔' : '✘'">✔</span> Acepta el seguimiento del refugio
+          </div>
+          <div th:class="${cita.condEvaluacion} ? 'cond-item ok' : 'cond-item no'">
+            <span class="cond-icon" th:text="${cita.condEvaluacion} ? '✔' : '✘'">✔</span> Acepta el proceso de evaluación
+          </div>
         </div>
       </div>
 
+      <!-- Acciones: solo si NO está pre-aprobada ya -->
+      <!-- Acciones contextuales según el estado -->
       <div class="action-bar">
-        <p>Revisa toda la información antes de tomar una decisión. Esta acción notificará al adoptante por correo electrónico.</p>
+        <p th:if="${cita.estado.name() == 'en_espera'}">Revisa toda la información antes de tomar una decisión.</p>
+        <p th:if="${cita.estado.name() == 'pre_aprobada'}" style="color:#065F46;font-weight:700;">✅ Ya fue pre-aprobada. El usuario está eligiendo su horario.</p>
+        <p th:if="${cita.estado.name() == 'confirmada'}"  style="color:#1E40AF;font-weight:700;">📅 Cita confirmada. El usuario ya tiene fecha y hora reservada.</p>
+        <p th:if="${cita.estado.name() == 'rechazada'}"   style="color:#991B1B;font-weight:700;">✘ Esta solicitud fue rechazada.</p>
         <div class="action-buttons">
-          <button class="btn-pending">↩ Dejar en espera</button>
-          <button class="btn-reject">✘ Rechazar solicitud</button>
-          <button class="btn-approve">✔ Aprobar solicitud</button>
+          <!-- Rechazar: solo en_espera o pre_aprobada -->
+          <form th:if="${cita.estado.name() == 'en_espera' or cita.estado.name() == 'pre_aprobada'}"
+                th:action="@{/admin/cita/{id}/rechazar(id=${cita.idCita})}" method="post" style="display:inline;">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit" class="btn-reject">✘ Rechazar solicitud</button>
+          </form>
+          <!-- Pre-aprobar: solo en_espera -->
+          <form th:if="${cita.estado.name() == 'en_espera'}"
+                th:action="@{/admin/cita/{id}/pre-aprobar(id=${cita.idCita})}" method="post" style="display:inline;">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit" class="btn-approve">✔ Pre-aprobar solicitud</button>
+          </form>
+          <!-- Badges de estado final -->
+          <span th:if="${cita.estado.name() == 'pre_aprobada'}"
+                style="background:#D1FAE5;border:1.5px solid #6EE7B7;border-radius:10px;padding:10px 20px;font-size:.85rem;font-weight:800;color:#065F46;">✅ Ya pre-aprobada</span>
+          <span th:if="${cita.estado.name() == 'confirmada'}"
+                style="background:#DBEAFE;border:1.5px solid #93C5FD;border-radius:10px;padding:10px 20px;font-size:.85rem;font-weight:800;color:#1E40AF;">📅 Confirmada</span>
+          <span th:if="${cita.estado.name() == 'rechazada'}"
+                style="background:#FEE2E2;border:1.5px solid #FCA5A5;border-radius:10px;padding:10px 20px;font-size:.85rem;font-weight:800;color:#991B1B;">✘ Ya rechazada</span>
         </div>
       </div>
 

@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Refugio Nueva Vida</title>
-  <link rel="stylesheet" th:href="@{/css/inicio.css}"/> 
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" th:href="@{/css/inicio.css}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 </head>
 <body>
-
   <nav>
     <div class="nav-left">
       <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
-      <a th:href="@{/admin/panel}" class="btn-admin">Administrar</a>
+      <a th:href="@{/admin/panel}" class="btn-admin"
+         sec:authorize="hasRole('administrador')">Administrar</a>
     </div>
     <div class="nav-right">
       <ul class="nav-links">
@@ -20,71 +20,99 @@
         <li><a th:href="@{/nosotros}">Nosotros</a></li>
         <li><a th:href="@{/mision}">Nuestra Misión</a></li>
       </ul>
-      <a th:href="@{/perfil}" class="btn-perfil">👤 Mi Perfil</a>
-      <a th:href="@{/login}" class="btn-nav">Iniciar Sesión</a>
+
+      <!-- Visible solo si está logueado -->
+      <a th:href="@{/perfil}" class="btn-perfil"
+         sec:authorize="isAuthenticated()">👤 Mi Perfil</a>
+
+      <form th:action="@{/logout}" method="post" style="display:inline;"
+            sec:authorize="isAuthenticated()">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit" class="btn-nav">Cerrar Sesión</button>
+      </form>
+
+      <!-- Visible solo si NO está logueado -->
+      <a th:href="@{/login}" class="btn-nav"
+         sec:authorize="!isAuthenticated()">Iniciar Sesión</a>
     </div>
   </nav>
 
   <section class="hero">
     <div class="hero-badge">🐶 Adopta · Rescata · Ama</div>
-    <h1>Encuentra tu nuevo<br /><span>mejor amigo</span></h1>
-    <p>Cientos de perros esperan un hogar lleno de amor. Busca por nombre o raza.</p>
-
+    <h1>Encuentra tu nuevo<br/><span>mejor amigo</span></h1>
+    <p>Cientos de perros esperan un hogar lleno de amor.</p>
     <div class="search-wrap">
-      <input type="text" placeholder="Buscar por nombre o raza…" />
+      <input type="text" id="searchInput" placeholder="Buscar por nombre…"
+             oninput="filtrarPerros()" autocomplete="off"/>
       <button type="button" aria-label="Buscar">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       </button>
     </div>
-
     <div class="filter-pills">
-      <span class="pill active">Todos</span>
-      <span class="pill">Machos</span>
-      <span class="pill">Hembras</span>
-      <span class="pill">Cachorros</span>
-      <span class="pill">Adultos</span>
+      <span class="pill active" data-filter="todos"    onclick="setPill(this)">Todos</span>
+      <span class="pill"        data-filter="Macho"    onclick="setPill(this)">Machos</span>
+      <span class="pill"        data-filter="Hembra"   onclick="setPill(this)">Hembras</span>
     </div>
   </section>
 
   <main>
     <div class="section-header">
       <h2>Perros disponibles</h2>
-      <span>Mostrando <span th:text="${totalResultados}">0</span> resultados</span>
+      <span>Mostrando <span id="contadorResultados" th:text="${totalResultados}">0</span> resultados</span>
     </div>
-
     <div class="cards-grid">
-      <div class="pet-card" th:each="perro : ${perros}">
+      <div class="pet-card"
+           th:each="perro : ${perros}"
+           th:attr="data-nombre=${perro.nombre},data-sexo=${perro.sexo}">
         <div class="card-img">
-          <div class="card-img-bg"></div>
-          <div class="card-img-circle">🐶</div>
+          <img th:if="${fotosPerfil[perro.idPerro] != null}"
+               th:src="${fotosPerfil[perro.idPerro]}"
+               th:alt="${perro.nombre}"/>
+          <div th:if="${fotosPerfil[perro.idPerro] == null}" class="card-img-placeholder">🐶</div>
         </div>
         <div class="card-info">
-          <span th:text="${perro.raza}">Raza</span>
+          <span class="card-estado" th:text="${perro.estado}">Estado</span>
           <span class="card-name" th:text="${perro.nombre}">Nombre</span>
-          <span th:text="${perro.sexo}">Sexo</span>
+          <span class="card-sexo" th:text="${perro.sexo}">Sexo</span>
         </div>
         <div class="card-footer">
-          <a th:href="@{/mascota/1}" class="btn-ver-mas">Ver más</a>
+          <a th:href="@{/mascota/{id}(id=${perro.idPerro})}" class="btn-ver-mas">Ver más</a>
         </div>
       </div>
     </div>
-
-    <div class="pagination">
-      <button class="btn-page prev">
-        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-        Anterior
-      </button>
-      <span class="page-indicator">Página 1 de 1</span>
-      <button class="btn-page next">
-        Siguiente
-        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-      </button>
-    </div>
   </main>
 
-  <footer>
-    <p>© 2025 <span>Refugio Nueva Vida</span> · Todos los derechos reservados · Hecho con ❤️ para los perros</p>
-  </footer>
+  <footer><p>© 2025 <span>Refugio Nueva Vida</span> · Todos los derechos reservados · Hecho con ❤️ para los perros</p></footer>
 
+  <script>
+    var filtroActivo = 'todos';
+
+    function setPill(el) {
+      document.querySelectorAll('.pill').forEach(function(p){ p.classList.remove('active'); });
+      el.classList.add('active');
+      filtroActivo = el.getAttribute('data-filter');
+      filtrarPerros();
+    }
+
+    function filtrarPerros() {
+      var texto = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+      var cards = document.querySelectorAll('.pet-card');
+      var visibles = 0;
+      cards.forEach(function(card) {
+        var nombre = (card.getAttribute('data-nombre') || '').toLowerCase();
+        var sexo   = (card.getAttribute('data-sexo')   || '');
+        var coincideTexto = !texto || nombre.includes(texto);
+        var coincideFiltro = (filtroActivo === 'todos') || (sexo === filtroActivo);
+        if (coincideTexto && coincideFiltro) {
+          card.style.display = '';
+          visibles++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      var contador = document.getElementById('contadorResultados');
+      if (contador) contador.textContent = visibles;
+    }
+  </script>
 </body>
 </html>

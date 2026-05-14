@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Mi Perfil — Refugio Nueva Vida</title>
@@ -7,11 +8,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 </head>
 <body>
-
   <nav>
     <div class="nav-left">
       <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
-      <a th:href="@{/admin/panel}" class="btn-admin">Administrar</a>
+      <a th:href="@{/admin/panel}" class="btn-admin" sec:authorize="hasRole('administrador')">Administrar</a>
     </div>
     <div class="nav-right">
       <ul class="nav-links">
@@ -19,8 +19,10 @@
         <li><a th:href="@{/nosotros}">Nosotros</a></li>
         <li><a th:href="@{/mision}">Nuestra Misión</a></li>
       </ul>
-      <a th:href="@{/perfil}" class="btn-perfil active">👤 Mi Perfil</a>
-      <a th:href="@{/login}" class="btn-nav">Iniciar Sesión</a>
+      <a th:href="@{/perfil}" class="btn-perfil active" sec:authorize="isAuthenticated()">👤 Mi Perfil</a>
+      <form th:action="@{/logout}" method="post" style="display:inline;" sec:authorize="isAuthenticated()"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit" class="btn-nav">Cerrar Sesión</button>
+      </form>
     </div>
   </nav>
 
@@ -32,24 +34,22 @@
     <div class="profile-hero">
       <div class="avatar">👤</div>
       <div class="profile-meta">
-        <h1 th:text="${nombre}">Nombre</h1>
-        <p class="username"><span>@</span><span th:text="${usuario}">usuario</span></p>
-        <p th:text="${email}">email@example.com</p>
-        <span class="reg-badge">📅 Miembro desde <span th:text="${fecha_registro}">fecha</span></span>
+        <h1 th:text="${usuario.nombre}">Nombre</h1>
+        <p class="username"><span>@</span><span th:text="${usuario.usuario}">usuario</span></p>
+        <p th:text="${usuario.email}">email</p>
+        <span class="reg-badge">📅 Miembro desde <span th:text="${usuario.fechaRegistro}">fecha</span></span>
       </div>
     </div>
 
     <div class="section-card">
-      <div class="section-header">
-        <span class="section-title">Mis datos personales</span>
-      </div>
+      <div class="section-header"><span class="section-title">Mis datos personales</span></div>
       <div class="data-grid">
-        <div class="data-item"><div class="lbl">Usuario</div><div class="val" th:text="${usuario}">usuario</div></div>
-        <div class="data-item"><div class="lbl">Nombre completo</div><div class="val" th:text="${nombre}">nombre</div></div>
-        <div class="data-item"><div class="lbl">Correo electrónico</div><div class="val" th:text="${email}">email</div></div>
-        <div class="data-item"><div class="lbl">Teléfono</div><div class="val" th:text="${telefono}">telefono</div></div>
-        <div class="data-item"><div class="lbl">Dirección</div><div class="val" th:text="${direccion}">direccion</div></div>
-        <div class="data-item"><div class="lbl">Fecha de registro</div><div class="val" th:text="${fecha_registro}">fecha</div></div>
+        <div class="data-item"><div class="lbl">Usuario</div><div class="val" th:text="${usuario.usuario}">usuario</div></div>
+        <div class="data-item"><div class="lbl">Nombre completo</div><div class="val" th:text="${usuario.nombre}">nombre</div></div>
+        <div class="data-item"><div class="lbl">Email</div><div class="val" th:text="${usuario.email}">email</div></div>
+        <div class="data-item"><div class="lbl">Teléfono</div><div class="val" th:text="${usuario.telefono}">telefono</div></div>
+        <div class="data-item"><div class="lbl">Dirección</div><div class="val" th:text="${usuario.direccion}">direccion</div></div>
+        <div class="data-item"><div class="lbl">Rol</div><div class="val" th:text="${usuario.rol}">rol</div></div>
       </div>
     </div>
 
@@ -59,20 +59,38 @@
         <a th:href="@{/inicio}" style="font-size:.78rem;font-weight:800;color:var(--orange);text-decoration:none;">+ Agendar nueva cita</a>
       </div>
       <div class="citas-body">
-        <a th:href="@{/agendar-cita/1}" class="cita-row" th:each="cita : ${citas}">
+        <div th:if="${#lists.isEmpty(citas)}" style="padding:20px;text-align:center;color:#9CA3AF;">
+          No tienes citas agendadas aún.
+        </div>
+        <div class="cita-row" th:each="cita : ${citas}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #F3F4F6;text-decoration:none;">
           <div class="cita-dog-icon">🐶</div>
-          <div class="cita-info">
-            <div class="cita-dog" th:text="${cita.perro_nombre}">Perro</div>
-            <div class="cita-date">📅 <span th:text="${cita.fecha}">fecha</span> · <span th:text="${cita.hora}">hora</span> · 📍 <span th:text="${cita.sede}">sede</span></div>
+          <div class="cita-info" style="flex:1;">
+            <div class="cita-dog" th:text="${cita.perro.nombre}">Perro</div>
+            <div class="cita-date">
+              <!-- Si ya tiene fecha confirmada -->
+              <span th:if="${cita.fechaCita != null}">
+                📅 <span th:text="${cita.fechaCita}">fecha</span> · <span th:text="${cita.horaCita}">hora</span>
+              </span>
+              <!-- Si aún no tiene fecha -->
+              <span th:if="${cita.fechaCita == null}" style="color:#9CA3AF;">Sin fecha aún</span>
+            </div>
           </div>
-          <span class="cita-status" th:text="${cita.estado}">Estado</span>
-          <svg class="cita-arrow" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        </a>
+          <span class="cita-status" th:text="${cita.estado}"
+                th:style="${cita.estado.toString() == 'pre_aprobada' ? 'background:#D1FAE5;color:#065F46;padding:4px 10px;border-radius:999px;font-size:.72rem;font-weight:800;' :
+                           (cita.estado.toString() == 'confirmada'   ? 'background:#DBEAFE;color:#1E40AF;padding:4px 10px;border-radius:999px;font-size:.72rem;font-weight:800;' :
+                           (cita.estado.toString() == 'rechazada'    ? 'background:#FEE2E2;color:#991B1B;padding:4px 10px;border-radius:999px;font-size:.72rem;font-weight:800;' :
+                            'background:#FEF3C7;color:#92400E;padding:4px 10px;border-radius:999px;font-size:.72rem;font-weight:800;'))}">Estado</span>
+          <!-- Botón elegir horario solo si está pre_aprobada -->
+          <a th:if="${cita.estado.toString() == 'pre_aprobada'}"
+             th:href="@{/cita/{id}/elegir-horario(id=${cita.idCita})}"
+             style="background:#F97316;color:#fff;border-radius:8px;padding:7px 14px;font-size:.78rem;font-weight:800;text-decoration:none;white-space:nowrap;">
+            📅 Elegir horario
+          </a>
+        </div>
       </div>
     </div>
-
   </div>
 
-  <footer><p>© 2025 <span>Refugio Nueva Vida</span> · Todos los derechos reservados · Hecho con ❤️ para los perros</p></footer>
+  <footer><p>© 2025 <span>Refugio Nueva Vida</span> · Todos los derechos reservados</p></footer>
 </body>
 </html>

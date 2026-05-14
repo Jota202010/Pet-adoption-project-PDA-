@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,7 +14,7 @@
   <nav>
     <div class="nav-left">
       <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
-      <a href="#" class="btn-admin">Administrar</a>
+      <a th:href="@{/admin/panel}" class="btn-admin" sec:authorize="hasRole('administrador')">Administrar</a>
     </div>
     <div class="nav-right">
       <ul class="nav-links">
@@ -21,8 +22,12 @@
         <li><a th:href="@{/nosotros}" class="active">Nosotros</a></li>
         <li><a th:href="@{/mision}">Nuestra Misión</a></li>
       </ul>
-      <a th:href="@{/perfil}" class="btn-perfil">👤 Mi Perfil</a>
-      <a href="#" class="btn-nav">Iniciar Sesión</a>
+      <a th:href="@{/perfil}" class="btn-perfil" sec:authorize="isAuthenticated()">👤 Mi Perfil</a>
+      <form th:action="@{/logout}" method="post" style="display:inline;" sec:authorize="isAuthenticated()">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit" class="btn-nav">Cerrar Sesión</button>
+      </form>
+      <a th:href="@{/login}" class="btn-nav" sec:authorize="!isAuthenticated()">Iniciar Sesión</a>
     </div>
   </nav>
 

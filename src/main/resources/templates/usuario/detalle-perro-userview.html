@@ -1,18 +1,17 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title th:text="''+${nombre}+' — Refugio Nueva Vida'">Detalle Perro — Refugio Nueva Vida</title>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title th:text="${perro.nombre}+' — Refugio Nueva Vida'">Detalle Perro</title>
   <link rel="stylesheet" th:href="@{/css/detalle-perro-userview.css}"/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 </head>
 <body>
-
   <nav>
     <div class="nav-left">
       <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
-      <a th:href="@{/admin/panel}" class="btn-admin">Administrar</a>
+      <a th:href="@{/admin/panel}" class="btn-admin" sec:authorize="hasRole('administrador')">Administrar</a>
     </div>
     <div class="nav-right">
       <ul class="nav-links">
@@ -20,65 +19,77 @@
         <li><a th:href="@{/nosotros}">Nosotros</a></li>
         <li><a th:href="@{/mision}">Nuestra Misión</a></li>
       </ul>
-      <a th:href="@{/perfil}" class="btn-perfil">👤 Mi Perfil</a>
-      <a th:href="@{/login}" class="btn-nav">Iniciar Sesión</a>
+      <a th:href="@{/perfil}" class="btn-perfil" sec:authorize="isAuthenticated()">👤 Mi Perfil</a>
+      <form th:action="@{/logout}" method="post" style="display:inline;" sec:authorize="isAuthenticated()"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit" class="btn-nav">Cerrar Sesión</button>
+      </form>
+      <a th:href="@{/login}" class="btn-nav" sec:authorize="!isAuthenticated()">Iniciar Sesión</a>
     </div>
   </nav>
 
   <div class="breadcrumb">
-    <a th:href="@{/inicio}">Inicio</a>
-    <span>›</span>
-    <a th:href="@{/inicio}">Perros disponibles</a>
-    <span>›</span>
-    <span style="color:var(--text);" th:text="${nombre}">Nombre</span>
+    <a th:href="@{/inicio}">Inicio</a><span>›</span>
+    <a th:href="@{/inicio}">Perros disponibles</a><span>›</span>
+    <span style="color:var(--text);" th:text="${perro.nombre}">Nombre</span>
   </div>
 
   <div class="page-wrapper">
-
     <a th:href="@{/inicio}" class="back-link">
-      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-      Volver al listado
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Volver al listado
     </a>
 
     <div class="detail-card">
       <div class="detail-top">
-
         <div class="gallery">
+          <!-- Imagen principal — ocupa todo el espacio de la galería -->
           <div class="gallery-main">
-            <div class="gallery-placeholder">
+            <img th:if="${fotoPerfil != null}"
+                 th:src="${fotoPerfil.urlFoto}"
+                 id="fotoMain"
+                 style="width:100%;height:100%;object-fit:cover;display:block;"
+                 th:alt="${perro.nombre}"/>
+            <div th:if="${fotoPerfil == null}" class="gallery-placeholder">
               <span>🐶</span>
-              <p>Fotos de <span th:text="${nombre}">Nombre</span></p>
+              <p th:text="${perro.nombre}">Nombre</p>
             </div>
           </div>
-          <div class="estado-badge" th:text="${estado}">Estado</div>
-          <button class="gallery-btn prev" aria-label="Foto anterior">
+
+          <!-- Prev / Next: solo si hay más de 1 foto -->
+          <button th:if="${fotos != null and #lists.size(fotos) > 1}"
+                  type="button" class="gallery-btn prev" onclick="cambiarFoto(-1)">
             <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
           </button>
-          <button class="gallery-btn next" aria-label="Foto siguiente">
+          <button th:if="${fotos != null and #lists.size(fotos) > 1}"
+                  type="button" class="gallery-btn next" onclick="cambiarFoto(1)">
             <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
-          <div class="gallery-dots">
-            <div class="gallery-dot active"></div>
-            <div class="gallery-dot"></div>
-            <div class="gallery-dot"></div>
+
+          <!-- Dots indicadores -->
+          <div th:if="${fotos != null and #lists.size(fotos) > 1}" class="gallery-dots" id="galeriaDots">
+            <span th:each="foto,stat : ${fotos}"
+                  th:class="${stat.index == 0} ? 'gallery-dot active' : 'gallery-dot'"
+                  th:attr="data-idx=${stat.index}"
+                  onclick="irFoto(parseInt(this.getAttribute('data-idx')))"></span>
           </div>
+
+          <div class="estado-badge" th:text="${perro.estado}">Estado</div>
         </div>
 
         <div class="info-panel">
-          <h1 class="dog-name"><span class="dyn" th:text="${nombre}">Nombre</span></h1>
+          <h1 class="dog-name" th:text="${perro.nombre}">Nombre</h1>
           <div class="attrs-grid">
             <div class="attr-item">
               <div class="attr-icon">🎂</div>
               <div class="attr-content">
                 <span class="attr-label">Edad</span>
-                <span class="attr-value" th:text="${edad}">Edad</span>
+                <span class="attr-value" th:text="${perro.edad}">Edad</span>
               </div>
             </div>
             <div class="attr-item">
               <div class="attr-icon">⚧</div>
               <div class="attr-content">
                 <span class="attr-label">Sexo</span>
-                <span class="attr-value" th:text="${sexo}">Sexo</span>
+                <span class="attr-value" th:text="${perro.sexo}">Sexo</span>
               </div>
             </div>
             <div class="attr-item">
@@ -86,7 +97,8 @@
               <div class="attr-content">
                 <span class="attr-label">Salud</span>
                 <span class="attr-value">
-                  <span class="health-badge health-SANO" th:text="${nivel_salud}">Salud</span>
+                  <span th:class="'health-badge health-' + ${perro.nivelSalud}"
+                        th:text="${perro.nivelSalud}">Salud</span>
                 </span>
               </div>
             </div>
@@ -95,7 +107,8 @@
               <div class="attr-content">
                 <span class="attr-label">Sociabilidad</span>
                 <span class="attr-value">
-                  <span class="social-badge social-ALTA" th:text="${sociabilidad}">Sociabilidad</span>
+                  <span th:class="'social-badge social-' + ${perro.sociabilidad}"
+                        th:text="${perro.sociabilidad}">Sociabilidad</span>
                 </span>
               </div>
             </div>
@@ -103,14 +116,18 @@
               <div class="attr-icon">✂️</div>
               <div class="attr-content">
                 <span class="attr-label">Esterilizado</span>
-                <span class="attr-value" th:text="${esterilizado}">Esterilizado</span>
+                <span class="attr-value"
+                      th:class="${perro.esterilizado} ? 'attr-value check-yes' : 'attr-value check-no'"
+                      th:text="${perro.esterilizado} ? 'Sí' : 'No'">-</span>
               </div>
             </div>
             <div class="attr-item">
               <div class="attr-icon">💉</div>
               <div class="attr-content">
                 <span class="attr-label">Vacunado</span>
-                <span class="attr-value" th:text="${vacunado}">Vacunado</span>
+                <span class="attr-value"
+                      th:class="${perro.vacunado} ? 'attr-value check-yes' : 'attr-value check-no'"
+                      th:text="${perro.vacunado} ? 'Sí' : 'No'">-</span>
               </div>
             </div>
           </div>
@@ -118,22 +135,56 @@
       </div>
 
       <div class="desc-section">
-        <div class="desc-label">Sobre <span style="color:var(--blue-dyn); font-style:normal;" th:text="${nombre}">Nombre</span></div>
-        <p class="desc-text" th:text="${descripcion}">Descripción del perro.</p>
+        <div class="desc-label">Sobre <span style="color:var(--blue-dyn);" th:text="${perro.nombre}">Nombre</span></div>
+        <p class="desc-text" th:text="${perro.descripcion}">Descripción del perro.</p>
       </div>
 
       <div class="action-bar">
-        <a th:href="@{/agendar-cita/1}" class="btn-adoptar">
+        <!-- Si está logueado puede agendar, si no lo manda a login -->
+        <a th:href="@{/agendar-cita/{id}(id=${perro.idPerro})}"
+           sec:authorize="isAuthenticated()"
+           class="btn-adoptar">
           <span class="btn-icon">📅</span> Agendar Cita
         </a>
+        <a th:href="@{/login}"
+           sec:authorize="!isAuthenticated()"
+           class="btn-adoptar">
+          <span class="btn-icon">🔐</span> Inicia sesión para agendar
+        </a>
       </div>
-
     </div>
   </div>
 
-  <footer>
-    <p>© 2025 <span>Refugio Nueva Vida</span> · Todos los derechos reservados · Hecho con ❤️ para los perros</p>
-  </footer>
+  <footer><p>© 2025 <span>Refugio Nueva Vida</span> · Todos los derechos reservados · Hecho con ❤️ para los perros</p></footer>
 
+  <script th:inline="javascript">
+    /* ── Carrusel fotos ───────────────────────────────────────── */
+    var thumbs  = Array.from(document.querySelectorAll('[data-idx]'));   // dots
+    var total   = thumbs.length;
+    if (!Array.isArray(fotosUrls)) {
+    fotosUrls = [];
+}
+    var current = 0;
+    // Recopilar las URLs desde los dots usando data-src inyectado en Thymeleaf
+    // En su lugar leemos las URLs de los atributos del HTML ya que los dots
+    // no tienen src — necesitamos las fotos del servidor como array JS.
+    // Las fotos se inyectan como array desde Thymeleaf inline:
+    var fotosUrls = /*[[${fotos != null ? fotos.![urlFoto] : null}]]*/ [];
+
+    function irFoto(idx) {
+      if (total === 0) return;
+      current = (idx + total) % total;
+      var mainImg = document.getElementById('fotoMain');
+      if (mainImg && fotosUrls[current]) {
+        mainImg.src = fotosUrls[current];
+        mainImg.style.display = 'block';
+      }
+      thumbs.forEach(function(dot, i) {
+        dot.className = i === current ? 'gallery-dot active' : 'gallery-dot';
+      });
+    }
+
+    function cambiarFoto(dir) { irFoto(current + dir); }
+  </script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+              xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Panel Admin — Refugio Nueva Vida</title>
@@ -14,7 +15,9 @@
     </div>
     <div class="nav-right">
       <a th:href="@{/admin/perfil}" class="btn-perfil-nav">👤 Mi Perfil</a>
-      <a th:href="@{/inicio}" class="btn-exit">← Salir de Admin</a>
+      <form th:action="@{/logout}" method="post" style="display:inline;"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit" class="btn-exit">Cerrar Sesión</button>
+      </form>
     </div>
   </nav>
 
@@ -22,42 +25,32 @@
     <h1 class="page-title">Panel de Administración</h1>
     <p class="page-subtitle">Gestiona los perros, usuarios y citas del refugio desde aquí.</p>
 
-    <!-- ── Mensaje de éxito tras registrar perro ─── -->
-    <div th:if="${mensajeExito}" style="
-        background:#D1FAE5;border:1px solid #6EE7B7;border-radius:10px;
-        padding:14px 20px;margin-bottom:20px;font-weight:700;color:#065F46;
-        display:flex;align-items:center;gap:10px;">
+    <!-- Mensaje de éxito -->
+    <div th:if="${mensajeExito}" style="background:#D1FAE5;border:1px solid #6EE7B7;border-radius:10px;padding:14px 20px;margin-bottom:20px;font-weight:700;color:#065F46;display:flex;align-items:center;gap:10px;">
       ✅ <span th:text="${mensajeExito}"></span>
+    </div>
+    <!-- Mensaje de error (ej: horario no eliminable) -->
+    <div th:if="${errorMsg}" style="background:#FEE2E2;border:1px solid #FCA5A5;border-radius:10px;padding:14px 20px;margin-bottom:20px;font-weight:700;color:#991B1B;display:flex;align-items:center;gap:10px;">
+      ⚠️ <span th:text="${errorMsg}"></span>
     </div>
 
     <div class="stats-row">
-      <div class="stat-card"><div class="stat-icon dogs">🐶</div><div class="stat-text"><div class="num" th:text="${totalPerros}">0</div><div class="lbl">Perros activos en el refugio</div></div></div>
+      <div class="stat-card"><div class="stat-icon dogs">🐶</div><div class="stat-text"><div class="num" th:text="${totalPerros}">0</div><div class="lbl">Perros en el refugio</div></div></div>
       <div class="stat-card"><div class="stat-icon users">👥</div><div class="stat-text"><div class="num" th:text="${totalUsuarios}">0</div><div class="lbl">Usuarios registrados</div></div></div>
-      <div class="stat-card"><div class="stat-icon citas">📅</div><div class="stat-text"><div class="num" th:text="${citasPendientes}">0</div><div class="lbl">Citas pendientes esta semana</div></div></div>
+      <div class="stat-card"><div class="stat-icon citas">📅</div><div class="stat-text"><div class="num" th:text="${citasPendientes}">0</div><div class="lbl">Citas activas</div></div></div>
     </div>
 
     <div class="panel-grid">
-
-      <!-- ── Lista de perros (DESDE LA BASE DE DATOS) ─── -->
+      <!-- Lista de perros -->
       <div class="panel-card">
         <div class="panel-card-header">
           <span class="panel-card-title">🐶 Lista de perros</span>
           <span class="panel-card-count" th:text="${totalPerros}+' perros'">0 perros</span>
         </div>
-        <div class="panel-search">
-          <input type="text" placeholder="Buscar perro por nombre…"/>
-          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <div th:if="${#lists.isEmpty(perros)}" style="padding:24px;text-align:center;color:#9CA3AF;font-size:.9rem;">
+          Aún no hay perros. ¡Agrega el primero!
         </div>
-
-        <!-- Sin perros registrados aún -->
-        <div th:if="${#lists.isEmpty(perros)}" style="padding:24px 16px;text-align:center;color:#9CA3AF;font-size:.9rem;">
-          Aún no hay perros registrados. ¡Agrega el primero! 🐶
-        </div>
-
-        <!-- Lista dinámica desde BD -->
-        <a th:each="perro : ${perros}"
-           th:href="@{/admin/mascota/{id}(id=${perro.idPerro})}"
-           class="list-item">
+        <a th:each="perro : ${perros}" th:href="@{/admin/mascota/{id}(id=${perro.idPerro})}" class="list-item">
           <div class="item-avatar">🐶</div>
           <div class="item-info">
             <div class="item-name" th:text="${perro.nombre}">Nombre</div>
@@ -72,56 +65,123 @@
         </a>
       </div>
 
-      <!-- ── Lista de usuarios ─── -->
+      <!-- Lista de usuarios -->
       <div class="panel-card">
         <div class="panel-card-header">
           <span class="panel-card-title">👥 Usuarios registrados</span>
           <span class="panel-card-count" th:text="${totalUsuarios}+' usuarios'">0 usuarios</span>
         </div>
-        <div class="panel-search">
-          <input type="text" placeholder="Buscar usuario por nombre o email…"/>
-          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        </div>
-        <a th:href="@{/admin/usuario/1}" class="list-item" th:each="usuario : ${usuarios}">
+        <a th:each="u : ${usuarios}" th:href="@{/admin/usuario/{id}(id=${u.idUsuario})}" class="list-item">
           <div class="item-avatar user">👤</div>
           <div class="item-info">
-            <div class="item-name" th:text="${usuario.nombre}">Nombre</div>
-            <div class="item-sub"><span th:text="${usuario.email}">email</span> · Reg. <span th:text="${usuario.fecha_registro}">fecha</span></div>
+            <div class="item-name" th:text="${u.nombre}">Nombre</div>
+            <div class="item-sub"><span th:text="${u.email}">email</span> · <span th:text="${u.rol}">rol</span></div>
           </div>
           <svg class="item-arrow" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
         </a>
       </div>
     </div>
 
-    <!-- ── Tabla de citas ─── -->
-    <div class="panel-card" style="grid-column:1/-1;margin-top:0;">
+    <!-- Tabla de citas -->
+    <div class="panel-card" style="margin-top:0;">
       <div class="panel-card-header">
         <span class="panel-card-title">📅 Citas agendadas</span>
-        <span class="panel-card-count">Todas las citas</span>
+        <span class="panel-card-count" th:text="${#lists.size(citas)}+' citas'">0 citas</span>
       </div>
-      <table style="width:100%;border-collapse:collapse;font-size:.87rem;">
+      <div th:if="${#lists.isEmpty(citas)}" style="padding:24px;text-align:center;color:#9CA3AF;">Sin citas aún.</div>
+      <table th:if="${not #lists.isEmpty(citas)}" style="width:100%;border-collapse:collapse;font-size:.87rem;">
         <thead>
           <tr style="background:#F3F4F6;">
             <th style="padding:10px 16px;text-align:left;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#6B7280;border-bottom:2px solid #D1D5DB;">Persona</th>
             <th style="padding:10px 16px;text-align:left;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#6B7280;border-bottom:2px solid #D1D5DB;">Perro</th>
-            <th style="padding:10px 16px;text-align:left;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#6B7280;border-bottom:2px solid #D1D5DB;">Fecha y hora</th>
+            <th style="padding:10px 16px;text-align:left;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#6B7280;border-bottom:2px solid #D1D5DB;">Fecha</th>
             <th style="padding:10px 16px;text-align:left;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#6B7280;border-bottom:2px solid #D1D5DB;">Estado</th>
-            <th style="padding:10px 16px;text-align:center;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#6B7280;border-bottom:2px solid #D1D5DB;">Detalle</th>
+            <th style="padding:10px 16px;text-align:center;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#6B7280;border-bottom:2px solid #D1D5DB;">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr style="border-bottom:1px solid #F3F4F6;" th:each="cita : ${citas}">
+          <tr th:each="cita : ${citas}" style="border-bottom:1px solid #F3F4F6;">
             <td style="padding:12px 16px;">
               <span style="font-weight:800;color:#1F2937;" th:text="${cita.usuario.nombre}">Nombre</span><br/>
               <span style="font-size:.75rem;color:#6B7280;" th:text="${cita.usuario.email}">email</span>
             </td>
-            <td style="padding:12px 16px;"><span style="font-weight:800;color:#F97316;">🐶 <span th:text="${cita.perro.nombre}">Perro</span></span></td>
-            <td style="padding:12px 16px;color:#6B7280;font-weight:600;"><span th:text="${cita.fecha}">fecha</span> · <span th:text="${cita.hora}">hora</span></td>
-            <td style="padding:12px 16px;"><span style="display:inline-block;font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:999px;background:#FEF3C7;color:#92400E;" th:text="${cita.estado}">Estado</span></td>
-            <td style="padding:12px 16px;text-align:center;"><a th:href="@{/admin/cita/1}" style="display:inline-flex;align-items:center;gap:5px;background:#F3F4F6;border:1px solid #D1D5DB;border-radius:7px;padding:6px 14px;font-size:.78rem;font-weight:800;color:#1F2937;text-decoration:none;">Ver cita <svg viewBox="0 0 24 24" width="12" height="12" style="stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="9 18 15 12 9 6"/></svg></a></td>
+            <td style="padding:12px 16px;font-weight:800;color:#F97316;">🐶 <span th:text="${cita.perro.nombre}">Perro</span></td>
+            <td style="padding:12px 16px;color:#6B7280;font-weight:600;" th:text="${cita.fechaCita}">fecha</td>
+            <td style="padding:12px 16px;">
+              <span th:text="${cita.estado}"
+                    th:style="${cita.estado.name() == 'confirmada'}   ? 'display:inline-block;font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:999px;background:#DBEAFE;color:#1E40AF;' :
+                               (${cita.estado.name() == 'pre_aprobada'} ? 'display:inline-block;font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:999px;background:#D1FAE5;color:#065F46;' :
+                               (${cita.estado.name() == 'rechazada'}   ? 'display:inline-block;font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:999px;background:#FEE2E2;color:#991B1B;' :
+                                                                          'display:inline-block;font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:999px;background:#FEF3C7;color:#92400E;'))">Estado</span>
+            </td>
+            <td style="padding:12px 16px;text-align:center;display:flex;gap:6px;justify-content:center;">
+              <a th:href="@{/admin/cita/{id}(id=${cita.idCita})}" style="background:#F3F4F6;border:1px solid #D1D5DB;border-radius:7px;padding:5px 12px;font-size:.78rem;font-weight:800;color:#1F2937;text-decoration:none;">Ver</a>
+              <form th:if="${cita.estado.name() != 'pre_aprobada'}"
+                    th:action="@{/admin/cita/{id}/pre-aprobar(id=${cita.idCita})}" method="post" style="display:inline;">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" style="background:#D1FAE5;border:1px solid #6EE7B7;border-radius:7px;padding:5px 12px;font-size:.78rem;font-weight:800;color:#065F46;cursor:pointer;" title="Pre-aprobar">✓ Pre-aprobar</button>
+              </form>
+              <span th:if="${cita.estado.name() == 'pre_aprobada'}"
+                    style="background:#D1FAE5;border:1px solid #6EE7B7;border-radius:7px;padding:5px 12px;font-size:.72rem;font-weight:800;color:#065F46;">✅ Pre-aprobada</span>
+              <form th:if="${cita.estado.name() != 'confirmada' and cita.estado.name() != 'rechazada'}"
+                    th:action="@{/admin/cita/{id}/rechazar(id=${cita.idCita})}" method="post" style="display:inline;"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" style="background:#FEE2E2;border:1px solid #FCA5A5;border-radius:7px;padding:5px 12px;font-size:.78rem;font-weight:800;color:#991B1B;cursor:pointer;">✗</button>
+              </form>
+            </td>
           </tr>
         </tbody>
       </table>
+    </div>
+
+    
+    <!-- Gestión de horarios disponibles -->
+    <div class="panel-card" style="margin-top:0;">
+      <div class="panel-card-header">
+        <span class="panel-card-title">🕐 Horarios disponibles</span>
+        <span class="panel-card-count" th:text="${#lists.size(horarios)}+' disponibles'">0</span>
+      </div>
+
+      <!-- Formulario para crear nuevo horario -->
+      <form th:action="@{/admin/horario/crear}" method="post"
+            style="display:flex;gap:12px;align-items:flex-end;padding:16px;background:#F9FAFB;border-bottom:1px solid #E5E7EB;flex-wrap:wrap;">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <div>
+          <label style="display:block;font-size:.72rem;font-weight:800;color:#6B7280;text-transform:uppercase;margin-bottom:4px;">Fecha</label>
+          <input type="date" name="fecha" required
+                 style="border:1px solid #D1D5DB;border-radius:8px;padding:8px 12px;font-size:.9rem;"/>
+        </div>
+        <div>
+          <label style="display:block;font-size:.72rem;font-weight:800;color:#6B7280;text-transform:uppercase;margin-bottom:4px;">Hora</label>
+          <input type="time" name="hora" required
+                 style="border:1px solid #D1D5DB;border-radius:8px;padding:8px 12px;font-size:.9rem;"/>
+        </div>
+        <button type="submit"
+                style="background:#F97316;color:#fff;border:none;border-radius:8px;padding:9px 18px;font-weight:800;cursor:pointer;font-size:.87rem;">
+          + Agregar horario
+        </button>
+      </form>
+
+      <!-- Lista de horarios disponibles -->
+      <div th:if="${#lists.isEmpty(horarios)}"
+           style="padding:20px;text-align:center;color:#9CA3AF;font-size:.9rem;">
+        No hay horarios disponibles. Agrega uno arriba.
+      </div>
+      <div th:each="h : ${horarios}"
+           style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #F3F4F6;">
+        <div>
+          <span style="font-weight:800;color:#1F2937;">📅 <span th:text="${h.fecha}">fecha</span></span>
+          <span style="margin-left:12px;font-weight:800;color:#F97316;">🕐 <span th:text="${h.hora}">hora</span></span>
+          <span style="margin-left:12px;font-size:.75rem;font-weight:700;color:#10B981;">✅ Libre</span>
+        </div>
+        <form th:action="@{/admin/horario/{id}/eliminar(id=${h.idHorario})}" method="post" style="display:inline;"
+              onsubmit="return confirm('¿Eliminar este horario?')">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+          <button type="submit"
+                  style="background:#FEE2E2;border:1px solid #FCA5A5;border-radius:7px;padding:5px 12px;font-size:.78rem;font-weight:800;color:#991B1B;cursor:pointer;">
+            🗑 Eliminar
+          </button>
+        </form>
+      </div>
     </div>
 
     <div class="add-dog-section">
@@ -130,7 +190,6 @@
         Agregar nueva mascota al refugio
       </a>
     </div>
-
   </div>
 
   <footer><p>© 2025 <span>Refugio Nueva Vida</span> · Panel de Administración</p></footer>

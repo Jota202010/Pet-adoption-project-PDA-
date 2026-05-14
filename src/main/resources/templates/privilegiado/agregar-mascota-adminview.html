@@ -24,7 +24,8 @@
     </a>
     <div class="admin-banner">⚙ <span>Estás <strong>agregando una nueva mascota</strong> al refugio. Completa todos los campos requeridos y guarda para publicar.</span></div>
 
-    <form th:action="@{/admin/agregar-mascota}" th:object="${perro}" method="post" class="form-card">
+    <form th:action="@{/admin/agregar-mascota}" th:object="${perro}" method="post" enctype="multipart/form-data" class="form-card">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
       <!-- Header -->
       <div class="card-top">
@@ -156,6 +157,21 @@
             <textarea class="form-textarea" id="registroMedico" th:field="*{registroMedico}"
                       placeholder="Diagnósticos, tratamientos, procedimientos, vacunas aplicadas, alergias conocidas…"></textarea>
           </div>
+        </div>
+      </div>
+
+      <!-- Fotos -->
+      <div class="form-section">
+        <div class="section-title"><span>📷 Fotos del perro (opcional)</span></div>
+        <div style="background:#F9FAFB;border:1.5px dashed #D1D5DB;border-radius:12px;padding:18px;">
+          <p style="font-size:.82rem;color:#6B7280;font-weight:500;margin-bottom:12px;">Puedes agregar fotos ahora o después desde el perfil del perro.</p>
+          <input type="file" name="archivos" multiple accept="image/*"
+                 style="font-size:.85rem;display:block;width:100%;margin-bottom:12px;"/>
+          <label style="display:flex;align-items:center;gap:10px;font-size:.85rem;font-weight:600;cursor:pointer;">
+            <input type="checkbox" name="esPerfil" value="true"
+                   style="width:18px;height:18px;accent-color:#F97316;"/>
+            Primera imagen como foto de perfil
+          </label>
         </div>
       </div>
 

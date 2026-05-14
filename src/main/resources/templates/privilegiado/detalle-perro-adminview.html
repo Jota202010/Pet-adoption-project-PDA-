@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title th:text="'Admin — '+${nombre}+' — Refugio Nueva Vida'">Admin — Detalle Perro — Refugio Nueva Vida</title>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title th:text="'Admin — '+${perro.nombre}+' — Refugio Nueva Vida'">Admin — Detalle Perro</title>
   <link rel="stylesheet" th:href="@{/css/detalle-perro-adminview.css}"/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 </head>
 <body>
   <nav>
@@ -14,209 +13,369 @@
       <span class="admin-badge">⚙ Panel Admin</span>
     </div>
     <div class="nav-right">
-      <ul class="nav-links">
-        <li><a th:href="@{/inicio}">Inicio</a></li>
-        <li><a th:href="@{/nosotros}">Nosotros</a></li>
-        <li><a th:href="@{/mision}">Nuestra Misión</a></li>
-      </ul>
       <a th:href="@{/admin/perfil}" class="btn-perfil-nav">👤 Mi Perfil</a>
-      <a th:href="@{/inicio}" class="btn-exit">← Salir de Admin</a>
+      <a th:href="@{/admin/panel}" class="btn-exit">← Volver al panel</a>
     </div>
   </nav>
 
   <div class="breadcrumb">
-    <a th:href="@{/inicio}">Inicio</a>
-    <span>›</span>
-    <a th:href="@{/admin/panel}">Gestión de perros</a>
-    <span>›</span>
-    <span style="color:var(--text);" th:text="${nombre}">Nombre</span>
+    <a th:href="@{/inicio}">Inicio</a><span>›</span>
+    <a th:href="@{/admin/panel}">Gestión de perros</a><span>›</span>
+    <span style="color:var(--text);" th:text="${perro.nombre}">Nombre</span>
   </div>
 
   <div class="page-wrapper">
     <a th:href="@{/admin/panel}" class="back-link">
-      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-      Volver a gestión de perros
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Volver a gestión de perros
     </a>
 
-    <div class="admin-banner">
-      ⚙ <span>Estás editando el perfil de <strong th:text="${nombre}">Nombre</strong> como administrador.</span>
+    <!-- Mensaje de éxito tras guardar -->
+    <div th:if="${mensajeExito}"
+         id="successToast"
+         style="background:#D1FAE5;border:1px solid #6EE7B7;border-radius:12px;
+                padding:14px 20px;margin-bottom:20px;font-weight:700;color:#065F46;
+                display:flex;align-items:center;gap:10px;animation:fadeUp .3s ease both;">
+      ✅ <span th:text="${mensajeExito}"></span>
     </div>
 
-    <div class="detail-card">
+    <div class="admin-banner">
+      ⚙ <span>Estás viendo el perfil de <strong th:text="${perro.nombre}">Nombre</strong> como administrador.</span>
+    </div>
+
+    <!-- FORMULARIO EDITAR PERRO -->
+    <form th:action="@{/admin/mascota/{id}/editar(id=${perro.idPerro})}"
+          th:object="${perro}"
+          method="post"
+          enctype="multipart/form-data"
+          class="detail-card">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
       <div class="detail-top">
         <div class="gallery">
-          <div class="gallery-main">
-            <div class="gallery-placeholder">
-              <span>🐶</span>
-              <p>Fotos de <span th:text="${nombre}">Nombre</span></p>
+          <!-- Foto principal — usa fotoPerfil (o primera disponible), no fotos[0] -->
+          <div id="fotoContainer" style="border-radius:14px;overflow:hidden;background:#1F2937;height:260px;width:100%;position:relative;">
+            <img th:if="${fotoPerfil != null}"
+                 th:src="${fotoPerfil.urlFoto}"
+                 id="fotoMainAdmin"
+                 style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;"
+                 alt="foto del perro"/>
+            <div th:if="${fotoPerfil == null}"
+                 style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#9CA3AF;">
+              <div style="font-size:3rem;">🐶</div>
+              <p style="font-size:.8rem;margin-top:6px;">Sin fotos aún</p>
             </div>
           </div>
-          <div class="estado-badge" th:text="${estado}">Estado</div>
-          <button class="gallery-btn prev"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
-          <button class="gallery-btn next"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
-          <div class="gallery-dots">
-            <div class="gallery-dot active"></div>
-            <div class="gallery-dot"></div>
-            <div class="gallery-dot"></div>
+
+          <!-- Miniaturas con botón eliminar — clicks disparan forms externos -->
+          <div th:if="${fotos != null and not #lists.isEmpty(fotos)}"
+               style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
+            <div th:each="foto : ${fotos}"
+                 th:style="${foto.esPerfil} ? 'position:relative;width:60px;height:60px;border-radius:8px;overflow:hidden;border:2px solid #F97316;' : 'position:relative;width:60px;height:60px;border-radius:8px;overflow:hidden;border:2px solid #E5E7EB;'">
+              <img th:src="${foto.urlFoto}"
+                   onclick="document.getElementById('fotoMainAdmin') ? document.getElementById('fotoMainAdmin').src=this.src : null"
+                   style="width:100%;height:100%;object-fit:cover;cursor:pointer;"
+                   alt="miniatura"/>
+              <!-- Badge ⭐ en la foto de perfil -->
+              <div th:if="${foto.esPerfil}"
+                   style="position:absolute;bottom:0;left:0;right:0;background:rgba(249,115,22,.85);
+                          text-align:center;font-size:9px;font-weight:800;color:#fff;padding:2px 0;">⭐</div>
+              <button type="button"
+                      th:attr="data-foto-id=${foto.idFoto},data-perro-id=${perro.idPerro}"
+                      onclick="if(confirm('¿Eliminar esta foto?')) submitFotoDelete(this)"
+                      style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,.75);
+                             border:none;border-radius:4px;color:#fff;font-size:10px;
+                             width:18px;height:18px;cursor:pointer;padding:0;line-height:1;">✕</button>
+            </div>
           </div>
-          <button class="gallery-edit-btn">
-            <svg viewBox="0 0 24 24" width="13" height="13" style="stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            Modificar fotos
-          </button>
+
+          <!-- Subir fotos (dentro del form principal) -->
+          <div style="margin-top:12px;background:#F9FAFB;border:1.5px dashed #D1D5DB;border-radius:10px;padding:14px;">
+            <p style="font-size:.72rem;font-weight:800;color:#6B7280;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;">📷 Agregar fotos</p>
+            <input type="file" name="archivos" multiple accept="image/*"
+                   id="fotoFileInput"
+                   style="font-size:.8rem;display:block;width:100%;margin-bottom:10px;"
+                   onchange="previewFotos(this)"/>
+
+            <!-- Carrusel de previsualización -->
+            <div id="previewCarousel" style="display:none;margin-bottom:10px;">
+              <!-- Imagen grande activa -->
+              <div style="position:relative;width:100%;height:160px;border-radius:8px;overflow:hidden;background:#1F2937;margin-bottom:6px;">
+                <img id="previewMainImg" src="" alt="preview"
+                     style="width:100%;height:100%;object-fit:cover;display:block;"/>
+                <!-- Contador -->
+                <div id="previewCounter"
+                     style="position:absolute;top:6px;right:8px;background:rgba(0,0,0,.6);
+                            color:#fff;font-size:.7rem;font-weight:800;border-radius:20px;padding:2px 8px;">
+                  1 / 1
+                </div>
+                <!-- Botones prev / next -->
+                <button type="button" onclick="prevPreview()"
+                        style="position:absolute;left:6px;top:50%;transform:translateY(-50%);
+                               background:rgba(0,0,0,.5);border:none;border-radius:50%;
+                               width:28px;height:28px;color:#fff;cursor:pointer;font-size:14px;line-height:1;">‹</button>
+                <button type="button" onclick="nextPreview()"
+                        style="position:absolute;right:6px;top:50%;transform:translateY(-50%);
+                               background:rgba(0,0,0,.5);border:none;border-radius:50%;
+                               width:28px;height:28px;color:#fff;cursor:pointer;font-size:14px;line-height:1;">›</button>
+              </div>
+              <!-- Miniaturas de navegación -->
+              <div id="previewThumbs" style="display:flex;gap:5px;flex-wrap:wrap;"></div>
+            </div>
+
+            <label style="display:flex;align-items:center;gap:8px;font-size:.8rem;font-weight:600;cursor:pointer;">
+              <input type="checkbox" name="esPerfil" value="true"
+                     style="width:15px;height:15px;accent-color:#F97316;"/>
+              Primera imagen como foto de perfil
+            </label>
+            <p style="font-size:.7rem;color:#9CA3AF;margin-top:6px;">Se sube al dar "Guardar cambios"</p>
+          </div>
+
+          <div class="estado-badge" th:text="${perro.estado}" style="margin-top:10px;">Estado</div>
         </div>
 
         <div class="info-panel">
-          <div class="field-row" style="margin-bottom:8px;">
-            <h1 class="dog-name"><span class="dyn" th:text="${nombre}">Nombre</span></h1>
+          <!-- Nombre editable -->
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label" style="font-size:.72rem;font-weight:800;color:#6B7280;text-transform:uppercase;">Nombre</label>
+            <input class="form-input" type="text" th:field="*{nombre}" required style="font-size:1.4rem;font-weight:800;padding:10px 14px;"/>
           </div>
 
-          <div class="status-pills">
-            <div class="field-row" style="gap:6px;">
-              <span class="status-pill pill-adoptado-no">Estado adopción: <span style="color:var(--blue-dyn);font-weight:800;" th:text="${adoptado}">No</span></span>
+          <!-- Visibilidad pública -->
+          <div style="background:linear-gradient(135deg,#1F2937 0%,#111827 100%);border-radius:14px;padding:20px 22px;margin:16px 0;border:2px solid var(--orange);">
+            <p style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:10px;">¿Publicar en adopciones?</p>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <input type="checkbox" id="listaParaAdoptar" th:field="*{listaParaAdoptar}"
+                     style="width:20px;height:20px;cursor:pointer;accent-color:#F97316;"/>
+              <label for="listaParaAdoptar" style="color:#D1D5DB;font-weight:600;cursor:pointer;">Visible en la pantalla de inicio</label>
             </div>
           </div>
 
-          <div style="background:linear-gradient(135deg,#1F2937 0%,#111827 100%);border-radius:14px;padding:20px 22px;margin:16px 0 20px;border:2px solid var(--orange);position:relative;overflow:hidden;">
-            <div style="position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
-              <div>
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-                  <span style="background:var(--orange);color:#fff;font-size:.65rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:999px;">🌐 Visibilidad pública</span>
-                </div>
-                <p style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:4px;">¿Publicar en adopciones?</p>
-                <p style="font-size:.78rem;color:#9CA3AF;font-weight:600;line-height:1.4;">Al activar esta opción, <span style="color:var(--orange-mid);font-weight:800;" th:text="${nombre}">Nombre</span> aparecerá en la pantalla de inicio.</p>
-              </div>
-              <div style="display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;">
-                <label style="position:relative;width:64px;height:34px;cursor:pointer;display:block;">
-                  <input type="checkbox" style="opacity:0;width:0;height:0;position:absolute;">
-                  <span style="position:absolute;inset:0;background:#374151;border-radius:999px;transition:background .25s;border:2px solid #4B5563;">
-                    <span style="position:absolute;width:26px;height:26px;left:2px;top:50%;transform:translateY(-50%);background:#fff;border-radius:50%;transition:transform .25s;box-shadow:0 2px 6px rgba(0,0,0,.3);"></span>
-                  </span>
-                </label>
-                <span style="font-size:.72rem;font-weight:800;color:var(--blue-dyn);letter-spacing:.5px;" th:text="${listaParaAdoptar}">Estado</span>
-              </div>
-            </div>
-          </div>
-
+          <!-- Atributos editables -->
           <div class="attrs-grid">
             <div class="attr-item">
               <div class="attr-icon">🎂</div>
               <div class="attr-content">
                 <span class="attr-label">Edad</span>
-                <span class="attr-value" th:text="${edad}">Edad</span>
+                <input class="form-input" type="text" th:field="*{edad}" placeholder="Ej: 2 años" style="font-size:.85rem;padding:6px 10px;"/>
               </div>
             </div>
             <div class="attr-item">
               <div class="attr-icon">⚧</div>
               <div class="attr-content">
                 <span class="attr-label">Sexo</span>
-                <span class="attr-value" th:text="${sexo}">Sexo</span>
+                <select class="form-select" th:field="*{sexo}" style="font-size:.85rem;padding:6px 10px;">
+                  <option th:each="s : ${sexos}" th:value="${s}" th:text="${s}"></option>
+                </select>
               </div>
             </div>
             <div class="attr-item">
               <div class="attr-icon">🏷️</div>
               <div class="attr-content">
                 <span class="attr-label">Estado</span>
-                <span class="attr-value" th:text="${estado}">Estado</span>
+                <select class="form-select" th:field="*{estado}" style="font-size:.85rem;padding:6px 10px;">
+                  <option th:each="e : ${estados}" th:value="${e}" th:text="${e}"></option>
+                </select>
               </div>
             </div>
             <div class="attr-item">
               <div class="attr-icon">🩺</div>
               <div class="attr-content">
                 <span class="attr-label">Salud</span>
-                <span class="attr-value"><span class="health-badge health-SANO" th:text="${nivel_salud}">Salud</span></span>
+                <select class="form-select" th:field="*{nivelSalud}" style="font-size:.85rem;padding:6px 10px;">
+                  <option th:each="n : ${nivelesS}" th:value="${n}" th:text="${n}"></option>
+                </select>
               </div>
             </div>
             <div class="attr-item">
               <div class="attr-icon">🐾</div>
               <div class="attr-content">
                 <span class="attr-label">Sociabilidad</span>
-                <span class="attr-value"><span class="social-badge social-ALTA" th:text="${sociabilidad}">Sociabilidad</span></span>
+                <select class="form-select" th:field="*{sociabilidad}" style="font-size:.85rem;padding:6px 10px;">
+                  <option th:each="sc : ${sociabilidades}" th:value="${sc}" th:text="${sc}"></option>
+                </select>
               </div>
             </div>
             <div class="attr-item">
               <div class="attr-icon">✂️</div>
               <div class="attr-content">
                 <span class="attr-label">Esterilizado</span>
-                <span class="attr-value" th:text="${esterilizado}">Esterilizado</span>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+                  <input type="checkbox" id="esterilizado" th:field="*{esterilizado}"
+                         style="width:18px;height:18px;cursor:pointer;accent-color:#F97316;"/>
+                  <label for="esterilizado" style="font-size:.85rem;cursor:pointer;">Sí</label>
+                </div>
               </div>
             </div>
             <div class="attr-item">
               <div class="attr-icon">💉</div>
               <div class="attr-content">
                 <span class="attr-label">Vacunado</span>
-                <span class="attr-value" th:text="${vacunado}">Vacunado</span>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+                  <input type="checkbox" id="vacunado" th:field="*{vacunado}"
+                         style="width:18px;height:18px;cursor:pointer;accent-color:#F97316;"/>
+                  <label for="vacunado" style="font-size:.85rem;cursor:pointer;">Sí</label>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- Descripción editable -->
       <div class="desc-section">
-        <div class="section-header-row">
-          <div class="desc-label">Descripción de <span style="color:var(--blue-dyn);font-style:normal;margin-left:4px;" th:text="${nombre}">Nombre</span></div>
-        </div>
-        <p class="desc-text" th:text="${descripcion}">Descripción del perro.</p>
+        <div class="desc-label">Descripción de <span style="color:var(--blue-dyn);" th:text="${perro.nombre}">Nombre</span></div>
+        <textarea class="form-textarea" th:field="*{descripcion}" style="min-height:120px;width:100%;margin-top:10px;border-radius:10px;border:1px solid #E5E7EB;padding:12px;font-family:inherit;font-size:.9rem;" placeholder="Descripción del perro..."></textarea>
       </div>
 
+      <!-- Registro médico editable -->
+      <div class="desc-section">
+        <div class="desc-label">📋 Registro médico (interno)</div>
+        <textarea class="form-textarea" th:field="*{registroMedico}" style="min-height:90px;width:100%;margin-top:10px;border-radius:10px;border:1px solid #E5E7EB;padding:12px;font-family:inherit;font-size:.9rem;" placeholder="Notas médicas internas..."></textarea>
+      </div>
+
+      <!-- Citas del perro -->
       <div class="citas-section">
         <div class="citas-header-row">
           <div>
-            <div class="citas-title">Citas agendadas con <span style="color:var(--blue-dyn);" th:text="${nombre}">Nombre</span></div>
-            <p style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">Personas interesadas en adoptar o conocer a este perro</p>
+            <div class="citas-title">Citas agendadas con <span style="color:var(--blue-dyn);" th:text="${perro.nombre}">Nombre</span></div>
           </div>
-          <button class="btn-add-cita">
-            <svg viewBox="0 0 24 24" width="13" height="13" style="stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Nueva cita
-          </button>
         </div>
-
-        <table class="citas-table">
+        <div th:if="${#lists.isEmpty(citas)}" style="padding:16px;text-align:center;color:#9CA3AF;font-size:.9rem;">Sin citas agendadas para este perro.</div>
+        <table th:if="${not #lists.isEmpty(citas)}" class="citas-table">
           <thead>
             <tr>
-              <th>Persona</th>
-              <th>Fecha y hora</th>
-              <th>Motivo</th>
-              <th>Estado</th>
-              <th style="text-align:center;">Acciones</th>
+              <th>Persona</th><th>Fecha y hora</th><th>Estado</th><th style="text-align:center;">Ver</th>
             </tr>
           </thead>
           <tbody>
             <tr th:each="cita : ${citas}">
-              <td><span class="human-name" th:text="${cita.humano_nombre}">Persona</span><br /><span style="font-size:0.78rem;color:var(--text-muted);" th:text="${cita.humano_email}">email</span></td>
-              <td><span class="cita-date"><span th:text="${cita.fecha}">fecha</span> · <span th:text="${cita.hora}">hora</span></span></td>
-              <td style="color:var(--text-muted);font-size:0.85rem;" th:text="${cita.motivo}">Motivo</td>
+              <td><span class="human-name" th:text="${cita.usuario.nombre}">Persona</span><br/>
+                  <span style="font-size:.78rem;color:#6B7280;" th:text="${cita.usuario.email}">email</span></td>
+              <td><span class="cita-date"><span th:text="${cita.fechaCita}">fecha</span> · <span th:text="${cita.horaCita}">hora</span></span></td>
               <td><span class="cita-status status-pendiente" th:text="${cita.estado}">Estado</span></td>
-              <td>
-                <div class="cita-actions" style="justify-content:center;">
-                  <button class="cita-act-btn" title="Editar cita">
-                    <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                  </button>
-                  <button class="cita-act-btn del" title="Eliminar cita">
-                    <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-                  </button>
-                </div>
+              <td style="text-align:center;">
+                <a th:href="@{/admin/cita/{id}(id=${cita.idCita})}" style="background:#F3F4F6;border:1px solid #D1D5DB;border-radius:7px;padding:5px 12px;font-size:.78rem;font-weight:800;color:#1F2937;text-decoration:none;">Ver</a>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
 
+      <!-- Botones guardar / eliminar -->
       <div class="save-bar">
-        <p>⚠ Tienes cambios sin guardar en el perfil de <span style="color:var(--orange-dark);" th:text="${nombre}">Nombre</span></p>
+        <p>Guarda los cambios o elimina este perro del sistema.</p>
         <div class="save-buttons">
-          <button class="btn-cancel">Cancelar</button>
-          <button class="btn-save">
+          <!-- Eliminar perro — botón que dispara un form externo (evita anidamiento) -->
+          <button type="button"
+                  onclick="if(confirm('¿Estás seguro de eliminar a este perro? Esta acción no se puede deshacer.')) document.getElementById('formEliminar').submit();"
+                  style="background:#FEE2E2;border:1px solid #FCA5A5;border-radius:10px;padding:10px 20px;font-size:.85rem;font-weight:800;color:#991B1B;cursor:pointer;">
+            🗑 Eliminar perro
+          </button>
+          <!-- Guardar cambios -->
+          <button type="submit" class="btn-save">
             <svg viewBox="0 0 24 24" width="14" height="14" style="stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
             Guardar cambios
           </button>
         </div>
       </div>
 
-    </div>
+    </form>
+
+    <!-- Form eliminar FUERA del form principal (sin anidamiento) -->
+    <form id="formEliminar"
+          th:action="@{/admin/mascota/{id}/eliminar(id=${perro.idPerro})}" method="post"
+          style="display:none;">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    </form>
+
+    <!-- Form genérico para eliminar fotos (también fuera del form principal) -->
+    <form id="formFotoEliminar" method="post" style="display:none;">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" id="fotoDeleteCsrf"/>
+      <input type="hidden" name="perroId" id="fotoDeletePerroId"/>
+    </form>
   </div>
 
-  <footer>
-    <p>© 2025 <span>Refugio Nueva Vida</span> · Panel de Administración</p>
-  </footer>
+  <footer><p>© 2025 <span>Refugio Nueva Vida</span> · Panel de Administración</p></footer>
+
+  <script>
+    /* ── Eliminar foto individual (form externo) ────────────────── */
+    function submitFotoDelete(btn) {
+      var fotoId  = btn.getAttribute('data-foto-id');
+      var perroId = btn.getAttribute('data-perro-id');
+      var form    = document.getElementById('formFotoEliminar');
+      form.action = '/admin/foto/' + fotoId + '/eliminar';
+      document.getElementById('fotoDeletePerroId').value = perroId;
+      form.submit();
+    }
+
+    /* ── Carrusel de previsualización de fotos nuevas ──────────── */
+    var previewUrls   = [];
+    var previewIndex  = 0;
+
+    function previewFotos(input) {
+      previewUrls  = [];
+      previewIndex = 0;
+      if (!input.files || input.files.length === 0) {
+        document.getElementById('previewCarousel').style.display = 'none';
+        return;
+      }
+      var total = 0;
+      Array.from(input.files).forEach(function(file) {
+        if (!file.type.startsWith('image/')) return;
+        total++;
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          previewUrls.push(e.target.result);
+          if (previewUrls.length === total) renderCarousel();
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function renderCarousel() {
+      var carousel = document.getElementById('previewCarousel');
+      carousel.style.display = 'block';
+      showPreview(0);
+
+      // Miniaturas
+      var thumbs = document.getElementById('previewThumbs');
+      thumbs.innerHTML = '';
+      previewUrls.forEach(function(src, i) {
+        var t = document.createElement('img');
+        t.src = src;
+        t.style.cssText = 'width:48px;height:48px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid ' + (i===0 ? '#F97316' : '#E5E7EB') + ';';
+        t.onclick = function() { showPreview(i); };
+        thumbs.appendChild(t);
+      });
+
+      /* Actualiza la foto principal del panel admin con la primera seleccionada */
+      var mainImg = document.getElementById('fotoMainAdmin');
+      if (mainImg) {
+        mainImg.src = previewUrls[0];
+        mainImg.style.display = 'block';
+      } else {
+        var container = document.getElementById('fotoContainer');
+        if (container) {
+          container.innerHTML = '<img id="fotoMainAdmin" src="' + previewUrls[0] +
+            '" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;" alt="preview"/>';
+        }
+      }
+    }
+
+    function showPreview(idx) {
+      if (previewUrls.length === 0) return;
+      previewIndex = (idx + previewUrls.length) % previewUrls.length;
+      document.getElementById('previewMainImg').src = previewUrls[previewIndex];
+      document.getElementById('previewCounter').textContent = (previewIndex + 1) + ' / ' + previewUrls.length;
+      // Actualizar borde de miniaturas
+      var thumbImgs = document.getElementById('previewThumbs').querySelectorAll('img');
+      thumbImgs.forEach(function(t, i) {
+        t.style.borderColor = i === previewIndex ? '#F97316' : '#E5E7EB';
+      });
+    }
+
+    function prevPreview() { showPreview(previewIndex - 1); }
+    function nextPreview() { showPreview(previewIndex + 1); }
+  </script>
 </body>
 </html>
