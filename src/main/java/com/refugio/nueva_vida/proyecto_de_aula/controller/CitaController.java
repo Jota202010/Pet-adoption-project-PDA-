@@ -108,6 +108,13 @@ public class CitaController {
                                    @RequestParam Integer idHorario,
                                    @AuthenticationPrincipal UserDetails userDetails,
                                    RedirectAttributes ra) {
+        // BUG 4: verificar que la cita pertenece al usuario actual
+        Cita cita = citaService.buscarPorId(citaId).orElseThrow();
+        Usuario usuario = usuarioService.buscarPorUsername(userDetails.getUsername()).orElseThrow();
+        if (!cita.getUsuario().getIdUsuario().equals(usuario.getIdUsuario())) {
+            ra.addFlashAttribute("errorMsg", "No tienes permiso para confirmar esta cita.");
+            return "redirect:/perfil";
+        }
         try {
             citaService.confirmar(citaId, idHorario);
             ra.addFlashAttribute("mensajeExito", "¡Cita confirmada! Ya tienes tu fecha y hora reservada.");

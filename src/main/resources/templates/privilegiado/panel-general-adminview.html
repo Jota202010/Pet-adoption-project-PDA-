@@ -109,14 +109,14 @@
             <td style="padding:12px 16px;color:#6B7280;font-weight:600;" th:text="${cita.fechaCita}">fecha</td>
             <td style="padding:12px 16px;">
               <span th:text="${cita.estado}"
-                    th:style="${cita.estado.name() == 'confirmada'}   ? 'display:inline-block;font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:999px;background:#DBEAFE;color:#1E40AF;' :
-                               (${cita.estado.name() == 'pre_aprobada'} ? 'display:inline-block;font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:999px;background:#D1FAE5;color:#065F46;' :
-                               (${cita.estado.name() == 'rechazada'}   ? 'display:inline-block;font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:999px;background:#FEE2E2;color:#991B1B;' :
-                                                                          'display:inline-block;font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:999px;background:#FEF3C7;color:#92400E;'))">Estado</span>
+                    th:style="${cita.estado.name() == 'confirmada'    ? 'display:inline-block;font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:999px;background:#DBEAFE;color:#1E40AF;' :
+                               (cita.estado.name() == 'pre_aprobada' ? 'display:inline-block;font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:999px;background:#D1FAE5;color:#065F46;' :
+                               (cita.estado.name() == 'rechazada'    ? 'display:inline-block;font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:999px;background:#FEE2E2;color:#991B1B;' :
+                                                                        'display:inline-block;font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:999px;background:#FEF3C7;color:#92400E;'))}">Estado</span>
             </td>
             <td style="padding:12px 16px;text-align:center;display:flex;gap:6px;justify-content:center;">
               <a th:href="@{/admin/cita/{id}(id=${cita.idCita})}" style="background:#F3F4F6;border:1px solid #D1D5DB;border-radius:7px;padding:5px 12px;font-size:.78rem;font-weight:800;color:#1F2937;text-decoration:none;">Ver</a>
-              <form th:if="${cita.estado.name() != 'pre_aprobada'}"
+              <form th:if="${cita.estado.name() == 'en_espera'}"
                     th:action="@{/admin/cita/{id}/pre-aprobar(id=${cita.idCita})}" method="post" style="display:inline;">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <button type="submit" style="background:#D1FAE5;border:1px solid #6EE7B7;border-radius:7px;padding:5px 12px;font-size:.78rem;font-weight:800;color:#065F46;cursor:pointer;" title="Pre-aprobar">✓ Pre-aprobar</button>

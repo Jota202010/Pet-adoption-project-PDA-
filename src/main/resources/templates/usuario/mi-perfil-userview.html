@@ -75,13 +75,21 @@
               <span th:if="${cita.fechaCita == null}" style="color:#9CA3AF;">Sin fecha aún</span>
             </div>
           </div>
-          <span class="cita-status" th:text="${cita.estado}"
-                th:style="${cita.estado.toString() == 'pre_aprobada' ? 'background:#D1FAE5;color:#065F46;padding:4px 10px;border-radius:999px;font-size:.72rem;font-weight:800;' :
-                           (cita.estado.toString() == 'confirmada'   ? 'background:#DBEAFE;color:#1E40AF;padding:4px 10px;border-radius:999px;font-size:.72rem;font-weight:800;' :
-                           (cita.estado.toString() == 'rechazada'    ? 'background:#FEE2E2;color:#991B1B;padding:4px 10px;border-radius:999px;font-size:.72rem;font-weight:800;' :
-                            'background:#FEF3C7;color:#92400E;padding:4px 10px;border-radius:999px;font-size:.72rem;font-weight:800;'))}">Estado</span>
+          <!-- 4 spans simples por estado — evita ternarios complejos que Thymeleaf puede fallar -->
+          <span th:if="${cita.estado.name() == 'en_espera'}"
+                style="background:#FEF3C7;color:#92400E;padding:4px 10px;border-radius:999px;font-size:.72rem;font-weight:800;"
+                th:text="${cita.estado}">Estado</span>
+          <span th:if="${cita.estado.name() == 'pre_aprobada'}"
+                style="background:#D1FAE5;color:#065F46;padding:4px 10px;border-radius:999px;font-size:.72rem;font-weight:800;"
+                th:text="${cita.estado}">Estado</span>
+          <span th:if="${cita.estado.name() == 'confirmada'}"
+                style="background:#DBEAFE;color:#1E40AF;padding:4px 10px;border-radius:999px;font-size:.72rem;font-weight:800;"
+                th:text="${cita.estado}">Estado</span>
+          <span th:if="${cita.estado.name() == 'rechazada'}"
+                style="background:#FEE2E2;color:#991B1B;padding:4px 10px;border-radius:999px;font-size:.72rem;font-weight:800;"
+                th:text="${cita.estado}">Estado</span>
           <!-- Botón elegir horario solo si está pre_aprobada -->
-          <a th:if="${cita.estado.toString() == 'pre_aprobada'}"
+          <a th:if="${cita.estado.name() == 'pre_aprobada'}"
              th:href="@{/cita/{id}/elegir-horario(id=${cita.idCita})}"
              style="background:#F97316;color:#fff;border-radius:8px;padding:7px 14px;font-size:.78rem;font-weight:800;text-decoration:none;white-space:nowrap;">
             📅 Elegir horario

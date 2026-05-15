@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,11 +21,10 @@ public class HorarioService {
         this.horarioRepository = horarioRepository;
     }
 
-    /** Retorna todos los horarios disponibles (no ocupados) desde hoy */
+    /** Retorna todos los horarios disponibles (no ocupados) desde ahora — excluye horas pasadas de hoy */
     @Transactional(readOnly = true)
     public List<HorarioDisponible> listarDisponibles() {
-        return horarioRepository
-            .findByOcupadoFalseAndFechaGreaterThanEqualOrderByFechaAscHoraAsc(LocalDate.now());
+        return horarioRepository.findDisponiblesDesdeAhora(LocalDate.now(), LocalTime.now());
     }
 
     /** El admin crea un nuevo horario disponible */

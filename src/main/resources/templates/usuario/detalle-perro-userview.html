@@ -159,28 +159,22 @@
 
   <script th:inline="javascript">
     /* ── Carrusel fotos ───────────────────────────────────────── */
-    var thumbs  = Array.from(document.querySelectorAll('[data-idx]'));   // dots
-    var total   = thumbs.length;
-    if (!Array.isArray(fotosUrls)) {
-    fotosUrls = [];
-}
+    // Inyección segura: {} → [] en JS; nunca null
+    var fotosUrls = /*[[${fotos != null and not #lists.isEmpty(fotos) ? fotos.![urlFoto] : {}}]]*/ [];
+    var total   = fotosUrls.length;
     var current = 0;
-    // Recopilar las URLs desde los dots usando data-src inyectado en Thymeleaf
-    // En su lugar leemos las URLs de los atributos del HTML ya que los dots
-    // no tienen src — necesitamos las fotos del servidor como array JS.
-    // Las fotos se inyectan como array desde Thymeleaf inline:
-    var fotosUrls = /*[[${fotos != null ? fotos.![urlFoto] : null}]]*/ [];
+    var dots    = Array.from(document.querySelectorAll('.gallery-dot'));
 
     function irFoto(idx) {
       if (total === 0) return;
-      current = (idx + total) % total;
+      current = ((idx % total) + total) % total;
       var mainImg = document.getElementById('fotoMain');
       if (mainImg && fotosUrls[current]) {
         mainImg.src = fotosUrls[current];
         mainImg.style.display = 'block';
       }
-      thumbs.forEach(function(dot, i) {
-        dot.className = i === current ? 'gallery-dot active' : 'gallery-dot';
+      dots.forEach(function(d, i) {
+        d.className = i === current ? 'gallery-dot active' : 'gallery-dot';
       });
     }
 

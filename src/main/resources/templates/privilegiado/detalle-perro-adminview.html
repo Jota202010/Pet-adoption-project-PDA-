@@ -252,7 +252,13 @@
               <td><span class="human-name" th:text="${cita.usuario.nombre}">Persona</span><br/>
                   <span style="font-size:.78rem;color:#6B7280;" th:text="${cita.usuario.email}">email</span></td>
               <td><span class="cita-date"><span th:text="${cita.fechaCita}">fecha</span> · <span th:text="${cita.horaCita}">hora</span></span></td>
-              <td><span class="cita-status status-pendiente" th:text="${cita.estado}">Estado</span></td>
+              <td>
+                <span th:text="${cita.estado}"
+                      th:class="${cita.estado.name() == 'confirmada'   ? 'cita-status status-confirmada'  :
+                                 (cita.estado.name() == 'pre_aprobada' ? 'cita-status status-pre-aprobada' :
+                                 (cita.estado.name() == 'rechazada'    ? 'cita-status status-rechazada'   :
+                                                                          'cita-status status-pendiente'))}">Estado</span>
+              </td>
               <td style="text-align:center;">
                 <a th:href="@{/admin/cita/{id}(id=${cita.idCita})}" style="background:#F3F4F6;border:1px solid #D1D5DB;border-radius:7px;padding:5px 12px;font-size:.78rem;font-weight:800;color:#1F2937;text-decoration:none;">Ver</a>
               </td>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+              xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Admin — Detalle Cita — Refugio Nueva Vida</title>
@@ -28,12 +29,12 @@
       <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Volver al panel
     </a>
 
-    <div class="status-banner espera">
-      <div class="status-text espera">
-        <div class="status-dot dot-espera"></div>
+    <div th:class="'status-banner ' + ${cita.estado.name()}">
+      <div th:class="'status-text ' + ${cita.estado.name()}">
+        <div th:class="'status-dot dot-' + ${cita.estado.name()}"></div>
         Estado actual: <strong th:text="${cita.estado}">Estado</strong>
       </div>
-      <span style="font-size:.78rem;color:#92400E;font-weight:600;">Solicitud recibida el <span th:text="${cita.fechaSolicitud}">fecha</span></span>
+      <span style="font-size:.78rem;font-weight:600;">Solicitud recibida el <span th:text="${cita.fechaSolicitud}">fecha</span></span>
     </div>
 
     <div class="detail-card">

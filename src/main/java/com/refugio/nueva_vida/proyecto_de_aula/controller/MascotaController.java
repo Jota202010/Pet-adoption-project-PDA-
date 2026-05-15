@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.IOException;
 import java.util.List;
@@ -105,8 +106,13 @@ public class MascotaController {
     public String eliminarMascota(@PathVariable Integer id, RedirectAttributes ra) {
         Perro perro = perroService.buscarPorId(id).orElseThrow();
         String nombre = perro.getNombre();
-        perroService.eliminar(id);
-        ra.addFlashAttribute("mensajeExito", "El perro \"" + nombre + "\" fue eliminado.");
+        try {
+            perroService.eliminar(id);
+            ra.addFlashAttribute("mensajeExito", "El perro \"" + nombre + "\" fue eliminado.");
+        } catch (DataIntegrityViolationException e) {
+            ra.addFlashAttribute("errorMsg",
+                "No se puede eliminar a \"" + nombre + "\" porque tiene citas registradas. Elimina primero las citas.");
+        }
         return "redirect:/admin/panel";
     }
 

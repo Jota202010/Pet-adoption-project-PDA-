@@ -85,8 +85,12 @@ public class AdminController {
                            @AuthenticationPrincipal UserDetails userDetails,
                            RedirectAttributes ra) {
         Usuario admin = usuarioService.buscarPorUsername(userDetails.getUsername()).orElseThrow();
-        citaService.rechazar(id, admin);
-        ra.addFlashAttribute("mensajeExito", "Solicitud rechazada.");
+        try {
+            citaService.rechazar(id, admin);
+            ra.addFlashAttribute("mensajeExito", "Solicitud rechazada.");
+        } catch (IllegalStateException e) {
+            ra.addFlashAttribute("errorMsg", e.getMessage());
+        }
         return "redirect:/admin/panel";
     }
 
