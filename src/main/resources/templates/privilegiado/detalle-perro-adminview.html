@@ -140,14 +140,17 @@
             <input class="form-input" type="text" th:field="*{nombre}" required style="font-size:1.4rem;font-weight:800;padding:10px 14px;"/>
           </div>
 
-          <!-- Visibilidad pública -->
+          <!-- Estado de publicación — reemplaza los dos booleanos adoptado y listaParaAdoptar -->
           <div style="background:linear-gradient(135deg,#1F2937 0%,#111827 100%);border-radius:14px;padding:20px 22px;margin:16px 0;border:2px solid var(--orange);">
-            <p style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:10px;">¿Publicar en adopciones?</p>
-            <div style="display:flex;align-items:center;gap:12px;">
-              <input type="checkbox" id="listaParaAdoptar" th:field="*{listaParaAdoptar}"
-                     style="width:20px;height:20px;cursor:pointer;accent-color:#F97316;"/>
-              <label for="listaParaAdoptar" style="color:#D1D5DB;font-weight:600;cursor:pointer;">Visible en la pantalla de inicio</label>
-            </div>
+            <p style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:6px;">Estado de publicación</p>
+            <p style="font-size:.75rem;color:#9CA3AF;margin-bottom:12px;font-weight:500;">Controla si el animal aparece en el listado público y en qué etapa está.</p>
+            <select th:field="*{estadoPublicacion}"
+                    style="width:100%;border:1px solid #4B5563;border-radius:8px;padding:10px 12px;font-size:.9rem;background:#374151;color:#F9FAFB;font-weight:700;cursor:pointer;">
+              <option th:each="ep : ${estadosPublicacion}"
+                      th:value="${ep}"
+                      th:text="${ep.label}">
+              </option>
+            </select>
           </div>
 
           <!-- Atributos editables -->
@@ -261,6 +264,64 @@
               </td>
               <td style="text-align:center;">
                 <a th:href="@{/admin/cita/{id}(id=${cita.idCita})}" style="background:#F3F4F6;border:1px solid #D1D5DB;border-radius:7px;padding:5px 12px;font-size:.78rem;font-weight:800;color:#1F2937;text-decoration:none;">Ver</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ── Historial de cambios de estado ────────────────────────────────── -->
+      <div class="citas-section" style="margin-top:24px;">
+        <div class="citas-header-row">
+          <div class="citas-title">Historial de <span style="color:var(--blue-dyn);" th:text="${perro.nombre}">Nombre</span></div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(historial)}"
+             style="padding:16px;text-align:center;color:#9CA3AF;font-size:.9rem;">
+          Sin cambios de estado registrados aún.
+        </div>
+
+        <table th:if="${not #lists.isEmpty(historial)}" class="citas-table">
+          <thead>
+            <tr>
+              <th>Fecha y hora</th>
+              <th>Estado anterior</th>
+              <th>Nuevo estado</th>
+              <th>Origen</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="h : ${historial}">
+              <td th:text="${#temporals.format(h.fechaCambio, 'dd/MM/yyyy HH:mm')}">-</td>
+              <td>
+                <span th:if="${h.estadoAnterior != null}"
+                      style="font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:20px;background:#F3F4F6;color:#374151;"
+                      th:text="${h.estadoAnterior.label}">-</span>
+                <span th:if="${h.estadoAnterior == null}"
+                      style="font-size:.78rem;color:#9CA3AF;">Registro inicial</span>
+              </td>
+              <td>
+                <span th:if="${h.estadoNuevo.name() == 'PUBLICADO'}"
+                      style="background:#D1FAE5;color:#065F46;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:700;"
+                      th:text="${h.estadoNuevo.label}">-</span>
+                <span th:if="${h.estadoNuevo.name() == 'ADOPTADO'}"
+                      style="background:#DBEAFE;color:#1E40AF;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:700;"
+                      th:text="${h.estadoNuevo.label}">-</span>
+                <span th:if="${h.estadoNuevo.name() == 'EN_PROCESO'}"
+                      style="background:#FEF3C7;color:#92400E;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:700;"
+                      th:text="${h.estadoNuevo.label}">-</span>
+                <span th:if="${h.estadoNuevo.name() == 'DEVUELTO'}"
+                      style="background:#FEE2E2;color:#991B1B;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:700;"
+                      th:text="${h.estadoNuevo.label}">-</span>
+                <span th:if="${h.estadoNuevo.name() == 'EN_REFUGIO'}"
+                      style="background:#F3F4F6;color:#374151;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:700;"
+                      th:text="${h.estadoNuevo.label}">-</span>
+              </td>
+              <td>
+                <span th:if="${h.origen.name() == 'ADMIN'}"
+                      style="font-size:.75rem;font-weight:700;color:#6B7280;">👤 Admin</span>
+                <span th:if="${h.origen.name() == 'SISTEMA'}"
+                      style="font-size:.75rem;font-weight:700;color:#6B7280;">⚙️ Sistema</span>
               </td>
             </tr>
           </tbody>

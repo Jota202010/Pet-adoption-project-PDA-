@@ -3,15 +3,12 @@ package com.refugio.nueva_vida.proyecto_de_aula.controller;
 import com.refugio.nueva_vida.proyecto_de_aula.model.Cita;
 import com.refugio.nueva_vida.proyecto_de_aula.service.*;
 import com.refugio.nueva_vida.proyecto_de_aula.model.Usuario;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Controller
 public class AdminController {
@@ -19,14 +16,12 @@ public class AdminController {
     private final PerroService perroService;
     private final UsuarioService usuarioService;
     private final CitaService citaService;
-    private final HorarioService horarioService;
 
     public AdminController(PerroService perroService, UsuarioService usuarioService,
-                           CitaService citaService, HorarioService horarioService) {
-        this.perroService = perroService;
+                           CitaService citaService) {
+        this.perroService  = perroService;
         this.usuarioService = usuarioService;
-        this.citaService = citaService;
-        this.horarioService = horarioService;
+        this.citaService   = citaService;
     }
 
     // ── Panel principal ───────────────────────────────────────────────────────
@@ -38,15 +33,15 @@ public class AdminController {
         model.addAttribute("totalUsuarios",   usuarioService.contarTodos());
         model.addAttribute("citas",           citaService.listarTodas());
         model.addAttribute("citasPendientes", citaService.contarPendientes());
-        model.addAttribute("horarios",        horarioService.listarDisponibles());
         return "privilegiado/panel-general-adminview";
     }
 
     // ── Perfil del admin ──────────────────────────────────────────────────────
     @GetMapping("/admin/perfil")
     public String perfilAdmin(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        Usuario admin = usuarioService.buscarPorUsername(userDetails.getUsername()).orElseThrow();
-        var todas = citaService.listarTodas();
+        Usuario admin = usuarioService.buscarPorUsername(userDetails.getUsername())
+            .orElseThrow(() -> new IllegalStateException("Admin no encontrado."));
+        var todas       = citaService.listarTodas();
         long aprobadas  = todas.stream().filter(c -> c.getEstado() == Cita.EstadoCita.confirmada).count();
         long rechazadas = todas.stream().filter(c -> c.getEstado() == Cita.EstadoCita.rechazada).count();
         long espera     = todas.stream().filter(c -> c.getEstado() == Cita.EstadoCita.en_espera).count();
@@ -62,9 +57,10 @@ public class AdminController {
     // ── Detalle de usuario ────────────────────────────────────────────────────
     @GetMapping("/admin/usuario/{id}")
     public String detalleUsuario(@PathVariable Integer id, Model model) {
-        Usuario u = usuarioService.buscarPorId(id).orElseThrow();
+        Usuario u = usuarioService.buscarPorId(id)
+            .orElseThrow(() -> new IllegalStateException("Usuario con id " + id + " no encontrado."));
         model.addAttribute("usuario", u);
-        model.addAttribute("citas", citaService.citasDeUsuario(u));
+        model.addAttribute("citas",   citaService.citasDeUsuario(u));
         return "privilegiado/detalle-usuario-adminview";
     }
 
@@ -73,9 +69,13 @@ public class AdminController {
     public String preAprobar(@PathVariable Integer id,
                              @AuthenticationPrincipal UserDetails userDetails,
                              RedirectAttributes ra) {
-        Usuario admin = usuarioService.buscarPorUsername(userDetails.getUsername()).orElseThrow();
-        citaService.preAprobar(id, admin);
-        ra.addFlashAttribute("mensajeExito", "Solicitud pre-aprobada. El usuario podrá elegir su horario.");
+        try {
+            Usuario admin = usuarioService.buscarPorUsername(userDetails.getUsername()).orElseThrow();
+            citaService.preAprobar(id, admin);
+            ra.addFlashAttribute("mensajeExito", "Solicitud pre-aprobada. El usuario podrá elegir su horario.");
+        } catch (IllegalStateException e) {
+            ra.addFlashAttribute("errorMsg", e.getMessage());
+        }
         return "redirect:/admin/panel";
     }
 
@@ -84,33 +84,10 @@ public class AdminController {
     public String rechazar(@PathVariable Integer id,
                            @AuthenticationPrincipal UserDetails userDetails,
                            RedirectAttributes ra) {
-        Usuario admin = usuarioService.buscarPorUsername(userDetails.getUsername()).orElseThrow();
         try {
+            Usuario admin = usuarioService.buscarPorUsername(userDetails.getUsername()).orElseThrow();
             citaService.rechazar(id, admin);
-            ra.addFlashAttribute("mensajeExito", "Solicitud rechazada.");
-        } catch (IllegalStateException e) {
-            ra.addFlashAttribute("errorMsg", e.getMessage());
-        }
-        return "redirect:/admin/panel";
-    }
-
-    // ── Crear horario disponible ──────────────────────────────────────────────
-    @PostMapping("/admin/horario/crear")
-    public String crearHorario(
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fecha,
-            @RequestParam @DateTimeFormat(pattern = "HH:mm")      LocalTime hora,
-            RedirectAttributes ra) {
-        horarioService.crear(fecha, hora);
-        ra.addFlashAttribute("mensajeExito", "Horario " + fecha + " a las " + hora + " creado correctamente.");
-        return "redirect:/admin/panel";
-    }
-
-    // ── Eliminar horario disponible ───────────────────────────────────────────
-    @PostMapping("/admin/horario/{id}/eliminar")
-    public String eliminarHorario(@PathVariable Integer id, RedirectAttributes ra) {
-        try {
-            horarioService.eliminar(id);
-            ra.addFlashAttribute("mensajeExito", "Horario eliminado.");
+            ra.addFlashAttribute("mensajeExito", "Solicitud rechazada correctamente.");
         } catch (IllegalStateException e) {
             ra.addFlashAttribute("errorMsg", e.getMessage());
         }

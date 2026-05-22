@@ -43,11 +43,9 @@ public class Perro {
     @Column(name = "sociabilidad", nullable = false)
     private Sociabilidad sociabilidad;
 
-    @Column(name = "adoptado", nullable = false)
-    private Boolean adoptado = false;
-
-    @Column(name = "lista_para_adoptar", nullable = false)
-    private Boolean listaParaAdoptar = false;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado_publicacion", nullable = false)
+    private EstadoPublicacion estadoPublicacion = EstadoPublicacion.EN_REFUGIO;
 
     @Column(name = "registro_medico", columnDefinition = "TEXT")
     private String registroMedico;
@@ -64,6 +62,28 @@ public class Perro {
     public enum NivelSalud { SANO, ENFERMO, CRITICO }
 
     public enum Sociabilidad { ALTA, MEDIA, BAJA }
+
+    /**
+     * Estado de publicación del animal — reemplaza los dos booleanos
+     * adoptado y listaParaAdoptar con un flujo de estados claro:
+     *
+     *  EN_REFUGIO  → llegó al refugio, aún no está listo para publicar
+     *  PUBLICADO   → aparece en el listado público (antes: listaParaAdoptar=true)
+     *  EN_PROCESO  → tiene cita confirmada, esperando visita física
+     *  ADOPTADO    → adopción completada (antes: adoptado=true)
+     *  DEVUELTO    → fue devuelto, necesita evaluación antes de re-publicar
+     */
+    public enum EstadoPublicacion {
+        EN_REFUGIO("En el refugio (no publicado)"),
+        PUBLICADO("Publicado - listo para adoptar"),
+        EN_PROCESO("En proceso de adopcion"),
+        ADOPTADO("Adoptado"),
+        DEVUELTO("Devuelto - en evaluacion");
+
+        private final String label;
+        EstadoPublicacion(String label) { this.label = label; }
+        public String getLabel() { return label; }
+    }
 
     // ── Constructors ─────────────────────────────────────────────────────────
 
@@ -101,11 +121,8 @@ public class Perro {
     public Sociabilidad getSociabilidad() { return sociabilidad; }
     public void setSociabilidad(Sociabilidad sociabilidad) { this.sociabilidad = sociabilidad; }
 
-    public Boolean getAdoptado() { return adoptado; }
-    public void setAdoptado(Boolean adoptado) { this.adoptado = adoptado; }
-
-    public Boolean getListaParaAdoptar() { return listaParaAdoptar; }
-    public void setListaParaAdoptar(Boolean listaParaAdoptar) { this.listaParaAdoptar = listaParaAdoptar; }
+    public EstadoPublicacion getEstadoPublicacion() { return estadoPublicacion; }
+    public void setEstadoPublicacion(EstadoPublicacion estadoPublicacion) { this.estadoPublicacion = estadoPublicacion; }
 
     public String getRegistroMedico() { return registroMedico; }
     public void setRegistroMedico(String registroMedico) { this.registroMedico = registroMedico; }

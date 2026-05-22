@@ -9,17 +9,11 @@ import java.util.List;
 @Repository
 public interface PerroRepository extends JpaRepository<Perro, Integer> {
 
-    // Buscar perros no adoptados (disponibles para adopción)
-    List<Perro> findByAdoptadoFalse();
+    // Animales visibles en el listado público (reemplaza findByAdoptadoFalseAndListaParaAdoptarTrue)
+    List<Perro> findByEstadoPublicacion(Perro.EstadoPublicacion estadoPublicacion);
 
-    // Buscar perros disponibles Y listos para adoptar
-    List<Perro> findByAdoptadoFalseAndListaParaAdoptarTrue();
-
-    // Buscar por estado
+    // Buscar por estado de origen
     List<Perro> findByEstado(Perro.Estado estado);
-
-    // Buscar disponibles para adoptar
-    List<Perro> findByListaParaAdoptarTrue();
 
     // Buscar por nombre (case-insensitive)
     List<Perro> findByNombreContainingIgnoreCase(String nombre);

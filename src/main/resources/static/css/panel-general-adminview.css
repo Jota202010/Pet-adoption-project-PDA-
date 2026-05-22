@@ -75,3 +75,16 @@
     footer{background:#111827;color:#9CA3AF;text-align:center;padding:28px 48px;font-size:.82rem;}
     footer span{color:var(--orange);}
     @media(max-width:900px){.panel-grid{grid-template-columns:1fr;}.stats-row{grid-template-columns:1fr 1fr;}.page-wrapper{padding:24px 16px 60px;}nav{padding:12px 20px;}}
+
+    /* ── Botones de acción en cards de perros ─────────────────────────── */
+    .item-actions{display:flex;gap:8px;align-items:center;flex-shrink:0;}
+    .btn-accion{
+      display:inline-flex;align-items:center;justify-content:center;
+      width:34px;height:34px;border-radius:8px;font-size:.95rem;
+      text-decoration:none;border:1.5px solid transparent;
+      transition:all .15s;flex-shrink:0;
+    }
+    .btn-ver{background:#EFF6FF;border-color:#BFDBFE;color:#1D4ED8;}
+    .btn-ver:hover{background:#DBEAFE;border-color:#93C5FD;}
+    .btn-editar{background:#FFF7ED;border-color:#FED7AA;color:#C2410C;}
+    .btn-editar:hover{background:#FFEDD5;border-color:#FDBA74;}

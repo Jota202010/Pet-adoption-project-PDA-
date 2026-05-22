@@ -24,6 +24,14 @@
     </a>
     <div class="admin-banner">⚙ <span>Estás <strong>agregando una nueva mascota</strong> al refugio. Completa todos los campos requeridos y guarda para publicar.</span></div>
 
+    <!-- Mensaje de error de validación -->
+    <div th:if="${errorMsg}"
+         style="background:#FEE2E2;border:1px solid #FCA5A5;border-radius:10px;
+                padding:14px 20px;margin-bottom:20px;font-weight:700;color:#991B1B;
+                display:flex;align-items:center;gap:10px;">
+      ⚠️ <span th:text="${errorMsg}"></span>
+    </div>
+
     <form th:action="@{/admin/agregar-mascota}" th:object="${perro}" method="post" enctype="multipart/form-data" class="form-card">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
@@ -114,21 +122,18 @@
             </div>
           </div>
 
-          <div class="form-group">
-            <label class="form-label" style="margin-bottom:10px;">Adoptado</label>
-            <div style="display:flex;align-items:center;gap:12px;padding:12px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;">
-              <input type="checkbox" id="adoptado" th:field="*{adoptado}"
-                     style="width:20px;height:20px;cursor:pointer;accent-color:#F97316;"/>
-              <label for="adoptado" style="cursor:pointer;font-weight:600;color:#374151;">¿Ya fue adoptado?</label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" style="margin-bottom:10px;">Listo para adoptar</label>
-            <div style="display:flex;align-items:center;gap:12px;padding:12px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;">
-              <input type="checkbox" id="listaParaAdoptar" th:field="*{listaParaAdoptar}"
-                     style="width:20px;height:20px;cursor:pointer;accent-color:#F97316;"/>
-              <label for="listaParaAdoptar" style="cursor:pointer;font-weight:600;color:#374151;">¿Está listo para adopción?</label>
+          <!-- Estado de publicación — reemplaza los dos booleanos adoptado y listaParaAdoptar -->
+          <div class="form-group" style="grid-column:1/-1;">
+            <label class="form-label" for="estadoPublicacion" style="margin-bottom:10px;">Estado de publicación *</label>
+            <div style="background:linear-gradient(135deg,#1F2937 0%,#111827 100%);border-radius:12px;padding:16px 18px;border:2px solid #F97316;">
+              <p style="font-size:.75rem;color:#9CA3AF;margin-bottom:10px;font-weight:600;">Controla si el animal aparece en el listado público y en qué etapa se encuentra.</p>
+              <select id="estadoPublicacion" th:field="*{estadoPublicacion}" required
+                      style="width:100%;border:1px solid #4B5563;border-radius:8px;padding:10px 12px;font-size:.9rem;background:#374151;color:#F9FAFB;font-weight:700;">
+                <option th:each="ep : ${estadosPublicacion}"
+                        th:value="${ep}"
+                        th:text="${ep.label}">
+                </option>
+              </select>
             </div>
           </div>
 

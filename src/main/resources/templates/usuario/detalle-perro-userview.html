@@ -38,6 +38,25 @@
       <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Volver al listado
     </a>
 
+    <!-- Aviso: usuario ya tiene cita activa con este animal -->
+    <div th:if="${avisoCita}"
+         style="background:#FEF3C7;border:1.5px solid #FCD34D;border-radius:12px;
+                padding:14px 20px;margin-bottom:16px;color:#92400E;font-weight:700;
+                display:flex;align-items:center;gap:10px;font-size:.9rem;">
+      ⚠️ <span th:text="${avisoCita}"></span>
+      <a th:href="@{/perfil}" style="margin-left:auto;color:#F97316;font-size:.82rem;text-decoration:none;font-weight:800;">
+        Ver mi perfil →
+      </a>
+    </div>
+
+    <!-- Mensaje de error general -->
+    <div th:if="${errorMsg}"
+         style="background:#FEE2E2;border:1.5px solid #FCA5A5;border-radius:12px;
+                padding:14px 20px;margin-bottom:16px;color:#991B1B;font-weight:700;
+                display:flex;align-items:center;gap:10px;font-size:.9rem;">
+      ❌ <span th:text="${errorMsg}"></span>
+    </div>
+
     <div class="detail-card">
       <div class="detail-top">
         <div class="gallery">
@@ -140,16 +159,33 @@
       </div>
 
       <div class="action-bar">
-        <!-- Si está logueado puede agendar, si no lo manda a login -->
-        <a th:href="@{/agendar-cita/{id}(id=${perro.idPerro})}"
-           sec:authorize="isAuthenticated()"
-           class="btn-adoptar">
-          <span class="btn-icon">📅</span> Agendar Cita
-        </a>
+        <!-- No autenticado: redirige al login -->
         <a th:href="@{/login}"
            sec:authorize="!isAuthenticated()"
            class="btn-adoptar">
           <span class="btn-icon">🔐</span> Inicia sesión para agendar
+        </a>
+
+        <!-- Autenticado + ya tiene cita activa: mostrar aviso en vez del botón -->
+        <div th:if="${tienesCita}"
+             sec:authorize="isAuthenticated()"
+             style="background:#FEF3C7;border:1.5px solid #FCD34D;border-radius:12px;
+                    padding:14px 20px;color:#92400E;font-weight:700;font-size:.88rem;
+                    display:flex;align-items:center;gap:10px;width:100%;">
+          ⚠️ Ya tienes una solicitud activa para este animal.
+          <a th:href="@{/perfil}"
+             style="margin-left:auto;background:#F97316;color:#fff;padding:8px 18px;
+                    border-radius:8px;font-size:.82rem;text-decoration:none;font-weight:800;">
+            Ver mi perfil →
+          </a>
+        </div>
+
+        <!-- Autenticado + sin cita: botón normal de agendar -->
+        <a th:if="${!tienesCita}"
+           th:href="@{/agendar-cita/{id}(id=${perro.idPerro})}"
+           sec:authorize="isAuthenticated()"
+           class="btn-adoptar">
+          <span class="btn-icon">📅</span> Agendar Cita
         </a>
       </div>
     </div>

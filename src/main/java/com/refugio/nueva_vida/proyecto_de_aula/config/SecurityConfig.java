@@ -38,7 +38,8 @@ public class SecurityConfig {
                 // Rutas públicas: cualquiera puede acceder
                 .requestMatchers("/", "/inicio", "/nosotros", "/mision",
                                  "/login", "/registro", "/css/**", "/js/**",
-                                 "/images/**", "/fotos/**", "/mascota/**").permitAll()
+                                 "/images/**", "/fotos/**", "/mascota/**",
+                                 "/error", "/error/**").permitAll()
                 // Rutas de admin: solo rol administrador
                 .requestMatchers("/admin/**").hasRole("administrador")
                 // Rutas de usuario autenticado

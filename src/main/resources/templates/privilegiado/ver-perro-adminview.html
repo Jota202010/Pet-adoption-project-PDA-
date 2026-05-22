@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title th:text="'Ver — '+${perro.nombre}+' — Refugio Nueva Vida'">Ver Perro</title>
+  <link rel="stylesheet" th:href="@{/css/detalle-perro-adminview.css}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-left">
+      <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
+      <span class="admin-badge">👁 Vista de perfil</span>
+    </div>
+    <div class="nav-right">
+      <a th:href="@{/admin/mascota/{id}(id=${perro.idPerro})}" class="btn-exit"
+         style="border-color:#FED7AA;color:#F97316;">✏️ Editar</a>
+      <a th:href="@{/admin/panel}" class="btn-exit">← Panel</a>
+    </div>
+  </nav>
+
+  <div class="breadcrumb">
+    <a th:href="@{/inicio}">Inicio</a><span>›</span>
+    <a th:href="@{/admin/panel}">Gestión de perros</a><span>›</span>
+    <span style="color:var(--text);" th:text="${perro.nombre}">Nombre</span>
+  </div>
+
+  <div class="page-wrapper">
+    <a th:href="@{/admin/panel}" class="back-link">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Volver a gestión de perros
+    </a>
+
+    <!-- Banner modo lectura -->
+    <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;
+                padding:14px 20px;margin-bottom:20px;font-weight:700;color:#1D4ED8;
+                display:flex;align-items:center;justify-content:space-between;">
+      <span>👁 Modo visualización — solo lectura</span>
+      <a th:href="@{/admin/mascota/{id}(id=${perro.idPerro})}"
+         style="font-size:.82rem;background:#1D4ED8;color:#fff;padding:7px 16px;
+                border-radius:8px;text-decoration:none;font-weight:700;">
+        ✏️ Ir a editar
+      </a>
+    </div>
+
+    <div class="detail-card" style="pointer-events:none;user-select:text;">
+
+      <div class="detail-top">
+
+        <!-- Galería de fotos (solo visualización) -->
+        <div class="gallery">
+          <div style="border-radius:14px;overflow:hidden;background:#1F2937;height:260px;width:100%;position:relative;">
+            <img th:if="${fotoPerfil != null}"
+                 th:src="${fotoPerfil.urlFoto}"
+                 style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;"
+                 alt="foto del perro"/>
+            <div th:if="${fotoPerfil == null}"
+                 style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#9CA3AF;">
+              <div style="font-size:3rem;">🐶</div>
+              <p style="font-size:.8rem;margin-top:6px;">Sin fotos aún</p>
+            </div>
+          </div>
+
+          <!-- Miniaturas sin botón eliminar -->
+          <div th:if="${fotos != null and not #lists.isEmpty(fotos)}"
+               style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
+            <div th:each="foto : ${fotos}"
+                 th:style="${foto.esPerfil} ? 'position:relative;width:60px;height:60px;border-radius:8px;overflow:hidden;border:2px solid #F97316;' : 'position:relative;width:60px;height:60px;border-radius:8px;overflow:hidden;border:2px solid #E5E7EB;'">
+              <img th:src="${foto.urlFoto}"
+                   style="width:100%;height:100%;object-fit:cover;" alt="miniatura"/>
+              <div th:if="${foto.esPerfil}"
+                   style="position:absolute;bottom:0;left:0;right:0;background:rgba(249,115,22,.85);
+                          text-align:center;font-size:9px;font-weight:800;color:#fff;padding:2px 0;">⭐</div>
+            </div>
+          </div>
+
+          <div class="estado-badge" th:text="${perro.estado}" style="margin-top:10px;">Estado</div>
+        </div>
+
+        <!-- Información del perro — todo de solo lectura -->
+        <div class="info-panel">
+
+          <!-- Nombre -->
+          <h1 style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;
+                     color:var(--text);margin-bottom:12px;" th:text="${perro.nombre}">Nombre</h1>
+
+          <!-- Estado de publicación como badge -->
+          <div style="background:linear-gradient(135deg,#1F2937 0%,#111827 100%);
+                      border-radius:14px;padding:16px 20px;margin:12px 0;border:2px solid var(--orange);">
+            <p style="font-size:.72rem;font-weight:800;color:#9CA3AF;text-transform:uppercase;
+                      letter-spacing:.8px;margin-bottom:6px;">Estado de publicación</p>
+            <span style="font-size:.95rem;font-weight:700;color:#F9FAFB;"
+                  th:text="${perro.estadoPublicacion.label}">-</span>
+          </div>
+
+          <!-- Atributos en grid -->
+          <div class="attrs-grid">
+            <div class="attr-item">
+              <div class="attr-icon">🎂</div>
+              <div class="attr-content">
+                <span class="attr-label">Edad</span>
+                <span class="attr-value" th:text="${perro.edad ?: '—'}">-</span>
+              </div>
+            </div>
+            <div class="attr-item">
+              <div class="attr-icon">⚧</div>
+              <div class="attr-content">
+                <span class="attr-label">Sexo</span>
+                <span class="attr-value" th:text="${perro.sexo}">-</span>
+              </div>
+            </div>
+            <div class="attr-item">
+              <div class="attr-icon">🏥</div>
+              <div class="attr-content">
+                <span class="attr-label">Nivel de salud</span>
+                <span class="attr-value" th:text="${perro.nivelSalud}">-</span>
+              </div>
+            </div>
+            <div class="attr-item">
+              <div class="attr-icon">🤝</div>
+              <div class="attr-content">
+                <span class="attr-label">Sociabilidad</span>
+                <span class="attr-value" th:text="${perro.sociabilidad}">-</span>
+              </div>
+            </div>
+            <div class="attr-item">
+              <div class="attr-icon">✂️</div>
+              <div class="attr-content">
+                <span class="attr-label">Esterilizado</span>
+                <span class="attr-value" th:text="${perro.esterilizado} ? 'Sí' : 'No'">-</span>
+              </div>
+            </div>
+            <div class="attr-item">
+              <div class="attr-icon">💉</div>
+              <div class="attr-content">
+                <span class="attr-label">Vacunado</span>
+                <span class="attr-value" th:text="${perro.vacunado} ? 'Sí' : 'No'">-</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Descripción -->
+          <div style="margin-top:16px;">
+            <p style="font-size:.72rem;font-weight:800;color:#6B7280;text-transform:uppercase;
+                      letter-spacing:.8px;margin-bottom:8px;">Descripción</p>
+            <p style="font-size:.9rem;color:var(--text);line-height:1.6;background:#F9FAFB;
+                      border:1px solid #E5E7EB;border-radius:10px;padding:12px 14px;"
+               th:text="${perro.descripcion ?: 'Sin descripción registrada.'}">-</p>
+          </div>
+
+          <!-- Registro médico -->
+          <div style="margin-top:16px;">
+            <p style="font-size:.72rem;font-weight:800;color:#6B7280;text-transform:uppercase;
+                      letter-spacing:.8px;margin-bottom:8px;">Registro médico</p>
+            <p style="font-size:.9rem;color:var(--text);line-height:1.6;background:#F9FAFB;
+                      border:1px solid #E5E7EB;border-radius:10px;padding:12px 14px;"
+               th:text="${perro.registroMedico ?: 'Sin registro médico.'}">-</p>
+          </div>
+
+          <!-- Fecha de ingreso -->
+          <div style="margin-top:16px;font-size:.82rem;color:#9CA3AF;">
+            Ingresó el
+            <strong th:text="${#temporals.format(perro.fechaIngreso, 'dd/MM/yyyy')}">-</strong>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Citas del perro (solo lectura) -->
+    <div class="citas-section">
+      <div class="citas-header-row">
+        <div class="citas-title">Citas de <span style="color:var(--blue-dyn);" th:text="${perro.nombre}">Nombre</span></div>
+      </div>
+      <div th:if="${#lists.isEmpty(citas)}"
+           style="padding:16px;text-align:center;color:#9CA3AF;font-size:.9rem;">
+        Sin citas agendadas para este perro.
+      </div>
+      <table th:if="${not #lists.isEmpty(citas)}" class="citas-table">
+        <thead>
+          <tr>
+            <th>Solicitante</th>
+            <th>Fecha solicitud</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="cita : ${citas}">
+            <td th:text="${cita.usuario.nombre}">-</td>
+            <td th:text="${#temporals.format(cita.fechaSolicitud, 'dd/MM/yyyy HH:mm')}">-</td>
+            <td>
+              <span style="font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:20px;background:#F3F4F6;color:#374151;"
+                    th:text="${cita.estado}">-</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Historial de estados (solo lectura) -->
+    <div class="citas-section" style="margin-top:24px;">
+      <div class="citas-header-row">
+        <div class="citas-title">Historial de <span style="color:var(--blue-dyn);" th:text="${perro.nombre}">Nombre</span></div>
+      </div>
+      <div th:if="${#lists.isEmpty(historial)}"
+           style="padding:16px;text-align:center;color:#9CA3AF;font-size:.9rem;">
+        Sin cambios de estado registrados aún.
+      </div>
+      <table th:if="${not #lists.isEmpty(historial)}" class="citas-table">
+        <thead>
+          <tr>
+            <th>Fecha y hora</th>
+            <th>Estado anterior</th>
+            <th>Nuevo estado</th>
+            <th>Origen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="h : ${historial}">
+            <td th:text="${#temporals.format(h.fechaCambio, 'dd/MM/yyyy HH:mm')}">-</td>
+            <td>
+              <span th:if="${h.estadoAnterior != null}"
+                    style="font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:20px;background:#F3F4F6;color:#374151;"
+                    th:text="${h.estadoAnterior.label}">-</span>
+              <span th:if="${h.estadoAnterior == null}"
+                    style="font-size:.78rem;color:#9CA3AF;">Registro inicial</span>
+            </td>
+            <td>
+              <span th:if="${h.estadoNuevo.name() == 'PUBLICADO'}"
+                    style="background:#D1FAE5;color:#065F46;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:700;"
+                    th:text="${h.estadoNuevo.label}">-</span>
+              <span th:if="${h.estadoNuevo.name() == 'ADOPTADO'}"
+                    style="background:#DBEAFE;color:#1E40AF;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:700;"
+                    th:text="${h.estadoNuevo.label}">-</span>
+              <span th:if="${h.estadoNuevo.name() == 'EN_PROCESO'}"
+                    style="background:#FEF3C7;color:#92400E;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:700;"
+                    th:text="${h.estadoNuevo.label}">-</span>
+              <span th:if="${h.estadoNuevo.name() == 'DEVUELTO'}"
+                    style="background:#FEE2E2;color:#991B1B;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:700;"
+                    th:text="${h.estadoNuevo.label}">-</span>
+              <span th:if="${h.estadoNuevo.name() == 'EN_REFUGIO'}"
+                    style="background:#F3F4F6;color:#374151;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:700;"
+                    th:text="${h.estadoNuevo.label}">-</span>
+            </td>
+            <td>
+              <span th:if="${h.origen.name() == 'ADMIN'}"  style="font-size:.75rem;font-weight:700;color:#6B7280;">👤 Admin</span>
+              <span th:if="${h.origen.name() == 'SISTEMA'}" style="font-size:.75rem;font-weight:700;color:#6B7280;">⚙️ Sistema</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <footer><p>© 2025 <span style="color:var(--orange);">Refugio Nueva Vida</span> · Panel de Administración</p></footer>
+
+</body>
+</html>

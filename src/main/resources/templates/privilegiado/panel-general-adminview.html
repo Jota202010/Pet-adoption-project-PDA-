@@ -14,6 +14,7 @@
       <span class="admin-badge">⚙ Panel Admin</span>
     </div>
     <div class="nav-right">
+      <a th:href="@{/admin/metricas}" class="btn-perfil-nav">📊 Métricas</a>
       <a th:href="@{/admin/perfil}" class="btn-perfil-nav">👤 Mi Perfil</a>
       <form th:action="@{/logout}" method="post" style="display:inline;"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <button type="submit" class="btn-exit">Cerrar Sesión</button>
@@ -50,7 +51,7 @@
         <div th:if="${#lists.isEmpty(perros)}" style="padding:24px;text-align:center;color:#9CA3AF;font-size:.9rem;">
           Aún no hay perros. ¡Agrega el primero!
         </div>
-        <a th:each="perro : ${perros}" th:href="@{/admin/mascota/{id}(id=${perro.idPerro})}" class="list-item">
+        <div th:each="perro : ${perros}" class="list-item">
           <div class="item-avatar">🐶</div>
           <div class="item-info">
             <div class="item-name" th:text="${perro.nombre}">Nombre</div>
@@ -61,8 +62,13 @@
             </div>
           </div>
           <span class="item-badge" th:text="${perro.nivelSalud}">Salud</span>
-          <svg class="item-arrow" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        </a>
+          <div class="item-actions">
+            <a th:href="@{/admin/mascota/{id}/ver(id=${perro.idPerro})}"
+               class="btn-accion btn-ver" title="Ver perfil">👁</a>
+            <a th:href="@{/admin/mascota/{id}(id=${perro.idPerro})}"
+               class="btn-accion btn-editar" title="Editar">✏️</a>
+          </div>
+        </div>
       </div>
 
       <!-- Lista de usuarios -->
@@ -133,56 +139,7 @@
       </table>
     </div>
 
-    
-    <!-- Gestión de horarios disponibles -->
-    <div class="panel-card" style="margin-top:0;">
-      <div class="panel-card-header">
-        <span class="panel-card-title">🕐 Horarios disponibles</span>
-        <span class="panel-card-count" th:text="${#lists.size(horarios)}+' disponibles'">0</span>
-      </div>
 
-      <!-- Formulario para crear nuevo horario -->
-      <form th:action="@{/admin/horario/crear}" method="post"
-            style="display:flex;gap:12px;align-items:flex-end;padding:16px;background:#F9FAFB;border-bottom:1px solid #E5E7EB;flex-wrap:wrap;">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-        <div>
-          <label style="display:block;font-size:.72rem;font-weight:800;color:#6B7280;text-transform:uppercase;margin-bottom:4px;">Fecha</label>
-          <input type="date" name="fecha" required
-                 style="border:1px solid #D1D5DB;border-radius:8px;padding:8px 12px;font-size:.9rem;"/>
-        </div>
-        <div>
-          <label style="display:block;font-size:.72rem;font-weight:800;color:#6B7280;text-transform:uppercase;margin-bottom:4px;">Hora</label>
-          <input type="time" name="hora" required
-                 style="border:1px solid #D1D5DB;border-radius:8px;padding:8px 12px;font-size:.9rem;"/>
-        </div>
-        <button type="submit"
-                style="background:#F97316;color:#fff;border:none;border-radius:8px;padding:9px 18px;font-weight:800;cursor:pointer;font-size:.87rem;">
-          + Agregar horario
-        </button>
-      </form>
-
-      <!-- Lista de horarios disponibles -->
-      <div th:if="${#lists.isEmpty(horarios)}"
-           style="padding:20px;text-align:center;color:#9CA3AF;font-size:.9rem;">
-        No hay horarios disponibles. Agrega uno arriba.
-      </div>
-      <div th:each="h : ${horarios}"
-           style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #F3F4F6;">
-        <div>
-          <span style="font-weight:800;color:#1F2937;">📅 <span th:text="${h.fecha}">fecha</span></span>
-          <span style="margin-left:12px;font-weight:800;color:#F97316;">🕐 <span th:text="${h.hora}">hora</span></span>
-          <span style="margin-left:12px;font-size:.75rem;font-weight:700;color:#10B981;">✅ Libre</span>
-        </div>
-        <form th:action="@{/admin/horario/{id}/eliminar(id=${h.idHorario})}" method="post" style="display:inline;"
-              onsubmit="return confirm('¿Eliminar este horario?')">
-          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-          <button type="submit"
-                  style="background:#FEE2E2;border:1px solid #FCA5A5;border-radius:7px;padding:5px 12px;font-size:.78rem;font-weight:800;color:#991B1B;cursor:pointer;">
-            🗑 Eliminar
-          </button>
-        </form>
-      </div>
-    </div>
 
     <div class="add-dog-section">
       <a th:href="@{/admin/agregar-mascota}" class="btn-add-dog">

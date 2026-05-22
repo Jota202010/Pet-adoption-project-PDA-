@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title th:text="${titulo} + ' — Refugio Nueva Vida'">Error — Refugio Nueva Vida</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Nunito',sans-serif;background:#F9FAFB;min-height:100vh;
+         display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 16px;}
+    .card{background:#fff;border-radius:20px;padding:48px 40px;max-width:520px;width:100%;
+          text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.08);}
+    .emoji{font-size:3.5rem;margin-bottom:16px;}
+    .titulo{font-family:'Playfair Display',serif;font-size:1.8rem;color:#1F2937;margin-bottom:12px;}
+    .mensaje{color:#6B7280;font-size:1rem;line-height:1.6;margin-bottom:8px;}
+    .detalle{font-size:.78rem;color:#9CA3AF;margin-top:8px;padding:10px 14px;
+             background:#F3F4F6;border-radius:8px;word-break:break-all;}
+    .botones{display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap;}
+    .btn{padding:10px 24px;border-radius:10px;font-weight:800;font-size:.9rem;
+         text-decoration:none;transition:opacity .15s;}
+    .btn-primary{background:#F97316;color:#fff;}
+    .btn-primary:hover{opacity:.85;}
+    .btn-secondary{background:#F3F4F6;color:#374151;border:1.5px solid #E5E7EB;}
+    .btn-secondary:hover{background:#E5E7EB;}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="emoji">🐾</div>
+    <h1 class="titulo" th:text="${titulo}">Error</h1>
+    <p class="mensaje" th:text="${mensaje}">Algo salió mal.</p>
+    <div th:if="${detalle != null and !#strings.isEmpty(detalle)}"
+         class="detalle" th:text="${detalle}"></div>
+    <div class="botones">
+      <a href="/inicio" class="btn btn-primary">← Volver al inicio</a>
+      <a href="javascript:history.back()" class="btn btn-secondary">Regresar</a>
+    </div>
+  </div>
+</body>
+</html>

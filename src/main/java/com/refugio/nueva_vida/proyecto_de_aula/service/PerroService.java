@@ -30,10 +30,10 @@ public class PerroService {
         return perroRepository.findById(id);
     }
 
-    /** Lista los perros disponibles Y marcados listos para adoptar */
+    /** Lista solo los animales con estadoPublicacion = PUBLICADO (visibles al público) */
     @Transactional(readOnly = true)
     public List<Perro> listarDisponibles() {
-        return perroRepository.findByAdoptadoFalseAndListaParaAdoptarTrue();
+        return perroRepository.findByEstadoPublicacion(Perro.EstadoPublicacion.PUBLICADO);
     }
 
     /** Guarda un perro nuevo o actualiza uno existente */

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Métricas — Refugio Nueva Vida</title>
+  <link rel="stylesheet" th:href="@{/css/metricas-adminview.css}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <!-- Chart.js desde CDN permitido -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-left">
+      <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
+      <span class="admin-badge">📊 Métricas</span>
+    </div>
+    <div class="nav-right">
+      <a th:href="@{/admin/panel}" class="btn-back">← Panel admin</a>
+      <form th:action="@{/logout}" method="post" style="display:inline;">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit" class="btn-exit">Cerrar Sesión</button>
+      </form>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <h1 class="page-title">Métricas del refugio</h1>
+    <p class="page-subtitle">Resumen general del estado de los animales, citas y adopciones.</p>
+
+    <!-- ── Tarjetas resumen ──────────────────────────────────────────────── -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon a">🐶</div>
+        <div class="stat-text">
+          <div class="num" th:text="${totalPerros}">0</div>
+          <div class="lbl">Animales en el refugio</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon b">🏠</div>
+        <div class="stat-text">
+          <div class="num" th:text="${adoptados}">0</div>
+          <div class="lbl">Adoptados en total</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon c">✅</div>
+        <div class="stat-text">
+          <div class="num" th:text="${pctAprobacion} + '%'">0%</div>
+          <div class="lbl">Tasa de aprobación</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon d">⏱</div>
+        <div class="stat-text">
+          <div class="num" th:text="${horasPromedio} + 'h'">0h</div>
+          <div class="lbl">Tiempo prom. respuesta</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Gráficas ──────────────────────────────────────────────────────── -->
+    <div class="charts-row">
+
+      <!-- Gráfica 1: Estado de publicación (donut) -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Estado de publicación</span>
+          <span class="chart-subtitle" th:text="${totalPerros} + ' animales'">0 animales</span>
+        </div>
+        <div class="chart-body">
+          <canvas id="chartEstado"></canvas>
+        </div>
+      </div>
+
+      <!-- Gráfica 2: Estado de citas (donut) -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Estado de solicitudes</span>
+          <span class="chart-subtitle" th:text="${totalCitas} + ' solicitudes'">0 solicitudes</span>
+        </div>
+        <div class="chart-body">
+          <canvas id="chartCitas"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Gráfica 3: Origen de animales (barras horizontal) — ancho completo -->
+    <div class="chart-card" style="margin-bottom:24px;">
+      <div class="chart-header">
+        <span class="chart-title">Origen de los animales</span>
+        <span class="chart-subtitle">Rescatados · Abandonados · Acogidos</span>
+      </div>
+      <div class="chart-body" style="padding:24px 48px;">
+        <canvas id="chartOrigen" style="max-height:160px;width:100%;"></canvas>
+      </div>
+    </div>
+
+    <!-- ── Barras de porcentaje ──────────────────────────────────────────── -->
+    <div class="bars-row">
+      <div class="bar-card">
+        <div class="bar-label">🩺 Vacunados</div>
+        <div class="bar-sub" th:text="${vacunados} + ' de ' + ${totalPerros} + ' animales'">0 de 0</div>
+        <div class="bar-track">
+          <div class="bar-fill fill-green" th:style="'width:' + ${pctVacunados} + '%'"></div>
+        </div>
+        <div class="bar-pct" th:text="${pctVacunados} + '%'">0%</div>
+      </div>
+      <div class="bar-card">
+        <div class="bar-label">✂️ Esterilizados</div>
+        <div class="bar-sub" th:text="${esterilizados} + ' de ' + ${totalPerros} + ' animales'">0 de 0</div>
+        <div class="bar-track">
+          <div class="bar-fill fill-blue" th:style="'width:' + ${pctEsterilizados} + '%'"></div>
+        </div>
+        <div class="bar-pct" th:text="${pctEsterilizados} + '%'">0%</div>
+      </div>
+      <div class="bar-card">
+        <div class="bar-label">🏠 Tasa de adopción</div>
+        <div class="bar-sub" th:text="${adoptados} + ' de ' + ${totalPerros} + ' adoptados'">0 de 0</div>
+        <div class="bar-track">
+          <div class="bar-fill fill-orange" th:style="'width:' + ${pctAdoptados} + '%'"></div>
+        </div>
+        <div class="bar-pct" th:text="${pctAdoptados} + '%'">0%</div>
+      </div>
+    </div>
+
+    <!-- ── Tabla resumen de citas ────────────────────────────────────────── -->
+    <div class="summary-card">
+      <div class="chart-header">
+        <span class="chart-title">Resumen de solicitudes de adopción</span>
+        <span class="chart-subtitle" th:text="${totalCitas} + ' en total'">0 en total</span>
+      </div>
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th>Estado</th>
+            <th>Cantidad</th>
+            <th>Proporción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="estado-pill pill-espera">En espera</span></td>
+            <td th:text="${enEspera}">0</td>
+            <td th:text="${totalCitas > 0 ? #numbers.formatDecimal(enEspera * 100.0 / totalCitas, 1, 1) + '%' : '—'}">—</td>
+          </tr>
+          <tr>
+            <td><span class="estado-pill pill-preapro">Pre-aprobada</span></td>
+            <td th:text="${preAprobadas}">0</td>
+            <td th:text="${totalCitas > 0 ? #numbers.formatDecimal(preAprobadas * 100.0 / totalCitas, 1, 1) + '%' : '—'}">—</td>
+          </tr>
+          <tr>
+            <td><span class="estado-pill pill-confirm">Confirmada</span></td>
+            <td th:text="${confirmadas}">0</td>
+            <td th:text="${totalCitas > 0 ? #numbers.formatDecimal(confirmadas * 100.0 / totalCitas, 1, 1) + '%' : '—'}">—</td>
+          </tr>
+          <tr>
+            <td><span class="estado-pill pill-rechaz">Rechazada</span></td>
+            <td th:text="${rechazadas}">0</td>
+            <td th:text="${totalCitas > 0 ? #numbers.formatDecimal(rechazadas * 100.0 / totalCitas, 1, 1) + '%' : '—'}">—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── Dato adicional: usuarios y listos ────────────────────────────── -->
+    <div class="stats-row" style="grid-template-columns:1fr 1fr;margin-bottom:0;">
+      <div class="stat-card">
+        <div class="stat-icon b">👥</div>
+        <div class="stat-text">
+          <div class="num" th:text="${totalUsuarios}">0</div>
+          <div class="lbl">Usuarios registrados</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon c">🐾</div>
+        <div class="stat-text">
+          <div class="num" th:text="${listosAdoptar}">0</div>
+          <div class="lbl">Listos para adoptar ahora</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer><p>© 2025 <span>Refugio Nueva Vida</span> · Panel de Administración</p></footer>
+
+  <!-- ── Scripts de Chart.js ───────────────────────────────────────────────── -->
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+
+    // Datos desde el servidor (Thymeleaf los inyecta)
+    const epEnRefugio = /*[[${epEnRefugio}]]*/ 0;
+    const epPublicado = /*[[${epPublicado}]]*/ 0;
+    const epEnProceso = /*[[${epEnProceso}]]*/ 0;
+    const epAdoptado  = /*[[${epAdoptado}]]*/  0;
+    const epDevuelto  = /*[[${epDevuelto}]]*/  0;
+
+    const enEspera     = /*[[${enEspera}]]*/ 0;
+    const preAprobadas = /*[[${preAprobadas}]]*/ 0;
+    const confirmadas  = /*[[${confirmadas}]]*/ 0;
+    const rechazadas   = /*[[${rechazadas}]]*/ 0;
+
+    const rescatados = /*[[${rescatados}]]*/ 0;
+    const abandonados = /*[[${abandonados}]]*/ 0;
+    const acogidos   = /*[[${acogidos}]]*/ 0;
+
+    // Opciones comunes para que las leyendas se vean limpias
+    const baseOptions = {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { font: { family: 'Nunito', size: 12 }, padding: 16, boxWidth: 14 }
+        }
+      }
+    };
+
+    // ── Gráfica 1: Estado de publicación (donut) ──────────────────────────
+    new Chart(document.getElementById('chartEstado'), {
+      type: 'doughnut',
+      data: {
+        labels: ['En el refugio', 'Publicado', 'En proceso', 'Adoptado', 'Devuelto'],
+        datasets: [{
+          data: [epEnRefugio, epPublicado, epEnProceso, epAdoptado, epDevuelto],
+          backgroundColor: ['#6B7280', '#10B981', '#F59E0B', '#3B82F6', '#EF4444'],
+          borderWidth: 2,
+          borderColor: '#fff'
+        }]
+      },
+      options: { ...baseOptions, cutout: '65%' }
+    });
+
+    // ── Gráfica 2: Citas (donut) ───────────────────────────────────────────
+    new Chart(document.getElementById('chartCitas'), {
+      type: 'doughnut',
+      data: {
+        labels: ['En espera', 'Pre-aprobada', 'Confirmada', 'Rechazada'],
+        datasets: [{
+          data: [enEspera, preAprobadas, confirmadas, rechazadas],
+          backgroundColor: ['#F59E0B', '#34D399', '#3B82F6', '#F87171'],
+          borderWidth: 2,
+          borderColor: '#fff'
+        }]
+      },
+      options: {
+        ...baseOptions,
+        cutout: '65%'
+      }
+    });
+
+    // ── Gráfica 3: Origen (barras horizontales) ───────────────────────────
+    new Chart(document.getElementById('chartOrigen'), {
+      type: 'bar',
+      data: {
+        labels: ['Rescatados', 'Abandonados', 'Acogidos'],
+        datasets: [{
+          label: 'Cantidad de animales',
+          data: [rescatados, abandonados, acogidos],
+          backgroundColor: ['#F97316', '#3B82F6', '#10B981'],
+          borderRadius: 8,
+          borderSkipped: false
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            ticks: { stepSize: 1, font: { family: 'Nunito', size: 12 } },
+            grid: { color: '#F3F4F6' }
+          },
+          y: {
+            ticks: { font: { family: 'Nunito', size: 13, weight: '700' } },
+            grid: { display: false }
+          }
+        }
+      }
+    });
+
+    /*]]>*/
+  </script>
+
+</body>
+</html>

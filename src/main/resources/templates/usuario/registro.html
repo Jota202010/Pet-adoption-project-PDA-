@@ -70,10 +70,57 @@
         <div class="form-group">
           <label class="form-label">Contraseña *</label>
           <input class="form-input" type="password" name="contrasena"
-                 placeholder="Mínimo 8 caracteres" required/>
+                 id="contrasena" placeholder="Mínimo 8 caracteres" required minlength="8"/>
         </div>
 
-        <button type="submit" class="btn-register">Crear mi cuenta</button>
+        <div class="form-group">
+          <label class="form-label">Confirmar contraseña *</label>
+          <input class="form-input" type="password" name="confirmarContrasena"
+                 id="confirmarContrasena" placeholder="Repite tu contraseña" required/>
+          <span id="errorContrasena"
+                style="display:none;font-size:.78rem;color:#DC2626;font-weight:700;margin-top:4px;">
+            ⚠️ Las contraseñas no coinciden.
+          </span>
+        </div>
+
+        <button type="submit" class="btn-register" id="btnRegistrar">Crear mi cuenta</button>
+
+        <script>
+          (function () {
+            var c1 = document.getElementById('contrasena');
+            var c2 = document.getElementById('confirmarContrasena');
+            var err = document.getElementById('errorContrasena');
+            var btn = document.getElementById('btnRegistrar');
+
+            function validar() {
+              var mismatch = c2.value !== '' && c1.value !== c2.value;
+              var tooShort = c1.value.length > 0 && c1.value.length < 8;
+              if (tooShort) {
+                err.textContent = '⚠️ La contraseña debe tener al menos 8 caracteres.';
+                err.style.display = 'block';
+              } else if (mismatch) {
+                err.textContent = '⚠️ Las contraseñas no coinciden.';
+                err.style.display = 'block';
+              } else {
+                err.style.display = 'none';
+              }
+              c2.style.borderColor = mismatch ? '#DC2626' : '';
+              c1.style.borderColor = tooShort  ? '#DC2626' : '';
+              btn.disabled = mismatch || tooShort || c1.value === '';
+            }
+
+            c1.addEventListener('input', validar);
+            c2.addEventListener('input', validar);
+
+            c2.closest('form').addEventListener('submit', function (e) {
+              if (c1.value !== c2.value) {
+                e.preventDefault();
+                err.style.display = 'block';
+                c2.focus();
+              }
+            });
+          })();
+        </script>
       </form>
 
       <div class="login-prompt">
