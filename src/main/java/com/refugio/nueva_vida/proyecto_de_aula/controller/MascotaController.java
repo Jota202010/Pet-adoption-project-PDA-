@@ -162,8 +162,10 @@ public class MascotaController {
         existente.setRegistroMedico(perroActualizado.getRegistroMedico());
         perroService.guardar(existente);
 
-        historialService.registrar(existente, estadoAnterior,
-            existente.getEstadoPublicacion(), HistorialEstado.Origen.ADMIN);
+        // Re-fetch para evitar pasar una entidad detached a la siguiente transacción
+        Perro perroGuardado = perroService.buscarPorId(id).orElse(existente);
+        historialService.registrar(perroGuardado, estadoAnterior,
+            perroGuardado.getEstadoPublicacion(), HistorialEstado.Origen.ADMIN);
 
         if (archivos != null) {
             boolean primeraComo = esPerfil;

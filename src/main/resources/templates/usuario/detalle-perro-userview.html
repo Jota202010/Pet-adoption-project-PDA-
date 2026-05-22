@@ -112,13 +112,11 @@
               </div>
             </div>
             <div class="attr-item">
-              <div class="attr-icon">🩺</div>
+              <div class="attr-icon">📅</div>
               <div class="attr-content">
-                <span class="attr-label">Salud</span>
-                <span class="attr-value">
-                  <span th:class="'health-badge health-' + ${perro.nivelSalud}"
-                        th:text="${perro.nivelSalud}">Salud</span>
-                </span>
+                <span class="attr-label">En el refugio desde</span>
+                <span class="attr-value"
+                      th:text="${#temporals.format(perro.fechaIngreso, 'dd MMM yyyy')}">Fecha</span>
               </div>
             </div>
             <div class="attr-item">

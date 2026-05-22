@@ -76,7 +76,7 @@ public class AdminController {
         } catch (IllegalStateException e) {
             ra.addFlashAttribute("errorMsg", e.getMessage());
         }
-        return "redirect:/admin/panel";
+        return "redirect:/admin/cita/" + id;
     }
 
     // ── Rechazar cita ─────────────────────────────────────────────────────────
@@ -91,6 +91,6 @@ public class AdminController {
         } catch (IllegalStateException e) {
             ra.addFlashAttribute("errorMsg", e.getMessage());
         }
-        return "redirect:/admin/panel";
+        return "redirect:/admin/cita/" + id;
     }
 }

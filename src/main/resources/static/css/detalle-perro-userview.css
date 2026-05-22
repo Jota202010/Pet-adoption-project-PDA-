@@ -176,16 +176,6 @@
     .check-yes { color: #16A34A; }
     .check-no  { color: #DC2626; }
 
-    /* Nivel de salud badge — mismo peso visual que otros attr-value */
-    .health-badge {
-      display: inline-block;
-      font-size: 0.82rem; font-weight: 800;
-      padding: 2px 8px; border-radius: 5px;
-    }
-    .health-SANO    { background: #DCFCE7; color: #15803D; }
-    .health-ENFERMO { background: #FEF9C3; color: #854D0E; }
-    .health-CRITICO { background: #FEE2E2; color: #991B1B; }
-
     /* Sociabilidad badge — ídem */
     .social-badge {
       display: inline-block;

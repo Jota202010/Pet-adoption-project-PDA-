@@ -126,8 +126,7 @@ public class CitaService {
 
     @Transactional(readOnly = true)
     public long contarPendientes() {
-        long enEspera     = citaRepository.findByEstado(Cita.EstadoCita.en_espera).size();
-        long preAprobadas = citaRepository.findByEstado(Cita.EstadoCita.pre_aprobada).size();
-        return enEspera + preAprobadas;
+        return citaRepository.countByEstado(Cita.EstadoCita.en_espera)
+             + citaRepository.countByEstado(Cita.EstadoCita.pre_aprobada);
     }
 }

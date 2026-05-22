@@ -12,4 +12,5 @@ public interface CitaRepository extends JpaRepository<Cita, Integer> {
     List<Cita> findByUsuario(Usuario usuario);
     List<Cita> findByPerro(Perro perro);
     List<Cita> findByEstado(Cita.EstadoCita estado);
+    long countByEstado(Cita.EstadoCita estado);
 }
