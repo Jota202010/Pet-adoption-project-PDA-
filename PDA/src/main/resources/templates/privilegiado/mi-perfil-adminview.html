@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Mi Perfil Admin — Refugio Nueva Vida</title>
+  <link rel="stylesheet" th:href="@{/css/mi-perfil-adminview.css}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <nav>
+    <div class="nav-left">
+      <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
+      <span class="admin-badge">⚙ Panel Admin</span>
+    </div>
+    <div class="nav-right">
+      <a th:href="@{/admin/perfil}" class="btn-perfil-nav active">👤 Mi Perfil</a>
+      <a th:href="@{/admin/panel}" class="btn-exit">← Volver al panel</a>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ── Hero con stats integradas ─────────────────────────── -->
+    <div class="profile-hero">
+      <div class="hero-left">
+        <div class="avatar">👤</div>
+        <div class="profile-meta">
+          <h1 th:text="${admin.nombre}">Nombre</h1>
+          <p class="username">@<span th:text="${admin.usuario}">usuario</span></p>
+          <p th:text="${admin.email}">email</p>
+          <span class="role-badge">⚙ Administrador del sistema</span>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="num num-aprobadas" th:text="${total_aprobadas}">0</div>
+          <div class="lbl">Citas<br/>confirmadas</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num num-rechazadas" th:text="${total_rechazadas}">0</div>
+          <div class="lbl">Solicitudes<br/>rechazadas</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num num-espera" th:text="${total_espera}">0</div>
+          <div class="lbl">En espera<br/>de revisión</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Citas aprobadas ─────────────────────────────────── -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-title">Citas confirmadas</span>
+        <span class="count-pill" th:text="${#lists.size(citasAprobadas)}">0</span>
+      </div>
+      <div class="empty-state" th:if="${#lists.isEmpty(citasAprobadas)}">
+        <span class="empty-icon">📋</span>Ninguna cita confirmada aún.
+      </div>
+      <div class="citas-table-wrap" th:if="${not #lists.isEmpty(citasAprobadas)}">
+        <table class="citas-table">
+          <thead><tr>
+            <th>Adoptante</th><th>Perro</th><th>Fecha</th><th>Estado</th><th style="text-align:center;">Ver</th>
+          </tr></thead>
+          <tbody>
+            <tr th:each="c : ${citasAprobadas}">
+              <td>
+                <div class="user-name" th:text="${c.usuario.nombre}">Nombre</div>
+                <div class="user-sub" th:text="${c.usuario.email}">email</div>
+              </td>
+              <td><a th:href="@{/admin/mascota/{id}(id=${c.perro.idPerro})}" class="dog-link" th:text="${c.perro.nombre}">Perro</a></td>
+              <td><span class="date-text" th:text="${c.fechaCita} ?: 'Por confirmar'">fecha</span></td>
+              <td><span class="status-badge s-aprobada" th:text="${c.estado}">Estado</span></td>
+              <td style="text-align:center;">
+                <a th:href="@{/admin/cita/{id}(id=${c.idCita})}" class="action-link">
+                  Ver <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Citas rechazadas ─────────────────────────────────── -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-title">Solicitudes rechazadas</span>
+        <span class="count-pill" th:text="${#lists.size(citasRechazadas)}">0</span>
+      </div>
+      <div class="empty-state" th:if="${#lists.isEmpty(citasRechazadas)}">
+        <span class="empty-icon">📋</span>Ninguna solicitud rechazada.
+      </div>
+      <div class="citas-table-wrap" th:if="${not #lists.isEmpty(citasRechazadas)}">
+        <table class="citas-table">
+          <thead><tr>
+            <th>Adoptante</th><th>Perro</th><th>Solicitud</th><th>Estado</th><th style="text-align:center;">Ver</th>
+          </tr></thead>
+          <tbody>
+            <tr th:each="c : ${citasRechazadas}">
+              <td>
+                <div class="user-name" th:text="${c.usuario.nombre}">Nombre</div>
+                <div class="user-sub" th:text="${c.usuario.email}">email</div>
+              </td>
+              <td><a th:href="@{/admin/mascota/{id}(id=${c.perro.idPerro})}" class="dog-link" th:text="${c.perro.nombre}">Perro</a></td>
+              <td><span class="date-text" th:text="${c.fechaSolicitud}">fecha</span></td>
+              <td><span class="status-badge s-rechazada" th:text="${c.estado}">Estado</span></td>
+              <td style="text-align:center;">
+                <a th:href="@{/admin/cita/{id}(id=${c.idCita})}" class="action-link">
+                  Ver <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  <footer><p>© 2025 <span>Refugio Nueva Vida</span> · Panel de Administración</p></footer>
+</body>
+</html>

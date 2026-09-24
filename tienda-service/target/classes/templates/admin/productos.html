@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Administrar productos | PDA</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/admin-productos.css}">
+
+</head>
+
+<body>
+
+
+<!-- =========================
+     HEADER
+     ========================= -->
+
+<header class="admin-header">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            🐾
+        </div>
+
+        <div>
+            <strong>PDA</strong>
+            <span>Panel administrativo</span>
+        </div>
+
+    </div>
+
+
+    <div class="header-actions">
+
+        <a href="/admin/cuenta"
+           class="btn-header secondary"
+           style="margin-right:8px;">
+
+            💰 Ver cuenta
+
+        </a>
+
+        <a href="/tienda"
+           class="btn-header secondary">
+
+            🛒 Ver tienda
+
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================
+     CONTENIDO
+     ========================= -->
+
+<main class="admin-container">
+
+
+    <section class="page-heading">
+
+        <div>
+
+            <span class="eyebrow">
+                INVENTARIO
+            </span>
+
+            <h1>
+                Productos
+            </h1>
+
+            <p>
+                Administra los productos disponibles
+                en la tienda.
+            </p>
+
+        </div>
+
+
+        <a href="/admin/productos/nuevo"
+           class="btn-primary">
+
+            <span>＋</span>
+            Nuevo producto
+
+        </a>
+
+    </section>
+
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         🆕 SALDOS DE LAS CUENTAS
+         ═══════════════════════════════════════════════════════ -->
+
+    <section style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:18px; margin-bottom:30px;">
+
+        <!-- 🐾 SALDO DEL REFUGIO -->
+        <div style="background:linear-gradient(135deg,#ff6b35,#ff9f43); border-radius:18px;
+                    padding:22px 26px; color:#fff; box-shadow: 0 10px 25px rgba(255,107,53,0.3);
+                    position:relative; overflow:hidden;">
+
+            <div style="position:absolute; top:-30px; right:-30px; width:120px; height:120px;
+                        background:rgba(255,255,255,0.1); border-radius:50%;"></div>
+
+            <div style="position:relative; z-index:1;">
+                <div style="font-size:0.75rem; font-weight:800; letter-spacing:1.5px;
+                            opacity:0.95; margin-bottom:10px;">
+                    🐾 SALDO DEL REFUGIO
+                </div>
+                <div style="font-size:2.2rem; font-weight:800;
+                            font-family:'Playfair Display',serif; line-height:1; margin-bottom:6px;"
+                     th:text="'$ ' + ${#numbers.formatDecimal(cuentaRefugio.saldo, 1, 'POINT', 0, 'COMMA')}">
+                    $ 0
+                </div>
+                <div style="font-size:0.82rem; opacity:0.85;">
+                    <span th:text="${cuentaRefugio.titular}">Refugio Nueva Vida</span>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- 🏪 SALDO DE LA TIENDA -->
+        <div style="background:linear-gradient(135deg,#172033,#2d3f5c); border-radius:18px;
+                    padding:22px 26px; color:#fff; box-shadow: 0 10px 25px rgba(23,32,51,0.3);
+                    position:relative; overflow:hidden;">
+
+            <div style="position:absolute; top:-30px; right:-30px; width:120px; height:120px;
+                        background:rgba(255,255,255,0.08); border-radius:50%;"></div>
+
+            <div style="position:relative; z-index:1;">
+                <div style="font-size:0.75rem; font-weight:800; letter-spacing:1.5px;
+                            opacity:0.95; margin-bottom:10px;">
+                    🏪 SALDO DE LA TIENDA
+                </div>
+                <div style="font-size:2.2rem; font-weight:800;
+                            font-family:'Playfair Display',serif; line-height:1; margin-bottom:6px;"
+                     th:text="'$ ' + ${#numbers.formatDecimal(cuentaTienda.saldo, 1, 'POINT', 0, 'COMMA')}">
+                    $ 0
+                </div>
+                <div style="font-size:0.82rem; opacity:0.85;">
+                    <span th:text="${cuentaTienda.titular}">Tienda del Refugio</span>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- MENSAJE ÉXITO -->
+
+    <div class="alert success"
+         th:if="${mensajeExito}"
+         th:text="${mensajeExito}">
+    </div>
+
+
+    <!-- MENSAJE ERROR -->
+
+    <div class="alert error"
+         th:if="${mensajeError}"
+         th:text="${mensajeError}">
+    </div>
+
+
+
+    <!-- =========================
+         RESUMEN
+         ========================= -->
+
+    <section class="stats">
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon blue">
+                📦
+            </div>
+
+            <div>
+
+                <span>
+                    Productos
+                </span>
+
+                <strong
+                    th:text="${#lists.size(productos)}">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon green">
+                ✅
+            </div>
+
+            <div>
+
+                <span>
+                    Con stock
+                </span>
+
+                <strong
+                    th:text="${#lists.size(productos.?[stock > 0])}">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon orange">
+                ⚠️
+            </div>
+
+            <div>
+
+                <span>
+                    Sin stock
+                </span>
+
+                <strong
+                    th:text="${#lists.size(productos.?[stock == 0])}">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =========================
+         TABLA
+         ========================= -->
+
+    <section class="products-card">
+
+
+        <div class="table-header">
+
+            <div>
+
+                <h2>
+                    Inventario actual
+                </h2>
+
+                <p>
+                    Productos registrados en la tienda.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- SIN PRODUCTOS -->
+
+        <div class="empty-state"
+             th:if="${#lists.isEmpty(productos)}">
+
+            <div class="empty-icon">
+                📦
+            </div>
+
+            <h3>
+                Todavía no hay productos
+            </h3>
+
+            <p>
+                Comienza agregando tu primer producto.
+            </p>
+
+            <a href="/admin/productos/nuevo"
+               class="btn-primary">
+
+                ＋ Agregar producto
+
+            </a>
+
+        </div>
+
+
+
+        <!-- TABLA -->
+
+        <div class="table-wrapper"
+             th:if="${!#lists.isEmpty(productos)}">
+
+            <table>
+
+                <thead>
+
+                <tr>
+
+                    <th>
+                        Producto
+                    </th>
+
+                    <th>
+                        Categoría
+                    </th>
+
+                    <th>
+                        Precio
+                    </th>
+
+                    <th>
+                        Stock
+                    </th>
+
+                    <th>
+                        Estado
+                    </th>
+
+                    <th>
+                        Acciones
+                    </th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                <tr th:each="producto : ${productos}">
+
+
+                    <!-- PRODUCTO -->
+
+                    <td>
+
+                        <div class="product-name">
+
+                            <div class="product-icon">
+                                📦
+                            </div>
+
+                            <div>
+
+                                <strong
+                                    th:text="${producto.nombre}">
+                                    Producto
+                                </strong>
+
+                                <span
+                                    th:text="'ID #' + ${producto.idProducto}">
+                                    ID
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- CATEGORÍA -->
+
+                    <td>
+
+                        <span class="category"
+                              th:text="${producto.categoria}">
+                            VACUNA
+                        </span>
+
+                    </td>
+
+
+                    <!-- PRECIO -->
+
+                    <td>
+
+                        <strong class="price"
+                                th:text="'$ ' + ${producto.precio}">
+                            $0
+                        </strong>
+
+                    </td>
+
+
+                    <!-- STOCK -->
+
+                    <td>
+
+                        <strong
+                            th:text="${producto.stock}">
+                            0
+                        </strong>
+
+                    </td>
+
+
+                    <!-- ESTADO -->
+
+                    <td>
+
+                        <span class="stock-status available"
+                              th:if="${producto.stock > 0}">
+
+                            ● Disponible
+
+                        </span>
+
+                        <span class="stock-status empty"
+                              th:if="${producto.stock == 0}">
+
+                            ● Sin stock
+
+                        </span>
+
+                    </td>
+
+
+                    <!-- ACCIONES -->
+
+                    <td>
+
+                        <div class="actions">
+
+
+                            <a th:href="@{/admin/productos/editar/{id}
+                                      (id=${producto.idProducto})}"
+                               class="action edit">
+
+                                ✏️
+
+                            </a>
+
+
+                            <form th:action="@{/admin/productos/eliminar/{id}
+                                               (id=${producto.idProducto})}"
+                                  method="post"
+                                  onsubmit="return confirm('¿Seguro que deseas eliminar este producto?');">
+
+                                <button type="submit"
+                                        class="action delete">
+
+                                    🗑️
+
+                                </button>
+
+                            </form>
+
+
+                        </div>
+
+                    </td>
+
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        PDA · Sistema de Gestión
+    </p>
+
+</footer>
+
+
+</body>
+</html>

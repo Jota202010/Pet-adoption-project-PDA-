@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Panel de Pedidos — Proveedor</title>
+    <link rel="stylesheet" th:href="@{/css/proveedor.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     TOPBAR
+     ═══════════════════════════════════════════ -->
+<header class="topbar">
+    <div>
+        <span class="logo">🐾</span>
+        <span style="font-weight:800;">Proveedor · Refugio Nueva Vida</span>
+    </div>
+    <nav style="display:flex; gap:20px; align-items:center;">
+        <a th:href="@{/proveedor}" class="top-link">Inicio</a>
+        <a th:href="@{/proveedor/admin}" class="top-link">Panel</a>
+        <a href="http://localhost:8081/tienda" class="top-link">Tienda</a>
+    </nav>
+</header>
+
+<!-- ═══════════════════════════════════════════
+     DASHBOARD
+     ═══════════════════════════════════════════ -->
+<main class="dashboard">
+
+    <div class="page-title">
+        <div>
+            <span class="small-title">GESTIÓN DE PEDIDOS</span>
+            <h1>Panel de envíos</h1>
+            <p>Todos los pedidos recibidos desde la tienda</p>
+        </div>
+        <span class="live">● EN VIVO</span>
+    </div>
+
+    <!-- ═══ SIN PEDIDOS ═══ -->
+    <div th:if="${#lists.isEmpty(envios)}" class="empty">
+        <div class="empty-icon">📭</div>
+        <h2>No hay envíos aún</h2>
+        <p>Cuando la tienda procese un pedido, aparecerá aquí automáticamente.</p>
+    </div>
+
+    <!-- ═══ LISTA DE PEDIDOS ═══ -->
+    <section th:if="${not #lists.isEmpty(envios)}" class="orders">
+
+        <article th:each="envio : ${envios}" class="order-card">
+
+            <!-- Header -->
+            <div class="order-header">
+                <div>
+                    <span class="label">PEDIDO</span>
+                    <h2>#<span th:text="${envio.idPedido}">1</span></h2>
+                </div>
+                <span class="status"
+                      th:classappend="${envio.estado.name()}"
+                      th:switch="${envio.estado}">
+                    <span th:case="'PREPARANDO'">📝 PREPARANDO</span>
+                    <span th:case="'DESPACHADO'">📤 DESPACHADO</span>
+                    <span th:case="'EN_TRANSITO'">🚛 EN TRÁNSITO</span>
+                    <span th:case="'EN_REPARTO'">🛵 EN REPARTO</span>
+                    <span th:case="'ENTREGADO'">✅ ENTREGADO</span>
+                </span>
+            </div>
+
+            <!-- Timeline horizontal con 5 pasos -->
+            <div class="timeline">
+
+                <div class="step"
+                     th:classappend="${envio.estado.name() == 'PREPARANDO' or
+                                      envio.estado.name() == 'DESPACHADO' or
+                                      envio.estado.name() == 'EN_TRANSITO' or
+                                      envio.estado.name() == 'EN_REPARTO' or
+                                      envio.estado.name() == 'ENTREGADO'} ? ' active' : ''">
+                    <div class="circle">1</div>
+                    <span>Preparando</span>
+                </div>
+                <div class="line"></div>
+
+                <div class="step"
+                     th:classappend="${envio.estado.name() == 'DESPACHADO' or
+                                      envio.estado.name() == 'EN_TRANSITO' or
+                                      envio.estado.name() == 'EN_REPARTO' or
+                                      envio.estado.name() == 'ENTREGADO'} ? ' active' : ''">
+                    <div class="circle">2</div>
+                    <span>Despachado</span>
+                </div>
+                <div class="line"></div>
+
+                <div class="step"
+                     th:classappend="${envio.estado.name() == 'EN_TRANSITO' or
+                                      envio.estado.name() == 'EN_REPARTO' or
+                                      envio.estado.name() == 'ENTREGADO'} ? ' active' : ''">
+                    <div class="circle">3</div>
+                    <span>En tránsito</span>
+                </div>
+                <div class="line"></div>
+
+                <div class="step"
+                     th:classappend="${envio.estado.name() == 'EN_REPARTO' or
+                                      envio.estado.name() == 'ENTREGADO'} ? ' active' : ''">
+                    <div class="circle">4</div>
+                    <span>En reparto</span>
+                </div>
+                <div class="line"></div>
+
+                <div class="step"
+                     th:classappend="${envio.estado.name() == 'ENTREGADO'} ? ' active' : ''">
+                    <div class="circle">5</div>
+                    <span>Entregado</span>
+                </div>
+
+            </div>
+
+            <!-- Footer -->
+            <div class="order-footer">
+                <div>
+                    <span class="label">ÚLTIMA ACTUALIZACIÓN</span>
+                    <strong th:text="${#temporals.format(envio.fechaActualizacion, 'dd/MM/yyyy HH:mm')}">
+                        22/09/2026 10:35
+                    </strong>
+                </div>
+                <a th:href="@{/proveedor/seguimiento/{id}(id=${envio.idPedido})}"
+                   class="btn btn-primary small">
+                    Ver seguimiento →
+                </a>
+            </div>
+
+        </article>
+
+    </section>
+
+</main>
+
+</body>
+</html>

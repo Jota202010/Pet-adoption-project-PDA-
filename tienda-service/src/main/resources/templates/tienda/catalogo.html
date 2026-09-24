@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Tienda — Refugio Nueva Vida</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/tienda.css}"/>
+    <style>
+        /* Colores por categoría (no rompe el diseño base de tienda.css) */
+        .producto-categoria.cat-vacuna         { background:#EFF6FF; color:#1D4ED8; }
+        .producto-categoria.cat-alimento       { background:#FFF7ED; color:#C2410C; }
+        .producto-categoria.cat-medicamento    { background:#F3E8FF; color:#7C3AED; }
+        .producto-categoria.cat-accesorio      { background:#FCE7F3; color:#BE185D; }
+        .producto-categoria.cat-higiene        { background:#F0FDFA; color:#0D9488; }
+        .producto-categoria.cat-hidratacion    { background:#ECFEFF; color:#0891B2; }
+        .producto-categoria.cat-desparasitante { background:#DCFCE7; color:#15803D; }
+    </style>
+</head>
+
+<body>
+
+<!-- =========================
+     HEADER
+     ========================= -->
+
+<header class="tienda-header">
+
+    <div class="tienda-header-top">
+
+        <a th:href="@{/admin/productos}" class="btn-admin">
+            ⚙️ Administrar productos
+        </a>
+
+        <a th:href="@{/admin/cuenta}"
+           class="btn-cuenta"
+           title="Ver saldos y transferencias">
+            💰 Mi Cuenta
+        </a>
+
+        <a th:href="@{/tienda/carrito}" class="btn-carrito">
+            🛒 Ver carrito
+        </a>
+
+        <a th:href="@{/admin/notificaciones-tienda}"
+           class="btn-campana"
+           th:classappend="${totalNoLeidas != null and totalNoLeidas > 0} ? ' tiene-no-leidas' : ''"
+           title="Recetas pendientes">
+            🔔
+            <span th:if="${totalNoLeidas != null and totalNoLeidas > 0}"
+                  class="badge-no-leidas"
+                  th:text="${totalNoLeidas}">3</span>
+        </a>
+
+    </div>
+
+    <h1>🐾 Tienda del Refugio</h1>
+    <p>Productos para el cuidado de nuestros peluditos</p>
+
+</header>
+
+
+
+<!-- =========================
+     MENSAJE DE ÉXITO
+     ========================= -->
+
+<div th:if="${mensajeExito}" class="aviso-exito" th:text="${mensajeExito}"></div>
+
+<div th:if="${errorMsg}" class="aviso-error aviso-shake" th:text="${errorMsg}"></div>
+
+
+
+<!-- =========================
+     🆕 SALDO DEL REFUGIO
+     ========================= -->
+
+<div th:if="${cuentaRefugio != null}"
+     style="width: min(1150px, calc(100% - 32px));
+            margin: 25px auto -20px;
+            background: linear-gradient(135deg, #ff6b35, #ff9f43);
+            border-radius: 18px;
+            padding: 20px 28px;
+            color: #fff;
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;">
+
+    <div style="position:absolute; top:-40px; right:-40px; width:150px; height:150px;
+                background:rgba(255,255,255,0.1); border-radius:50%;"></div>
+
+    <div style="position:relative; z-index:1;">
+        <div style="font-size:0.75rem; font-weight:800; letter-spacing:1.5px;
+                    opacity:0.95; margin-bottom:8px;">
+            💰 SALDO DEL REFUGIO
+        </div>
+        <div style="font-size:2.2rem; font-weight:800;
+                    font-family:'Playfair Display',serif; line-height:1;"
+             th:text="'$ ' + ${#numbers.formatDecimal(cuentaRefugio.saldo, 1, 'POINT', 0, 'COMMA')}">
+            $ 500.000
+        </div>
+    </div>
+
+    <a th:href="@{/admin/cuenta}"
+       style="position:relative; z-index:1;
+              background:rgba(255,255,255,0.2); color:#fff;
+              padding:12px 22px; border-radius:12px;
+              text-decoration:none; font-weight:800; font-size:0.9rem;
+              border:2px solid rgba(255,255,255,0.35);
+              transition: all 0.2s ease;">
+        Ver cuenta →
+    </a>
+
+</div>
+
+
+
+<!-- =========================
+     CATÁLOGO
+     ========================= -->
+
+<main class="catalogo-grid">
+
+
+    <!-- =========================
+         SIN PRODUCTOS
+         ========================= -->
+
+    <div th:if="${#lists.isEmpty(productos)}" class="sin-productos">
+
+        <div class="sin-productos-icon">📦</div>
+
+        <h2>Todavía no hay productos</h2>
+
+        <p>Puedes agregar productos desde el panel de administración.</p>
+
+        <a th:href="@{/admin/productos}" class="btn-agregar">
+            ⚙️ Ir al panel de productos
+        </a>
+
+    </div>
+
+
+
+    <!-- =========================
+         PRODUCTOS
+         ========================= -->
+
+    <div class="producto-card" th:each="producto : ${productos}">
+
+        <div class="producto-categoria"
+             th:classappend="'cat-' + ${#strings.toLowerCase(producto.categoria)}"
+             th:switch="${producto.categoria.name()}">
+            <th:block th:case="'VACUNA'">💉 Vacuna</th:block>
+            <th:block th:case="'ALIMENTO'">🥩 Alimento</th:block>
+            <th:block th:case="'MEDICAMENTO'">💊 Medicamento</th:block>
+            <th:block th:case="'ACCESORIO'">🎒 Accesorio</th:block>
+            <th:block th:case="'HIGIENE'">🧴 Higiene</th:block>
+            <th:block th:case="'HIDRATACION'">💧 Hidratación</th:block>
+            <th:block th:case="'DESPARASITANTE'">🪱 Desparasitante</th:block>
+            <th:block th:case="*" th:text="${producto.categoria}">CATEGORÍA</th:block>
+        </div>
+
+        <div class="producto-icon" th:switch="${producto.categoria.name()}">
+            <th:block th:case="'VACUNA'">💉</th:block>
+            <th:block th:case="'ALIMENTO'">🥩</th:block>
+            <th:block th:case="'MEDICAMENTO'">💊</th:block>
+            <th:block th:case="'ACCESORIO'">🎒</th:block>
+            <th:block th:case="'HIGIENE'">🧴</th:block>
+            <th:block th:case="'HIDRATACION'">💧</th:block>
+            <th:block th:case="'DESPARASITANTE'">🪱</th:block>
+            <th:block th:case="*">📦</th:block>
+        </div>
+
+        <h3 th:text="${producto.nombre}">Nombre del producto</h3>
+
+        <p class="producto-precio" th:text="'$' + ${producto.precio}">
+            $0
+        </p>
+
+        <p class="producto-stock"
+           th:if="${producto.stock > 0}"
+           th:text="'Stock disponible: ' + ${producto.stock}">
+            Stock disponible: 0
+        </p>
+
+        <p class="producto-stock sin-stock" th:if="${producto.stock == 0}">
+            Sin stock disponible
+        </p>
+
+        <form th:action="@{/tienda/carrito/agregar}" method="post" class="form-agregar" th:if="${producto.stock > 0}">
+
+            <input type="hidden" name="idProducto" th:value="${producto.idProducto}"/>
+
+            <div class="cantidad-selector" th:attr="data-stock=${producto.stock}">
+                <button type="button" class="btn-cantidad btn-menos" aria-label="Restar unidad">−</button>
+                <input type="number" name="cantidad" class="input-cantidad"
+                       value="1" min="1" th:max="${producto.stock}" inputmode="numeric"/>
+                <button type="button" class="btn-cantidad btn-mas" aria-label="Sumar unidad">+</button>
+            </div>
+            <div class="cantidad-aviso"></div>
+
+            <button type="submit" class="btn-agregar">🛒 Agregar al carrito</button>
+
+        </form>
+
+        <button type="button" class="btn-agregar" disabled th:if="${producto.stock == 0}">
+            Sin stock
+        </button>
+
+    </div>
+
+
+</main>
+
+
+
+<!-- =========================
+     🆕 SELECTOR DE CANTIDAD: validación de stock en vivo
+     ========================= -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.cantidad-selector').forEach(function (selector) {
+        var stock     = parseInt(selector.dataset.stock, 10) || 0;
+        var input     = selector.querySelector('.input-cantidad');
+        var btnMenos  = selector.querySelector('.btn-menos');
+        var btnMas    = selector.querySelector('.btn-mas');
+        var aviso     = selector.parentElement.querySelector('.cantidad-aviso');
+        var form      = selector.closest('form');
+
+        function mostrarAviso(mensaje) {
+            if (!aviso) return;
+            aviso.textContent = mensaje;
+            aviso.classList.add('visible');
+            selector.classList.remove('cantidad-shake');
+            // truco para reiniciar la animación aunque se dispare seguido
+            void selector.offsetWidth;
+            selector.classList.add('cantidad-shake');
+
+            clearTimeout(aviso._timeoutId);
+            aviso._timeoutId = setTimeout(function () {
+                aviso.classList.remove('visible');
+            }, 2600);
+        }
+
+        function clamp() {
+            var valor = parseInt(input.value, 10);
+
+            if (isNaN(valor) || valor < 1) {
+                valor = 1;
+            }
+
+            if (stock <= 0) {
+                valor = 0;
+            } else if (valor > stock) {
+                valor = stock;
+                mostrarAviso('⚠️ Solo quedan ' + stock + ' unidad(es) disponibles.');
+            }
+
+            input.value = valor;
+            return valor;
+        }
+
+        btnMenos.addEventListener('click', function () {
+            var valor = (parseInt(input.value, 10) || 1) - 1;
+            input.value = Math.max(1, valor);
+        });
+
+        btnMas.addEventListener('click', function () {
+            input.value = (parseInt(input.value, 10) || 1) + 1;
+            clamp();
+        });
+
+        input.addEventListener('input', clamp);
+        input.addEventListener('blur', clamp);
+
+        if (form) {
+            form.addEventListener('submit', function (e) {
+                var valorFinal = clamp();
+                if (valorFinal > stock || valorFinal < 1) {
+                    e.preventDefault();
+                    mostrarAviso('🚫 No puedes llevar más de ' + stock + ' unidad(es) de este producto.');
+                }
+            });
+        }
+    });
+});
+</script>
+
+
+
+<!-- =========================
+     FOOTER
+     ========================= -->
+
+<footer>
+    <p>© 2025 Refugio Nueva Vida · Tienda</p>
+</footer>
+
+</body>
+
+</html>

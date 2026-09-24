@@ -1,0 +1,108 @@
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: pda-mysql
+    restart: unless-stopped
+    environment:
+      - TZ=America/Bogota
+      - MYSQL_ROOT_PASSWORD=juanp
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pjuanp"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: pda-rabbitmq
+    restart: unless-stopped
+    environment:
+      - TZ=America/Bogota
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  pda:
+    build:
+      context: ./PDA
+    container_name: pda-service
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - TZ=America/Bogota
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=juanp
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./PDA/uploads/fotos:/app/uploads/fotos
+
+  tienda-service:
+    build:
+      context: ./tienda-service
+    container_name: tienda-service
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - TZ=America/Bogota
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=juanp
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+    ports:
+      - "8081:8081"
+
+  proveedor-service:
+    build:
+      context: ./proveedor-service
+    container_name: proveedor-service
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - TZ=America/Bogota
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=juanp
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+    ports:
+      - "8082:8082"
+
+volumes:
+  mysql_data:

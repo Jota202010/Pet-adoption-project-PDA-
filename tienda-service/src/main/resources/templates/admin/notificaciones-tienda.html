@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Notificaciones — Tienda</title>
+    <link rel="stylesheet" th:href="@{/css/tienda.css}"/>
+    <link rel="stylesheet" th:href="@{/css/cuenta.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<header class="cuenta-header">
+    <h1>🔔 Notificaciones de la Tienda</h1>
+    <p>Recetas enviadas desde el refugio</p>
+</header>
+
+<main class="cuenta-container">
+
+    <div th:if="${mensajeExito}" class="alerta alerta-exito" th:text="${mensajeExito}"></div>
+    <div th:if="${mensajeError}" class="alerta alerta-error" th:text="${mensajeError}"></div>
+
+    <div class="saldos-info notif-resumen">
+        <div class="info-item">
+            <span>📩 Total:</span>
+            <strong th:text="${#lists.size(notificaciones)}">0</strong>
+        </div>
+        <div class="info-item">
+            <span>🔵 No leídas:</span>
+            <strong th:text="${totalNoLeidas}">0</strong>
+        </div>
+    </div>
+
+    <div th:if="${totalNoLeidas > 0}" class="notif-botones-top">
+        <form th:action="@{/admin/notificaciones-tienda/leer-todas}" method="post">
+            <button type="submit" class="btn-confirmar">✅ Marcar todas como leídas</button>
+        </form>
+    </div>
+
+    <div th:if="${#lists.isEmpty(notificaciones)}" class="estado-vacio">
+        <div class="vacio-icono">📭</div>
+        <h3>No hay notificaciones</h3>
+        <p>Cuando el refugio genere una receta, aparecerá aquí automáticamente.</p>
+    </div>
+
+    <div th:if="${not #lists.isEmpty(notificaciones)}">
+        <h2 class="historial-title">📋 Recetas recibidas</h2>
+
+        <div th:each="noti : ${notificaciones}"
+             class="notif-card"
+             th:classappend="${noti.leida} ? ' leida' : ' no-leida'">
+
+            <div class="notif-header">
+                <h3 class="notif-titulo" th:text="${noti.titulo}">Nueva receta</h3>
+                <span th:if="${!noti.leida}" class="notif-badge-nueva">🆕 NUEVA</span>
+            </div>
+
+            <p class="notif-mensaje" th:text="${noti.mensaje}" style="white-space: pre-line;">
+                Descripción...
+            </p>
+
+            <div class="notif-fecha"
+                 th:text="${#temporals.format(noti.fecha, 'dd/MM/yyyy HH:mm')}">
+                23/09/2026 05:32
+            </div>
+
+            <div class="notif-acciones">
+
+                <!-- 🆕 Botón "Rellenar automáticamente" -->
+                <a th:href="@{/admin/productos/nuevo(
+                                rellenar=true,
+                                nombre=${noti.titulo != null ? 
+                                       #strings.substringAfter(noti.titulo, '— ') : ''},
+                                descripcion=${noti.mensaje}
+                              )}"
+                   class="notif-btn"
+                   style="background:linear-gradient(135deg,#7c3aed,#a855f7); color:#fff;
+                          box-shadow: 0 4px 12px rgba(124,58,237,0.3);">
+                    🪄 Rellenar automáticamente
+                </a>
+
+                <form th:if="${!noti.leida}"
+                      th:action="@{/admin/notificaciones-tienda/{id}/leer(id=${noti.idNotificacion})}"
+                      method="post">
+                    <button type="submit" class="notif-btn notif-btn-leer">✅ Marcar como leída</button>
+                </form>
+
+                <a th:href="@{/tienda}" class="notif-btn notif-btn-tienda">🛒 Ir a la tienda</a>
+
+                <form th:action="@{/admin/notificaciones-tienda/{id}/eliminar(id=${noti.idNotificacion})}"
+                      method="post">
+                    <button type="submit" class="notif-btn notif-btn-eliminar">🗑️ Eliminar</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="notif-volver">
+        <a th:href="@{/tienda}" class="btn-volver">← Volver a la tienda</a>
+    </div>
+
+</main>
+
+<footer class="cuenta-footer">
+    <p>© 2025 Refugio Nueva Vida · Tienda</p>
+</footer>
+
+</body>
+</html>

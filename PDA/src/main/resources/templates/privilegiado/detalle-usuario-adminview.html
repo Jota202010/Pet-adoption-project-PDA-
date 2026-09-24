@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Detalle Usuario — Admin</title>
+  <link rel="stylesheet" th:href="@{/css/detalle-usuario-adminview.css}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <nav>
+    <div class="nav-left">
+      <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
+      <span class="admin-badge">⚙ Panel Admin</span>
+    </div>
+    <div class="nav-right">
+      <a th:href="@{/admin/perfil}" class="btn-perfil-nav">👤 Mi Perfil</a>
+      <a th:href="@{/admin/panel}" class="btn-exit">← Volver al panel</a>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <a th:href="@{/admin/panel}" class="back-link">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Volver al panel
+    </a>
+
+    <div class="detail-card">
+
+      <!-- Cabecera del perfil -->
+      <div class="profile-header">
+        <div class="avatar">👤</div>
+        <div class="profile-meta">
+          <h1 th:text="${usuario.nombre}">Nombre</h1>
+          <p>@<span th:text="${usuario.usuario}">usuario</span></p>
+          <p th:text="${usuario.email}">email</p>
+          <span class="profile-badge">Rol: <strong th:text="${usuario.rol}">rol</strong></span>
+        </div>
+      </div>
+
+      <!-- Datos personales -->
+      <div class="data-section">
+        <div class="section-label">Datos personales</div>
+        <div class="data-grid">
+          <div class="data-card">
+            <div class="icon">✉️</div>
+            <div class="label">Email</div>
+            <div class="value" th:text="${usuario.email}">email</div>
+          </div>
+          <div class="data-card">
+            <div class="icon">📞</div>
+            <div class="label">Teléfono</div>
+            <div class="value" th:text="${usuario.telefono != null ? usuario.telefono : '—'}">tel</div>
+          </div>
+          <div class="data-card">
+            <div class="icon">🏠</div>
+            <div class="label">Dirección</div>
+            <div class="value" th:text="${usuario.direccion != null ? usuario.direccion : '—'}">dir</div>
+          </div>
+          <div class="data-card">
+            <div class="icon">📅</div>
+            <div class="label">Fecha de registro</div>
+            <div class="value" th:text="${usuario.fechaRegistro}">fecha</div>
+          </div>
+          <div class="data-card">
+            <div class="icon">🔑</div>
+            <div class="label">Rol</div>
+            <div class="value" th:text="${usuario.rol}">rol</div>
+          </div>
+          <div class="data-card">
+            <div class="icon">📋</div>
+            <div class="label">Total citas</div>
+            <div class="value" th:text="${#lists.size(citas)}">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Citas del usuario -->
+      <div class="citas-section">
+        <div class="citas-header-row">
+          <div class="citas-title">Citas agendadas</div>
+        </div>
+        <div th:if="${#lists.isEmpty(citas)}"
+             style="padding:24px;text-align:center;color:#9CA3AF;font-size:.9rem;">
+          Sin citas agendadas.
+        </div>
+        <table th:if="${not #lists.isEmpty(citas)}" class="citas-table">
+          <thead>
+            <tr><th>Perro</th><th>Fecha y hora</th><th>Estado</th><th style="text-align:center;">Ver</th></tr>
+          </thead>
+          <tbody>
+            <tr th:each="cita : ${citas}">
+              <td>
+                <a th:href="@{/admin/mascota/{id}(id=${cita.perro.idPerro})}"
+                   class="perro-link" th:text="${cita.perro.nombre}">Perro</a>
+              </td>
+              <td>
+                <span th:text="${cita.fechaCita}">fecha</span> ·
+                <span th:text="${cita.horaCita}">hora</span>
+              </td>
+              <td>
+                <span class="cita-status status-pendiente" th:text="${cita.estado}">Estado</span>
+              </td>
+              <td style="text-align:center;">
+                <a th:href="@{/admin/cita/{id}(id=${cita.idCita})}"
+                   style="background:#F3F4F6;border:1px solid #D1D5DB;border-radius:7px;
+                          padding:5px 12px;font-size:.78rem;font-weight:800;color:#1F2937;text-decoration:none;">Ver</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <footer><p>© 2025 <span>Refugio Nueva Vida</span> · Panel de Administración</p></footer>
+</body>
+</html>

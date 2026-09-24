@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Saldo insuficiente</title>
+    <link rel="stylesheet" th:href="@{/css/cuenta.css}"/>
+</head>
+<body class="error-body">
+    <div class="error-card">
+        <div class="error-icono">🚫</div>
+        <h1>Saldo insuficiente</h1>
+        <p th:text="${mensajeError}">No hay fondos suficientes.</p>
+        <div class="error-botones">
+            <a th:href="@{/admin/cuenta/transferir}" class="btn-confirmar">💸 Transferir más fondos</a>
+            <a th:href="@{/admin/cuenta}" class="btn-cancelar">← Volver al panel</a>
+        </div>
+    </div>
+</body>
+</html>

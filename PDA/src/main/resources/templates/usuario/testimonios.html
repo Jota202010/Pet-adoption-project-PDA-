@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testimonios — Refugio Nueva Vida</title>
+  <link rel="stylesheet" th:href="@{/css/testimonios.css}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <nav>
+    <div class="nav-left">
+      <a th:href="@{/inicio}" class="nav-brand">Refugio Nueva Vida</a>
+      <a th:href="@{/admin/panel}" class="btn-admin" sec:authorize="hasRole('administrador')">Administrar</a>
+    </div>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a th:href="@{/inicio}">Inicio</a></li>
+        <li><a th:href="@{/nosotros}">Nosotros</a></li>
+        <li><a th:href="@{/mision}">Nuestra Misión</a></li>
+        <li><a th:href="@{/testimonios}" class="active">Testimonios</a></li>
+      </ul>
+      <a th:href="@{/perfil}" class="btn-perfil" sec:authorize="isAuthenticated()">👤 Mi Perfil</a>
+      <form th:action="@{/logout}" method="post" style="display:inline;" sec:authorize="isAuthenticated()">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit" class="btn-nav">Cerrar Sesión</button>
+      </form>
+    </div>
+  </nav>
+
+  <!-- Promedio general -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">⭐ Lo que opinan</div>
+      <h1>La voz de quienes<br/><span>nos acompañan</span></h1>
+
+      <div class="promedio-box">
+        <div class="promedio-num" th:text="${#numbers.formatDecimal(promedio, 1, 1, 'POINT')}">0.0</div>
+        <div class="promedio-estrellas">
+          <span th:each="i : ${#numbers.sequence(1, 5)}"
+                th:text="${i le estrellasLlenas ? '⭐' : '☆'}"
+                th:style="${i le estrellasLlenas ? '' : 'opacity:.35'}">☆</span>
+        </div>
+        <div class="promedio-label"
+             th:text="${total + (total == 1 ? ' testimonio' : ' testimonios')}">0 testimonios</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mensajes -->
+  <div th:if="${mensajeExito}" class="flash ok">✅ <span th:text="${mensajeExito}"></span></div>
+  <div th:if="${errorMsg}"     class="flash err">⚠️ <span th:text="${errorMsg}"></span></div>
+
+  <!-- Formulario de calificación -->
+  <section class="form-section">
+    <div class="form-card">
+      <h2 th:text="${miTestimonio != null ? 'Actualiza tu calificación' : 'Déjanos tu calificación'}">Déjanos tu calificación</h2>
+      <p class="sub">Cuéntanos cómo fue tu experiencia con el refugio. El comentario es opcional.</p>
+
+      <div th:if="${miTestimonio}" class="ya-calificaste">
+        Ya nos calificaste con <span th:text="${miTestimonio.calificacion}">5</span> de 5 estrellas.
+        Si quieres, puedes cambiar tu calificación abajo.
+      </div>
+
+      <form th:action="@{/testimonios}" method="post" id="formTestimonio">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <label class="campo-label">Tu calificación</label>
+        <!-- En orden inverso para que el CSS pinte las estrellas de izquierda a derecha -->
+        <div class="estrellas-input">
+          <input type="radio" id="e5" name="calificacion" value="5"
+                 th:checked="${miTestimonio != null and miTestimonio.calificacion == 5}"/>
+          <label for="e5" title="Excelente">★</label>
+
+          <input type="radio" id="e4" name="calificacion" value="4"
+                 th:checked="${miTestimonio != null and miTestimonio.calificacion == 4}"/>
+          <label for="e4" title="Muy bueno">★</label>
+
+          <input type="radio" id="e3" name="calificacion" value="3"
+                 th:checked="${miTestimonio != null and miTestimonio.calificacion == 3}"/>
+          <label for="e3" title="Bueno">★</label>
+
+          <input type="radio" id="e2" name="calificacion" value="2"
+                 th:checked="${miTestimonio != null and miTestimonio.calificacion == 2}"/>
+          <label for="e2" title="Regular">★</label>
+
+          <input type="radio" id="e1" name="calificacion" value="1"
+                 th:checked="${miTestimonio != null and miTestimonio.calificacion == 1}"/>
+          <label for="e1" title="Malo">★</label>
+        </div>
+
+        <label class="campo-label" for="comentario">Comentario (opcional)</label>
+        <textarea id="comentario" name="comentario" maxlength="500"
+                  placeholder="¿Qué te pareció la atención, el proceso de adopción, el cuidado de los perros?"
+                  th:text="${miTestimonio != null ? miTestimonio.comentario : ''}"></textarea>
+        <div class="contador"><span id="contador">0</span>/500</div>
+
+        <button type="submit" class="btn-enviar">Enviar calificación</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Últimos testimonios -->
+  <section class="lista-section">
+    <h2>Últimos testimonios</h2>
+
+    <div th:if="${#lists.isEmpty(testimonios)}" class="vacio">
+      Todavía nadie ha dejado su testimonio. ¡Sé el primero! 🐾
+    </div>
+
+    <div th:each="t : ${testimonios}" class="testimonio-card">
+      <div class="testimonio-top">
+        <div class="testimonio-autor">
+          <div class="avatar" th:text="${#strings.substring(t.usuario.nombre, 0, 1)}">M</div>
+          <div>
+            <div class="testimonio-nombre" th:text="${t.usuario.nombre}">María</div>
+            <div class="testimonio-fecha"
+                 th:text="${#temporals.format(t.fecha, 'dd/MM/yyyy HH:mm')}">01/01/2025</div>
+          </div>
+        </div>
+        <div class="testimonio-estrellas">
+          <span th:each="i : ${#numbers.sequence(1, 5)}"
+                th:text="${i le t.calificacion ? '★' : '☆'}">★</span>
+        </div>
+      </div>
+      <p class="testimonio-comentario" th:if="${t.comentario}" th:text="${t.comentario}">Comentario</p>
+    </div>
+  </section>
+
+  <footer><p>© 2025 <span>Refugio Nueva Vida</span> · Gracias por confiar en nosotros</p></footer>
+
+  <script>
+    // Contador de caracteres del comentario
+    var area = document.getElementById('comentario');
+    var contador = document.getElementById('contador');
+    function actualizarContador() { contador.textContent = area.value.length; }
+    area.addEventListener('input', actualizarContador);
+    actualizarContador();
+
+    // No dejar enviar sin elegir estrellas
+    document.getElementById('formTestimonio').addEventListener('submit', function (e) {
+      var elegida = document.querySelector('input[name="calificacion"]:checked');
+      if (!elegida) {
+        e.preventDefault();
+        alert('Por favor elige cuántas estrellas nos das.');
+      }
+    });
+  </script>
+</body>
+</html>

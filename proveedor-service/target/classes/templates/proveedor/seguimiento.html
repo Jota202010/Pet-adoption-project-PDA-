@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Seguimiento — Proveedor</title>
+    <link rel="stylesheet" th:href="@{/css/proveedor.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<header class="topbar">
+    <div>
+        <span class="logo">🐾</span>
+        <span style="font-weight:800;">Proveedor · Refugio Nueva Vida</span>
+    </div>
+    <nav style="display:flex; gap:20px; align-items:center;">
+        <a th:href="@{/proveedor}" class="top-link">Inicio</a>
+        <a th:href="@{/proveedor/admin}" class="top-link">← Volver al panel</a>
+    </nav>
+</header>
+
+<main class="tracking-page">
+
+    <div th:if="${error}" class="error-box">
+        <div style="font-size:4rem; margin-bottom:20px;">🚫</div>
+        <h2>Envío no encontrado</h2>
+        <p th:text="${error}">No existe un envío para ese pedido.</p>
+        <a th:href="@{/proveedor/admin}" class="btn btn-primary">← Volver al panel</a>
+    </div>
+
+    <div th:if="${envio != null}" class="tracking-card">
+
+        <div class="tracking-header">
+            <div>
+                <span class="label">SEGUIMIENTO DE PEDIDO</span>
+                <h1>#<span th:text="${envio.idPedido}">2</span></h1>
+                <p>Estado en tiempo real del envío</p>
+            </div>
+
+            <div class="current-status">
+                <span>ESTADO ACTUAL</span>
+                <strong th:switch="${envio.estado.toString()}">
+                    <span th:case="'PREPARANDO'">📝 PREPARANDO</span>
+                    <span th:case="'DESPACHADO'">📤 DESPACHADO</span>
+                    <span th:case="'EN_TRANSITO'">🚛 EN TRÁNSITO</span>
+                    <span th:case="'EN_REPARTO'">🛵 EN REPARTO</span>
+                    <span th:case="'ENTREGADO'">✅ ENTREGADO</span>
+                    <span th:case="*" th:text="${envio.estado}">ESTADO</span>
+                </strong>
+            </div>
+        </div>
+
+        <div class="big-timeline">
+
+            <div class="big-step"
+                 th:classappend="${envio.estado.name() == 'PREPARANDO' or envio.estado.name() == 'DESPACHADO' or envio.estado.name() == 'EN_TRANSITO' or envio.estado.name() == 'EN_REPARTO' or envio.estado.name() == 'ENTREGADO'} ? ' completed' : ''">
+                <div class="big-circle">
+                    <span th:if="${envio.estado.name() == 'PREPARANDO'}">⏳</span>
+                    <span th:if="${envio.estado.name() != 'PREPARANDO' and (envio.estado.name() == 'DESPACHADO' or envio.estado.name() == 'EN_TRANSITO' or envio.estado.name() == 'EN_REPARTO' or envio.estado.name() == 'ENTREGADO')}">✅</span>
+                </div>
+                <div>
+                    <h3>📝 Preparando</h3>
+                    <p>Estamos alistando tu pedido en nuestras instalaciones.</p>
+                </div>
+            </div>
+
+            <div class="big-step"
+                 th:classappend="${envio.estado.name() == 'DESPACHADO' or envio.estado.name() == 'EN_TRANSITO' or envio.estado.name() == 'EN_REPARTO' or envio.estado.name() == 'ENTREGADO'} ? ' completed' : ''">
+                <div class="big-circle">
+                    <span th:if="${envio.estado.name() == 'DESPACHADO'}">⏳</span>
+                    <span th:if="${envio.estado.name() != 'DESPACHADO' and (envio.estado.name() == 'EN_TRANSITO' or envio.estado.name() == 'EN_REPARTO' or envio.estado.name() == 'ENTREGADO')}">✅</span>
+                </div>
+                <div>
+                    <h3>📤 Despachado</h3>
+                    <p>Tu pedido salió de nuestras instalaciones.</p>
+                </div>
+            </div>
+
+            <div class="big-step"
+                 th:classappend="${envio.estado.name() == 'EN_TRANSITO' or envio.estado.name() == 'EN_REPARTO' or envio.estado.name() == 'ENTREGADO'} ? ' completed' : ''">
+                <div class="big-circle">
+                    <span th:if="${envio.estado.name() == 'EN_TRANSITO'}">⏳</span>
+                    <span th:if="${envio.estado.name() != 'EN_TRANSITO' and (envio.estado.name() == 'EN_REPARTO' or envio.estado.name() == 'ENTREGADO')}">✅</span>
+                </div>
+                <div>
+                    <h3>🚛 En tránsito</h3>
+                    <p>Tu pedido está viajando hacia el refugio.</p>
+                </div>
+            </div>
+
+            <div class="big-step"
+                 th:classappend="${envio.estado.name() == 'EN_REPARTO' or envio.estado.name() == 'ENTREGADO'} ? ' completed' : ''">
+                <div class="big-circle">
+                    <span th:if="${envio.estado.name() == 'EN_REPARTO'}">⏳</span>
+                    <span th:if="${envio.estado.name() != 'EN_REPARTO' and envio.estado.name() == 'ENTREGADO'}">✅</span>
+                </div>
+                <div>
+                    <h3>🛵 En reparto</h3>
+                    <p>El repartidor está muy cerca de la dirección de entrega.</p>
+                </div>
+            </div>
+
+            <div class="big-step"
+                 th:classappend="${envio.estado.name() == 'ENTREGADO'} ? ' completed' : ''">
+                <div class="big-circle">
+                    <span th:if="${envio.estado.name() == 'ENTREGADO'}">✅</span>
+                </div>
+                <div>
+                    <h3>✅ Entregado</h3>
+                    <p>¡El pedido llegó al refugio! 🎉</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="tracking-footer">
+            <div>
+                <span>ÚLTIMA ACTUALIZACIÓN</span>
+                <strong th:text="${#temporals.format(envio.fechaActualizacion, 'dd/MM/yyyy HH:mm')}">
+                    23/09/2026 16:39
+                </strong>
+            </div>
+            <div>
+                <span>ID DEL ENVÍO</span>
+                <strong th:text="'ENV-' + ${envio.idEnvio}">ENV-1</strong>
+            </div>
+        </div>
+
+        <div style="margin-top:25px; text-align:center;">
+            <a th:href="@{/proveedor/admin}" class="btn btn-secondary">← Volver al panel</a>
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+</html>

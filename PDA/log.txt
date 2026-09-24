@@ -1,0 +1,1457 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------< com.refugio.nueva_vida:proyecto_de_aula >---------------
+[INFO] Building proyecto_de_aula 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.3.0:run (default-cli) > test-compile @ proyecto_de_aula >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ proyecto_de_aula ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 35 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ proyecto_de_aula ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ proyecto_de_aula ---
+[INFO] skip non existing resourceDirectory C:\Users\enriq\Downloads\PDA\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ proyecto_de_aula ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] <<< spring-boot:3.3.0:run (default-cli) < test-compile @ proyecto_de_aula <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.3.0:run (default-cli) @ proyecto_de_aula ---
+[INFO] Attaching agents: []
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.0)
+
+2026-09-15T16:59:24.151-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] c.r.n.p.ProyectoDeAulaApplication        : Starting ProyectoDeAulaApplication using Java 17.0.12 with PID 14776 (C:\Users\enriq\Downloads\PDA\target\classes started by enriq in C:\Users\enriq\Downloads\PDA)
+2026-09-15T16:59:24.153-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] c.r.n.p.ProyectoDeAulaApplication        : No active profile set, falling back to 1 default profile: "default"
+2026-09-15T16:59:24.226-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-09-15T16:59:24.226-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-09-15T16:59:25.419-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-15T16:59:25.516-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 86 ms. Found 6 JPA repository interfaces.
+2026-09-15T16:59:26.442-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-09-15T16:59:26.465-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-09-15T16:59:26.465-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.24]
+2026-09-15T16:59:26.548-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-09-15T16:59:26.551-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2322 ms
+2026-09-15T16:59:26.813-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-15T16:59:26.938-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.2.Final
+2026-09-15T16:59:26.996-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-09-15T16:59:27.427-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-15T16:59:27.457-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-09-15T16:59:27.733-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5e41219b
+2026-09-15T16:59:27.742-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-09-15T16:59:27.855-05:00  WARN 14776 --- [proyecto_de_aula] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-09-15T16:59:29.343-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: 
+    alter table cita 
+       modify column mascotas_anteriores TEXT
+Hibernate: 
+    alter table cita 
+       modify column motivacion TEXT
+Hibernate: 
+    alter table cita 
+       modify column tipo_perro_buscado TEXT
+Hibernate: 
+    alter table perro 
+       modify column descripcion TEXT
+Hibernate: 
+    alter table perro 
+       modify column registro_medico TEXT
+2026-09-15T16:59:29.657-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-15T16:59:30.802-05:00  WARN 14776 --- [proyecto_de_aula] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-09-15T16:59:30.843-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-09-15T16:59:30.845-05:00  WARN 14776 --- [proyecto_de_aula] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2026-09-15T16:59:31.025-05:00 DEBUG 14776 --- [proyecto_de_aula] [  restartedMain] o.s.w.s.s.s.WebSocketHandlerMapping      : Patterns [/ws/**] in 'stompWebSocketHandlerMapping'
+2026-09-15T16:59:31.219-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@df987ce, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@19f5f203, org.springframework.security.web.context.SecurityContextHolderFilter@5b25b25d, org.springframework.security.web.header.HeaderWriterFilter@6c6f4051, org.springframework.web.filter.CorsFilter@42b16045, org.springframework.security.web.csrf.CsrfFilter@10bb94ba, org.springframework.security.web.authentication.logout.LogoutFilter@461184bf, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@3aec2e66, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@15946b6b, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@398227fe, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2e9b7ed0, org.springframework.security.web.access.ExceptionTranslationFilter@b91f2a7, org.springframework.security.web.access.intercept.AuthorizationFilter@54780c0e]
+2026-09-15T16:59:31.293-05:00 DEBUG 14776 --- [proyecto_de_aula] [  restartedMain] .WebSocketAnnotationMethodMessageHandler : 
+	c.r.n.p.c.AdminController:
+	
+2026-09-15T16:59:31.293-05:00 DEBUG 14776 --- [proyecto_de_aula] [  restartedMain] .WebSocketAnnotationMethodMessageHandler : 
+	c.r.n.p.c.AuthController:
+	
+2026-09-15T16:59:31.293-05:00 DEBUG 14776 --- [proyecto_de_aula] [  restartedMain] .WebSocketAnnotationMethodMessageHandler : 
+	c.r.n.p.c.CitaController:
+	
+2026-09-15T16:59:31.293-05:00 DEBUG 14776 --- [proyecto_de_aula] [  restartedMain] .WebSocketAnnotationMethodMessageHandler : 
+	c.r.n.p.c.FotoController:
+	
+2026-09-15T16:59:31.293-05:00 DEBUG 14776 --- [proyecto_de_aula] [  restartedMain] .WebSocketAnnotationMethodMessageHandler : 
+	c.r.n.p.c.HomeController:
+	
+2026-09-15T16:59:31.293-05:00 DEBUG 14776 --- [proyecto_de_aula] [  restartedMain] .WebSocketAnnotationMethodMessageHandler : 
+	c.r.n.p.c.MascotaController:
+	
+2026-09-15T16:59:31.293-05:00 DEBUG 14776 --- [proyecto_de_aula] [  restartedMain] .WebSocketAnnotationMethodMessageHandler : 
+	c.r.n.p.c.MetricasController:
+	
+2026-09-15T16:59:31.295-05:00 DEBUG 14776 --- [proyecto_de_aula] [  restartedMain] .WebSocketAnnotationMethodMessageHandler : 
+	o.s.b.a.w.s.e.BasicErrorController:
+	
+2026-09-15T16:59:31.616-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-09-15T16:59:31.693-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-09-15T16:59:31.695-05:00 DEBUG 14776 --- [proyecto_de_aula] [  restartedMain] o.s.m.s.ExecutorSubscribableChannel      : clientOutboundChannel added SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
+2026-09-15T16:59:31.695-05:00 DEBUG 14776 --- [proyecto_de_aula] [  restartedMain] o.s.m.s.ExecutorSubscribableChannel      : clientInboundChannel added WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
+2026-09-15T16:59:31.695-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-09-15T16:59:31.695-05:00 DEBUG 14776 --- [proyecto_de_aula] [  restartedMain] o.s.m.s.ExecutorSubscribableChannel      : clientInboundChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@6413b0e6]
+2026-09-15T16:59:31.695-05:00 DEBUG 14776 --- [proyecto_de_aula] [  restartedMain] o.s.m.s.ExecutorSubscribableChannel      : brokerChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@6413b0e6]
+2026-09-15T16:59:31.695-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@6413b0e6]]
+2026-09-15T16:59:31.695-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-09-15T16:59:31.695-05:00 DEBUG 14776 --- [proyecto_de_aula] [  restartedMain] o.s.m.s.ExecutorSubscribableChannel      : clientInboundChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2026-09-15T16:59:31.695-05:00 DEBUG 14776 --- [proyecto_de_aula] [  restartedMain] o.s.m.s.ExecutorSubscribableChannel      : brokerChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2026-09-15T16:59:31.700-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [localhost:5672]
+2026-09-15T16:59:31.805-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#25c2420d:0/SimpleConnection@7a45d0fa [delegate=amqp://guest@127.0.0.1:5672/, localPort=54606]
+2026-09-15T16:59:31.918-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] c.r.n.p.ProyectoDeAulaApplication        : Started ProyectoDeAulaApplication in 8.291 seconds (process running for 8.867)
+2026-09-15T16:59:38.563-05:00  INFO 14776 --- [proyecto_de_aula] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-15T16:59:38.563-05:00  INFO 14776 --- [proyecto_de_aula] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-09-15T16:59:38.565-05:00  INFO 14776 --- [proyecto_de_aula] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+Hibernate: 
+    select
+        c1_0.id_cita,
+        c1_0.id_admin,
+        c1_0.cond_evaluacion,
+        c1_0.cond_no_abandono,
+        c1_0.cond_seguimiento,
+        c1_0.cubre_emergencias,
+        c1_0.cubre_vet,
+        c1_0.estado,
+        c1_0.fecha_cita,
+        c1_0.fecha_decision,
+        c1_0.fecha_solicitud,
+        c1_0.hora_cita,
+        c1_0.id_horario,
+        c1_0.horas_solo,
+        c1_0.mascotas_actual,
+        c1_0.mascotas_anteriores,
+        c1_0.motivacion,
+        c1_0.num_personas,
+        c1_0.permiten_mascotas,
+        c1_0.id_perro,
+        c1_0.perros_antes,
+        c1_0.propiedad,
+        c1_0.puede_pasear,
+        c1_0.responsable,
+        c1_0.sede,
+        c1_0.tipo_perro_buscado,
+        c1_0.tipo_vivienda,
+        c1_0.todos_acuerdo,
+        c1_0.id_usuario 
+    from
+        cita c1_0 
+    where
+        c1_0.id_cita=?
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.contrasena,
+        u1_0.direccion,
+        u1_0.email,
+        u1_0.fecha_registro,
+        u1_0.nombre,
+        u1_0.rol,
+        u1_0.telefono,
+        u1_0.usuario 
+    from
+        usuario u1_0 
+    where
+        u1_0.id_usuario=?
+Hibernate: 
+    select
+        p1_0.id_perro,
+        p1_0.descripcion,
+        p1_0.edad,
+        p1_0.estado,
+        p1_0.estado_publicacion,
+        p1_0.esterilizado,
+        p1_0.fecha_ingreso,
+        p1_0.nivel_salud,
+        p1_0.nombre,
+        p1_0.registro_medico,
+        p1_0.sexo,
+        p1_0.sociabilidad,
+        p1_0.vacunado 
+    from
+        perro p1_0 
+    where
+        p1_0.id_perro=?
+Hibernate: 
+    select
+        p1_0.id_perro,
+        p1_0.descripcion,
+        p1_0.edad,
+        p1_0.estado,
+        p1_0.estado_publicacion,
+        p1_0.esterilizado,
+        p1_0.fecha_ingreso,
+        p1_0.nivel_salud,
+        p1_0.nombre,
+        p1_0.registro_medico,
+        p1_0.sexo,
+        p1_0.sociabilidad,
+        p1_0.vacunado 
+    from
+        perro p1_0 
+    where
+        p1_0.estado_publicacion=?
+Hibernate: 
+    select
+        fp1_0.id_foto,
+        fp1_0.es_perfil,
+        fp1_0.orden,
+        fp1_0.id_perro,
+        fp1_0.url_foto 
+    from
+        foto_perro fp1_0 
+    where
+        fp1_0.id_perro=? 
+        and fp1_0.es_perfil
+Hibernate: 
+    select
+        p1_0.id_perro,
+        p1_0.descripcion,
+        p1_0.edad,
+        p1_0.estado,
+        p1_0.estado_publicacion,
+        p1_0.esterilizado,
+        p1_0.fecha_ingreso,
+        p1_0.nivel_salud,
+        p1_0.nombre,
+        p1_0.registro_medico,
+        p1_0.sexo,
+        p1_0.sociabilidad,
+        p1_0.vacunado 
+    from
+        perro p1_0
+Hibernate: 
+    select
+        count(*) 
+    from
+        perro p1_0
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.contrasena,
+        u1_0.direccion,
+        u1_0.email,
+        u1_0.fecha_registro,
+        u1_0.nombre,
+        u1_0.rol,
+        u1_0.telefono,
+        u1_0.usuario 
+    from
+        usuario u1_0
+Hibernate: 
+    select
+        count(*) 
+    from
+        usuario u1_0
+Hibernate: 
+    select
+        c1_0.id_cita,
+        c1_0.id_admin,
+        c1_0.cond_evaluacion,
+        c1_0.cond_no_abandono,
+        c1_0.cond_seguimiento,
+        c1_0.cubre_emergencias,
+        c1_0.cubre_vet,
+        c1_0.estado,
+        c1_0.fecha_cita,
+        c1_0.fecha_decision,
+        c1_0.fecha_solicitud,
+        c1_0.hora_cita,
+        c1_0.id_horario,
+        c1_0.horas_solo,
+        c1_0.mascotas_actual,
+        c1_0.mascotas_anteriores,
+        c1_0.motivacion,
+        c1_0.num_personas,
+        c1_0.permiten_mascotas,
+        c1_0.id_perro,
+        c1_0.perros_antes,
+        c1_0.propiedad,
+        c1_0.puede_pasear,
+        c1_0.responsable,
+        c1_0.sede,
+        c1_0.tipo_perro_buscado,
+        c1_0.tipo_vivienda,
+        c1_0.todos_acuerdo,
+        c1_0.id_usuario 
+    from
+        cita c1_0
+Hibernate: 
+    select
+        count(c1_0.id_cita) 
+    from
+        cita c1_0 
+    where
+        c1_0.estado=?
+Hibernate: 
+    select
+        count(c1_0.id_cita) 
+    from
+        cita c1_0 
+    where
+        c1_0.estado=?
+2026-09-15T16:59:45.233-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-8] o.s.w.s.s.s.WebSocketHandlerMapping      : Mapped to org.springframework.web.socket.sockjs.support.SockJsHttpRequestHandler@6f93af08
+2026-09-15T16:59:45.238-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-8] o.s.w.s.s.t.h.DefaultSockJsService       : Processing transport request: GET http://localhost:8080/ws/info?t=1789509585207
+2026-09-15T16:59:45.266-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-9] o.s.w.s.s.s.WebSocketHandlerMapping      : Mapped to org.springframework.web.socket.sockjs.support.SockJsHttpRequestHandler@6f93af08
+2026-09-15T16:59:45.266-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-9] o.s.w.s.s.t.h.DefaultSockJsService       : Processing transport request: GET http://localhost:8080/ws/226/oilg5qr3/websocket
+2026-09-15T16:59:45.401-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-9] s.w.s.h.LoggingWebSocketHandlerDecorator : New WebSocketServerSockJsSession[id=oilg5qr3]
+2026-09-15T16:59:45.500-05:00 DEBUG 14776 --- [proyecto_de_aula] [nboundChannel-2] o.s.m.s.b.SimpleBrokerMessageHandler     : Processing CONNECT user=juan12 session=oilg5qr3
+2026-09-15T16:59:45.514-05:00 DEBUG 14776 --- [proyecto_de_aula] [nboundChannel-5] o.s.m.s.b.SimpleBrokerMessageHandler     : Processing SUBSCRIBE /topic/admin-notificaciones id=sub-0 session=oilg5qr3
+2026-09-15T17:00:31.667-05:00  INFO 14776 --- [proyecto_de_aula] [MessageBroker-7] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[1 current WS(1)-HttpStream(0)-HttpPoll(0), 1 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(1)-CONNECTED(1)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 6, active threads = 0, queued tasks = 0, completed tasks = 6], outboundChannel[pool size = 1, active threads = 0, queued tasks = 0, completed tasks = 1], sockJsScheduler[pool size = 8, active threads = 1, queued tasks = 2, completed tasks = 11]
+Hibernate: 
+    select
+        p1_0.id_perro,
+        p1_0.descripcion,
+        p1_0.edad,
+        p1_0.estado,
+        p1_0.estado_publicacion,
+        p1_0.esterilizado,
+        p1_0.fecha_ingreso,
+        p1_0.nivel_salud,
+        p1_0.nombre,
+        p1_0.registro_medico,
+        p1_0.sexo,
+        p1_0.sociabilidad,
+        p1_0.vacunado 
+    from
+        perro p1_0 
+    where
+        p1_0.id_perro=?
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.contrasena,
+        u1_0.direccion,
+        u1_0.email,
+        u1_0.fecha_registro,
+        u1_0.nombre,
+        u1_0.rol,
+        u1_0.telefono,
+        u1_0.usuario 
+    from
+        usuario u1_0 
+    where
+        u1_0.usuario=?
+Hibernate: 
+    select
+        c1_0.id_cita,
+        c1_0.id_admin,
+        c1_0.cond_evaluacion,
+        c1_0.cond_no_abandono,
+        c1_0.cond_seguimiento,
+        c1_0.cubre_emergencias,
+        c1_0.cubre_vet,
+        c1_0.estado,
+        c1_0.fecha_cita,
+        c1_0.fecha_decision,
+        c1_0.fecha_solicitud,
+        c1_0.hora_cita,
+        c1_0.id_horario,
+        c1_0.horas_solo,
+        c1_0.mascotas_actual,
+        c1_0.mascotas_anteriores,
+        c1_0.motivacion,
+        c1_0.num_personas,
+        c1_0.permiten_mascotas,
+        c1_0.id_perro,
+        c1_0.perros_antes,
+        c1_0.propiedad,
+        c1_0.puede_pasear,
+        c1_0.responsable,
+        c1_0.sede,
+        c1_0.tipo_perro_buscado,
+        c1_0.tipo_vivienda,
+        c1_0.todos_acuerdo,
+        c1_0.id_usuario 
+    from
+        cita c1_0 
+    where
+        c1_0.id_usuario=?
+Hibernate: 
+    select
+        fp1_0.id_foto,
+        fp1_0.es_perfil,
+        fp1_0.orden,
+        fp1_0.id_perro,
+        fp1_0.url_foto 
+    from
+        foto_perro fp1_0 
+    where
+        fp1_0.id_perro=? 
+    order by
+        fp1_0.orden
+Hibernate: 
+    select
+        fp1_0.id_foto,
+        fp1_0.es_perfil,
+        fp1_0.orden,
+        fp1_0.id_perro,
+        fp1_0.url_foto 
+    from
+        foto_perro fp1_0 
+    where
+        fp1_0.id_perro=? 
+        and fp1_0.es_perfil
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.contrasena,
+        u1_0.direccion,
+        u1_0.email,
+        u1_0.fecha_registro,
+        u1_0.nombre,
+        u1_0.rol,
+        u1_0.telefono,
+        u1_0.usuario 
+    from
+        usuario u1_0 
+    where
+        u1_0.usuario=?
+Hibernate: 
+    select
+        c1_0.id_cita,
+        c1_0.id_admin,
+        c1_0.cond_evaluacion,
+        c1_0.cond_no_abandono,
+        c1_0.cond_seguimiento,
+        c1_0.cubre_emergencias,
+        c1_0.cubre_vet,
+        c1_0.estado,
+        c1_0.fecha_cita,
+        c1_0.fecha_decision,
+        c1_0.fecha_solicitud,
+        c1_0.hora_cita,
+        c1_0.id_horario,
+        c1_0.horas_solo,
+        c1_0.mascotas_actual,
+        c1_0.mascotas_anteriores,
+        c1_0.motivacion,
+        c1_0.num_personas,
+        c1_0.permiten_mascotas,
+        c1_0.id_perro,
+        c1_0.perros_antes,
+        c1_0.propiedad,
+        c1_0.puede_pasear,
+        c1_0.responsable,
+        c1_0.sede,
+        c1_0.tipo_perro_buscado,
+        c1_0.tipo_vivienda,
+        c1_0.todos_acuerdo,
+        c1_0.id_usuario 
+    from
+        cita c1_0 
+    where
+        c1_0.id_cita=?
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.contrasena,
+        u1_0.direccion,
+        u1_0.email,
+        u1_0.fecha_registro,
+        u1_0.nombre,
+        u1_0.rol,
+        u1_0.telefono,
+        u1_0.usuario 
+    from
+        usuario u1_0 
+    where
+        u1_0.id_usuario=?
+Hibernate: 
+    select
+        p1_0.id_perro,
+        p1_0.descripcion,
+        p1_0.edad,
+        p1_0.estado,
+        p1_0.estado_publicacion,
+        p1_0.esterilizado,
+        p1_0.fecha_ingreso,
+        p1_0.nivel_salud,
+        p1_0.nombre,
+        p1_0.registro_medico,
+        p1_0.sexo,
+        p1_0.sociabilidad,
+        p1_0.vacunado 
+    from
+        perro p1_0 
+    where
+        p1_0.id_perro=?
+Hibernate: 
+    update
+        cita 
+    set
+        id_admin=?,
+        cond_evaluacion=?,
+        cond_no_abandono=?,
+        cond_seguimiento=?,
+        cubre_emergencias=?,
+        cubre_vet=?,
+        estado=?,
+        fecha_cita=?,
+        fecha_decision=?,
+        hora_cita=?,
+        id_horario=?,
+        horas_solo=?,
+        mascotas_actual=?,
+        mascotas_anteriores=?,
+        motivacion=?,
+        num_personas=?,
+        permiten_mascotas=?,
+        id_perro=?,
+        perros_antes=?,
+        propiedad=?,
+        puede_pasear=?,
+        responsable=?,
+        sede=?,
+        tipo_perro_buscado=?,
+        tipo_vivienda=?,
+        todos_acuerdo=?,
+        id_usuario=? 
+    where
+        id_cita=?
+Hibernate: 
+    select
+        c1_0.id_cita,
+        c1_0.id_admin,
+        c1_0.cond_evaluacion,
+        c1_0.cond_no_abandono,
+        c1_0.cond_seguimiento,
+        c1_0.cubre_emergencias,
+        c1_0.cubre_vet,
+        c1_0.estado,
+        c1_0.fecha_cita,
+        c1_0.fecha_decision,
+        c1_0.fecha_solicitud,
+        c1_0.hora_cita,
+        c1_0.id_horario,
+        c1_0.horas_solo,
+        c1_0.mascotas_actual,
+        c1_0.mascotas_anteriores,
+        c1_0.motivacion,
+        c1_0.num_personas,
+        c1_0.permiten_mascotas,
+        c1_0.id_perro,
+        c1_0.perros_antes,
+        c1_0.propiedad,
+        c1_0.puede_pasear,
+        c1_0.responsable,
+        c1_0.sede,
+        c1_0.tipo_perro_buscado,
+        c1_0.tipo_vivienda,
+        c1_0.todos_acuerdo,
+        c1_0.id_usuario 
+    from
+        cita c1_0 
+    where
+        c1_0.id_cita=?
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.contrasena,
+        u1_0.direccion,
+        u1_0.email,
+        u1_0.fecha_registro,
+        u1_0.nombre,
+        u1_0.rol,
+        u1_0.telefono,
+        u1_0.usuario 
+    from
+        usuario u1_0 
+    where
+        u1_0.id_usuario=?
+Hibernate: 
+    select
+        p1_0.id_perro,
+        p1_0.descripcion,
+        p1_0.edad,
+        p1_0.estado,
+        p1_0.estado_publicacion,
+        p1_0.esterilizado,
+        p1_0.fecha_ingreso,
+        p1_0.nivel_salud,
+        p1_0.nombre,
+        p1_0.registro_medico,
+        p1_0.sexo,
+        p1_0.sociabilidad,
+        p1_0.vacunado 
+    from
+        perro p1_0 
+    where
+        p1_0.id_perro=?
+2026-09-15T17:02:58.524-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-8] s.w.s.h.LoggingWebSocketHandlerDecorator : WebSocketServerSockJsSession[id=oilg5qr3] closed with CloseStatus[code=1001, reason=null]
+2026-09-15T17:02:58.524-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-8] o.s.w.s.m.SubProtocolWebSocketHandler    : Clearing session oilg5qr3
+2026-09-15T17:02:58.526-05:00 DEBUG 14776 --- [proyecto_de_aula] [nboundChannel-8] o.s.m.s.b.SimpleBrokerMessageHandler     : Processing DISCONNECT session=oilg5qr3
+2026-09-15T17:02:58.531-05:00 DEBUG 14776 --- [proyecto_de_aula] [tboundChannel-2] o.s.w.s.m.SubProtocolWebSocketHandler    : No session for GenericMessage [payload=byte[0], headers={simpMessageType=DISCONNECT_ACK, simpDisconnectMessage=GenericMessage [payload=byte[0], headers={simpMessageType=DISCONNECT, stompCommand=DISCONNECT, simpSessionAttributes={org.springframework.messaging.simp.SimpAttributes.COMPLETED=true}, simpUser=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=juan12, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_administrador]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=65E96FA73BA47DE528C298352EC350C2], Granted Authorities=[ROLE_administrador]], simpSessionId=oilg5qr3}], simpUser=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=juan12, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_administrador]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=65E96FA73BA47DE528C298352EC350C2], Granted Authorities=[ROLE_administrador]], simpSessionId=oilg5qr3}]
+2026-09-15T17:02:58.567-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.consumers.NotificationConsumer   : ========================================
+2026-09-15T17:02:58.567-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.consumers.NotificationConsumer   : Procesando notificación en segundo plano
+2026-09-15T17:02:58.567-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.consumers.NotificationConsumer   : Tipo evento: RECHAZADA
+2026-09-15T17:02:58.567-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.consumers.NotificationConsumer   : ID Cita: 3
+2026-09-15T17:02:58.567-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.consumers.NotificationConsumer   : Adoptante: juan pablo
+2026-09-15T17:02:58.567-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.consumers.NotificationConsumer   : Email destino: juanpabloburgosfernandez@gmail.com
+2026-09-15T17:02:58.567-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.consumers.NotificationConsumer   : Perro: fabio
+Hibernate: 
+    select
+        p1_0.id_perro,
+        p1_0.descripcion,
+        p1_0.edad,
+        p1_0.estado,
+        p1_0.estado_publicacion,
+        p1_0.esterilizado,
+        p1_0.fecha_ingreso,
+        p1_0.nivel_salud,
+        p1_0.nombre,
+        p1_0.registro_medico,
+        p1_0.sexo,
+        p1_0.sociabilidad,
+        p1_0.vacunado 
+    from
+        perro p1_0 
+    where
+        p1_0.estado_publicacion=?
+Hibernate: 
+    select
+        fp1_0.id_foto,
+        fp1_0.es_perfil,
+        fp1_0.orden,
+        fp1_0.id_perro,
+        fp1_0.url_foto 
+    from
+        foto_perro fp1_0 
+    where
+        fp1_0.id_perro=? 
+        and fp1_0.es_perfil
+Hibernate: 
+    select
+        p1_0.id_perro,
+        p1_0.descripcion,
+        p1_0.edad,
+        p1_0.estado,
+        p1_0.estado_publicacion,
+        p1_0.esterilizado,
+        p1_0.fecha_ingreso,
+        p1_0.nivel_salud,
+        p1_0.nombre,
+        p1_0.registro_medico,
+        p1_0.sexo,
+        p1_0.sociabilidad,
+        p1_0.vacunado 
+    from
+        perro p1_0
+Hibernate: 
+    select
+        count(*) 
+    from
+        perro p1_0
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.contrasena,
+        u1_0.direccion,
+        u1_0.email,
+        u1_0.fecha_registro,
+        u1_0.nombre,
+        u1_0.rol,
+        u1_0.telefono,
+        u1_0.usuario 
+    from
+        usuario u1_0
+Hibernate: 
+    select
+        count(*) 
+    from
+        usuario u1_0
+Hibernate: 
+    select
+        c1_0.id_cita,
+        c1_0.id_admin,
+        c1_0.cond_evaluacion,
+        c1_0.cond_no_abandono,
+        c1_0.cond_seguimiento,
+        c1_0.cubre_emergencias,
+        c1_0.cubre_vet,
+        c1_0.estado,
+        c1_0.fecha_cita,
+        c1_0.fecha_decision,
+        c1_0.fecha_solicitud,
+        c1_0.hora_cita,
+        c1_0.id_horario,
+        c1_0.horas_solo,
+        c1_0.mascotas_actual,
+        c1_0.mascotas_anteriores,
+        c1_0.motivacion,
+        c1_0.num_personas,
+        c1_0.permiten_mascotas,
+        c1_0.id_perro,
+        c1_0.perros_antes,
+        c1_0.propiedad,
+        c1_0.puede_pasear,
+        c1_0.responsable,
+        c1_0.sede,
+        c1_0.tipo_perro_buscado,
+        c1_0.tipo_vivienda,
+        c1_0.todos_acuerdo,
+        c1_0.id_usuario 
+    from
+        cita c1_0
+Hibernate: 
+    select
+        count(c1_0.id_cita) 
+    from
+        cita c1_0 
+    where
+        c1_0.estado=?
+Hibernate: 
+    select
+        count(c1_0.id_cita) 
+    from
+        cita c1_0 
+    where
+        c1_0.estado=?
+2026-09-15T17:03:01.520-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-5] o.s.w.s.s.s.WebSocketHandlerMapping      : Mapped to org.springframework.web.socket.sockjs.support.SockJsHttpRequestHandler@6f93af08
+2026-09-15T17:03:01.520-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-5] o.s.w.s.s.t.h.DefaultSockJsService       : Processing transport request: GET http://localhost:8080/ws/info?t=1789509781517
+2026-09-15T17:03:01.536-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-7] o.s.w.s.s.s.WebSocketHandlerMapping      : Mapped to org.springframework.web.socket.sockjs.support.SockJsHttpRequestHandler@6f93af08
+2026-09-15T17:03:01.536-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-7] o.s.w.s.s.t.h.DefaultSockJsService       : Processing transport request: GET http://localhost:8080/ws/357/055mojyp/websocket
+2026-09-15T17:03:01.538-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-7] s.w.s.h.LoggingWebSocketHandlerDecorator : New WebSocketServerSockJsSession[id=055mojyp]
+2026-09-15T17:03:01.542-05:00 DEBUG 14776 --- [proyecto_de_aula] [boundChannel-11] o.s.m.s.b.SimpleBrokerMessageHandler     : Processing CONNECT user=juan12 session=055mojyp
+2026-09-15T17:03:01.550-05:00 DEBUG 14776 --- [proyecto_de_aula] [boundChannel-14] o.s.m.s.b.SimpleBrokerMessageHandler     : Processing SUBSCRIBE /topic/admin-notificaciones id=sub-0 session=055mojyp
+2026-09-15T17:03:02.292-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.service.EmailService             : Correo 'Actualización sobre tu solicitud — Refugio Nueva Vida' enviado a: juanpabloburgosfernandez@gmail.com
+2026-09-15T17:03:02.292-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.consumers.NotificationConsumer   : Notificación procesada exitosamente para la cita 3
+2026-09-15T17:03:02.292-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.consumers.NotificationConsumer   : ========================================
+2026-09-15T17:03:05.277-05:00 DEBUG 14776 --- [proyecto_de_aula] [MessageBroker-3] o.s.w.s.s.t.h.DefaultSockJsService       : Closed 1 sessions: [oilg5qr3]
+Hibernate: 
+    select
+        p1_0.id_perro,
+        p1_0.descripcion,
+        p1_0.edad,
+        p1_0.estado,
+        p1_0.estado_publicacion,
+        p1_0.esterilizado,
+        p1_0.fecha_ingreso,
+        p1_0.nivel_salud,
+        p1_0.nombre,
+        p1_0.registro_medico,
+        p1_0.sexo,
+        p1_0.sociabilidad,
+        p1_0.vacunado 
+    from
+        perro p1_0 
+    where
+        p1_0.estado_publicacion=?
+Hibernate: 
+    select
+        fp1_0.id_foto,
+        fp1_0.es_perfil,
+        fp1_0.orden,
+        fp1_0.id_perro,
+        fp1_0.url_foto 
+    from
+        foto_perro fp1_0 
+    where
+        fp1_0.id_perro=? 
+        and fp1_0.es_perfil
+Hibernate: 
+    select
+        p1_0.id_perro,
+        p1_0.descripcion,
+        p1_0.edad,
+        p1_0.estado,
+        p1_0.estado_publicacion,
+        p1_0.esterilizado,
+        p1_0.fecha_ingreso,
+        p1_0.nivel_salud,
+        p1_0.nombre,
+        p1_0.registro_medico,
+        p1_0.sexo,
+        p1_0.sociabilidad,
+        p1_0.vacunado 
+    from
+        perro p1_0 
+    where
+        p1_0.id_perro=?
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.contrasena,
+        u1_0.direccion,
+        u1_0.email,
+        u1_0.fecha_registro,
+        u1_0.nombre,
+        u1_0.rol,
+        u1_0.telefono,
+        u1_0.usuario 
+    from
+        usuario u1_0 
+    where
+        u1_0.usuario=?
+Hibernate: 
+    select
+        c1_0.id_cita,
+        c1_0.id_admin,
+        c1_0.cond_evaluacion,
+        c1_0.cond_no_abandono,
+        c1_0.cond_seguimiento,
+        c1_0.cubre_emergencias,
+        c1_0.cubre_vet,
+        c1_0.estado,
+        c1_0.fecha_cita,
+        c1_0.fecha_decision,
+        c1_0.fecha_solicitud,
+        c1_0.hora_cita,
+        c1_0.id_horario,
+        c1_0.horas_solo,
+        c1_0.mascotas_actual,
+        c1_0.mascotas_anteriores,
+        c1_0.motivacion,
+        c1_0.num_personas,
+        c1_0.permiten_mascotas,
+        c1_0.id_perro,
+        c1_0.perros_antes,
+        c1_0.propiedad,
+        c1_0.puede_pasear,
+        c1_0.responsable,
+        c1_0.sede,
+        c1_0.tipo_perro_buscado,
+        c1_0.tipo_vivienda,
+        c1_0.todos_acuerdo,
+        c1_0.id_usuario 
+    from
+        cita c1_0 
+    where
+        c1_0.id_usuario=?
+Hibernate: 
+    select
+        fp1_0.id_foto,
+        fp1_0.es_perfil,
+        fp1_0.orden,
+        fp1_0.id_perro,
+        fp1_0.url_foto 
+    from
+        foto_perro fp1_0 
+    where
+        fp1_0.id_perro=? 
+    order by
+        fp1_0.orden
+Hibernate: 
+    select
+        fp1_0.id_foto,
+        fp1_0.es_perfil,
+        fp1_0.orden,
+        fp1_0.id_perro,
+        fp1_0.url_foto 
+    from
+        foto_perro fp1_0 
+    where
+        fp1_0.id_perro=? 
+        and fp1_0.es_perfil
+Hibernate: 
+    select
+        p1_0.id_perro,
+        p1_0.descripcion,
+        p1_0.edad,
+        p1_0.estado,
+        p1_0.estado_publicacion,
+        p1_0.esterilizado,
+        p1_0.fecha_ingreso,
+        p1_0.nivel_salud,
+        p1_0.nombre,
+        p1_0.registro_medico,
+        p1_0.sexo,
+        p1_0.sociabilidad,
+        p1_0.vacunado 
+    from
+        perro p1_0 
+    where
+        p1_0.id_perro=?
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.contrasena,
+        u1_0.direccion,
+        u1_0.email,
+        u1_0.fecha_registro,
+        u1_0.nombre,
+        u1_0.rol,
+        u1_0.telefono,
+        u1_0.usuario 
+    from
+        usuario u1_0 
+    where
+        u1_0.usuario=?
+Hibernate: 
+    select
+        c1_0.id_cita,
+        c1_0.id_admin,
+        c1_0.cond_evaluacion,
+        c1_0.cond_no_abandono,
+        c1_0.cond_seguimiento,
+        c1_0.cubre_emergencias,
+        c1_0.cubre_vet,
+        c1_0.estado,
+        c1_0.fecha_cita,
+        c1_0.fecha_decision,
+        c1_0.fecha_solicitud,
+        c1_0.hora_cita,
+        c1_0.id_horario,
+        c1_0.horas_solo,
+        c1_0.mascotas_actual,
+        c1_0.mascotas_anteriores,
+        c1_0.motivacion,
+        c1_0.num_personas,
+        c1_0.permiten_mascotas,
+        c1_0.id_perro,
+        c1_0.perros_antes,
+        c1_0.propiedad,
+        c1_0.puede_pasear,
+        c1_0.responsable,
+        c1_0.sede,
+        c1_0.tipo_perro_buscado,
+        c1_0.tipo_vivienda,
+        c1_0.todos_acuerdo,
+        c1_0.id_usuario 
+    from
+        cita c1_0 
+    where
+        c1_0.id_usuario=?
+Hibernate: 
+    select
+        p1_0.id_perro,
+        p1_0.descripcion,
+        p1_0.edad,
+        p1_0.estado,
+        p1_0.estado_publicacion,
+        p1_0.esterilizado,
+        p1_0.fecha_ingreso,
+        p1_0.nivel_salud,
+        p1_0.nombre,
+        p1_0.registro_medico,
+        p1_0.sexo,
+        p1_0.sociabilidad,
+        p1_0.vacunado 
+    from
+        perro p1_0 
+    where
+        p1_0.id_perro=?
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.contrasena,
+        u1_0.direccion,
+        u1_0.email,
+        u1_0.fecha_registro,
+        u1_0.nombre,
+        u1_0.rol,
+        u1_0.telefono,
+        u1_0.usuario 
+    from
+        usuario u1_0 
+    where
+        u1_0.usuario=?
+Hibernate: 
+    select
+        c1_0.id_cita,
+        c1_0.id_admin,
+        c1_0.cond_evaluacion,
+        c1_0.cond_no_abandono,
+        c1_0.cond_seguimiento,
+        c1_0.cubre_emergencias,
+        c1_0.cubre_vet,
+        c1_0.estado,
+        c1_0.fecha_cita,
+        c1_0.fecha_decision,
+        c1_0.fecha_solicitud,
+        c1_0.hora_cita,
+        c1_0.id_horario,
+        c1_0.horas_solo,
+        c1_0.mascotas_actual,
+        c1_0.mascotas_anteriores,
+        c1_0.motivacion,
+        c1_0.num_personas,
+        c1_0.permiten_mascotas,
+        c1_0.id_perro,
+        c1_0.perros_antes,
+        c1_0.propiedad,
+        c1_0.puede_pasear,
+        c1_0.responsable,
+        c1_0.sede,
+        c1_0.tipo_perro_buscado,
+        c1_0.tipo_vivienda,
+        c1_0.todos_acuerdo,
+        c1_0.id_usuario 
+    from
+        cita c1_0 
+    where
+        c1_0.id_usuario=?
+Hibernate: 
+    insert 
+    into
+        cita
+        (id_admin, cond_evaluacion, cond_no_abandono, cond_seguimiento, cubre_emergencias, cubre_vet, estado, fecha_cita, fecha_decision, fecha_solicitud, hora_cita, id_horario, horas_solo, mascotas_actual, mascotas_anteriores, motivacion, num_personas, permiten_mascotas, id_perro, perros_antes, propiedad, puede_pasear, responsable, sede, tipo_perro_buscado, tipo_vivienda, todos_acuerdo, id_usuario) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-09-15T17:03:36.642-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.consumers.NotificationConsumer   : ========================================
+2026-09-15T17:03:36.643-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.consumers.NotificationConsumer   : Procesando notificación en segundo plano
+2026-09-15T17:03:36.643-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.consumers.NotificationConsumer   : Tipo evento: SOLICITUD_RECIBIDA
+2026-09-15T17:03:36.643-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.consumers.NotificationConsumer   : ID Cita: 4
+2026-09-15T17:03:36.643-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.consumers.NotificationConsumer   : Adoptante: juan pablo
+2026-09-15T17:03:36.643-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.consumers.NotificationConsumer   : Email destino: juanpabloburgosfernandez@gmail.com
+2026-09-15T17:03:36.643-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.consumers.NotificationConsumer   : Perro: fabio
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.contrasena,
+        u1_0.direccion,
+        u1_0.email,
+        u1_0.fecha_registro,
+        u1_0.nombre,
+        u1_0.rol,
+        u1_0.telefono,
+        u1_0.usuario 
+    from
+        usuario u1_0 
+    where
+        u1_0.usuario=?
+Hibernate: 
+    select
+        c1_0.id_cita,
+        c1_0.id_admin,
+        c1_0.cond_evaluacion,
+        c1_0.cond_no_abandono,
+        c1_0.cond_seguimiento,
+        c1_0.cubre_emergencias,
+        c1_0.cubre_vet,
+        c1_0.estado,
+        c1_0.fecha_cita,
+        c1_0.fecha_decision,
+        c1_0.fecha_solicitud,
+        c1_0.hora_cita,
+        c1_0.id_horario,
+        c1_0.horas_solo,
+        c1_0.mascotas_actual,
+        c1_0.mascotas_anteriores,
+        c1_0.motivacion,
+        c1_0.num_personas,
+        c1_0.permiten_mascotas,
+        c1_0.id_perro,
+        c1_0.perros_antes,
+        c1_0.propiedad,
+        c1_0.puede_pasear,
+        c1_0.responsable,
+        c1_0.sede,
+        c1_0.tipo_perro_buscado,
+        c1_0.tipo_vivienda,
+        c1_0.todos_acuerdo,
+        c1_0.id_usuario 
+    from
+        cita c1_0 
+    where
+        c1_0.id_usuario=?
+Hibernate: 
+    select
+        p1_0.id_perro,
+        p1_0.descripcion,
+        p1_0.edad,
+        p1_0.estado,
+        p1_0.estado_publicacion,
+        p1_0.esterilizado,
+        p1_0.fecha_ingreso,
+        p1_0.nivel_salud,
+        p1_0.nombre,
+        p1_0.registro_medico,
+        p1_0.sexo,
+        p1_0.sociabilidad,
+        p1_0.vacunado 
+    from
+        perro p1_0 
+    where
+        p1_0.id_perro=?
+2026-09-15T17:03:39.000-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.service.EmailService             : Correo 'Solicitud de adopción recibida — Refugio Nueva Vida' enviado a: juanpabloburgosfernandez@gmail.com
+2026-09-15T17:03:39.008-05:00 DEBUG 14776 --- [proyecto_de_aula] [ntContainer#1-1] o.s.m.s.b.SimpleBrokerMessageHandler     : Processing MESSAGE destination=/topic/admin-notificaciones session=null payload={"idCita":4,"nombreAdoptante":"juan pablo","nombrePerro":"fabio"}
+2026-09-15T17:03:39.012-05:00 DEBUG 14776 --- [proyecto_de_aula] [ntContainer#1-1] o.s.m.s.b.SimpleBrokerMessageHandler     : Broadcasting to 1 sessions.
+2026-09-15T17:03:39.016-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.consumers.NotificationConsumer   : Aviso en vivo enviado al panel admin (WebSocket)
+2026-09-15T17:03:39.016-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.consumers.NotificationConsumer   : Notificación procesada exitosamente para la cita 4
+2026-09-15T17:03:39.016-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-1] c.r.n.p.consumers.NotificationConsumer   : ========================================
+Hibernate: 
+    select
+        p1_0.id_perro,
+        p1_0.descripcion,
+        p1_0.edad,
+        p1_0.estado,
+        p1_0.estado_publicacion,
+        p1_0.esterilizado,
+        p1_0.fecha_ingreso,
+        p1_0.nivel_salud,
+        p1_0.nombre,
+        p1_0.registro_medico,
+        p1_0.sexo,
+        p1_0.sociabilidad,
+        p1_0.vacunado 
+    from
+        perro p1_0 
+    where
+        p1_0.estado_publicacion=?
+Hibernate: 
+    select
+        fp1_0.id_foto,
+        fp1_0.es_perfil,
+        fp1_0.orden,
+        fp1_0.id_perro,
+        fp1_0.url_foto 
+    from
+        foto_perro fp1_0 
+    where
+        fp1_0.id_perro=? 
+        and fp1_0.es_perfil
+2026-09-15T17:05:10.054-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-5] s.w.s.h.LoggingWebSocketHandlerDecorator : WebSocketServerSockJsSession[id=055mojyp] closed with CloseStatus[code=1001, reason=null]
+2026-09-15T17:05:10.064-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-5] o.s.w.s.m.SubProtocolWebSocketHandler    : Clearing session 055mojyp
+2026-09-15T17:05:10.070-05:00 DEBUG 14776 --- [proyecto_de_aula] [boundChannel-17] o.s.m.s.b.SimpleBrokerMessageHandler     : Processing DISCONNECT session=055mojyp
+2026-09-15T17:05:10.074-05:00 DEBUG 14776 --- [proyecto_de_aula] [tboundChannel-5] o.s.w.s.m.SubProtocolWebSocketHandler    : No session for GenericMessage [payload=byte[0], headers={simpMessageType=DISCONNECT_ACK, simpDisconnectMessage=GenericMessage [payload=byte[0], headers={simpMessageType=DISCONNECT, stompCommand=DISCONNECT, simpSessionAttributes={org.springframework.messaging.simp.SimpAttributes.COMPLETED=true}, simpUser=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=juan12, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_administrador]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=65E96FA73BA47DE528C298352EC350C2], Granted Authorities=[ROLE_administrador]], simpSessionId=055mojyp}], simpUser=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=juan12, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_administrador]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=65E96FA73BA47DE528C298352EC350C2], Granted Authorities=[ROLE_administrador]], simpSessionId=055mojyp}]
+Hibernate: 
+    select
+        p1_0.id_perro,
+        p1_0.descripcion,
+        p1_0.edad,
+        p1_0.estado,
+        p1_0.estado_publicacion,
+        p1_0.esterilizado,
+        p1_0.fecha_ingreso,
+        p1_0.nivel_salud,
+        p1_0.nombre,
+        p1_0.registro_medico,
+        p1_0.sexo,
+        p1_0.sociabilidad,
+        p1_0.vacunado 
+    from
+        perro p1_0
+Hibernate: 
+    select
+        count(*) 
+    from
+        perro p1_0
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.contrasena,
+        u1_0.direccion,
+        u1_0.email,
+        u1_0.fecha_registro,
+        u1_0.nombre,
+        u1_0.rol,
+        u1_0.telefono,
+        u1_0.usuario 
+    from
+        usuario u1_0
+Hibernate: 
+    select
+        count(*) 
+    from
+        usuario u1_0
+Hibernate: 
+    select
+        c1_0.id_cita,
+        c1_0.id_admin,
+        c1_0.cond_evaluacion,
+        c1_0.cond_no_abandono,
+        c1_0.cond_seguimiento,
+        c1_0.cubre_emergencias,
+        c1_0.cubre_vet,
+        c1_0.estado,
+        c1_0.fecha_cita,
+        c1_0.fecha_decision,
+        c1_0.fecha_solicitud,
+        c1_0.hora_cita,
+        c1_0.id_horario,
+        c1_0.horas_solo,
+        c1_0.mascotas_actual,
+        c1_0.mascotas_anteriores,
+        c1_0.motivacion,
+        c1_0.num_personas,
+        c1_0.permiten_mascotas,
+        c1_0.id_perro,
+        c1_0.perros_antes,
+        c1_0.propiedad,
+        c1_0.puede_pasear,
+        c1_0.responsable,
+        c1_0.sede,
+        c1_0.tipo_perro_buscado,
+        c1_0.tipo_vivienda,
+        c1_0.todos_acuerdo,
+        c1_0.id_usuario 
+    from
+        cita c1_0
+Hibernate: 
+    select
+        count(c1_0.id_cita) 
+    from
+        cita c1_0 
+    where
+        c1_0.estado=?
+Hibernate: 
+    select
+        count(c1_0.id_cita) 
+    from
+        cita c1_0 
+    where
+        c1_0.estado=?
+2026-09-15T17:05:11.083-05:00 DEBUG 14776 --- [proyecto_de_aula] [io-8080-exec-10] o.s.w.s.s.s.WebSocketHandlerMapping      : Mapped to org.springframework.web.socket.sockjs.support.SockJsHttpRequestHandler@6f93af08
+2026-09-15T17:05:11.083-05:00 DEBUG 14776 --- [proyecto_de_aula] [io-8080-exec-10] o.s.w.s.s.t.h.DefaultSockJsService       : Processing transport request: GET http://localhost:8080/ws/info?t=1789509911077
+2026-09-15T17:05:11.100-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-2] o.s.w.s.s.s.WebSocketHandlerMapping      : Mapped to org.springframework.web.socket.sockjs.support.SockJsHttpRequestHandler@6f93af08
+2026-09-15T17:05:11.100-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-2] o.s.w.s.s.t.h.DefaultSockJsService       : Processing transport request: GET http://localhost:8080/ws/642/c1tigu1p/websocket
+2026-09-15T17:05:11.100-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-2] s.w.s.h.LoggingWebSocketHandlerDecorator : New WebSocketServerSockJsSession[id=c1tigu1p]
+2026-09-15T17:05:11.108-05:00 DEBUG 14776 --- [proyecto_de_aula] [boundChannel-20] o.s.m.s.b.SimpleBrokerMessageHandler     : Processing CONNECT user=juan12 session=c1tigu1p
+2026-09-15T17:05:11.116-05:00 DEBUG 14776 --- [proyecto_de_aula] [boundChannel-23] o.s.m.s.b.SimpleBrokerMessageHandler     : Processing SUBSCRIBE /topic/admin-notificaciones id=sub-0 session=c1tigu1p
+Hibernate: 
+    select
+        p1_0.id_perro,
+        p1_0.descripcion,
+        p1_0.edad,
+        p1_0.estado,
+        p1_0.estado_publicacion,
+        p1_0.esterilizado,
+        p1_0.fecha_ingreso,
+        p1_0.nivel_salud,
+        p1_0.nombre,
+        p1_0.registro_medico,
+        p1_0.sexo,
+        p1_0.sociabilidad,
+        p1_0.vacunado 
+    from
+        perro p1_0 
+    where
+        p1_0.estado_publicacion=?
+Hibernate: 
+    select
+        fp1_0.id_foto,
+        fp1_0.es_perfil,
+        fp1_0.orden,
+        fp1_0.id_perro,
+        fp1_0.url_foto 
+    from
+        foto_perro fp1_0 
+    where
+        fp1_0.id_perro=? 
+        and fp1_0.es_perfil
+2026-09-15T17:05:13.891-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-5] s.w.s.h.LoggingWebSocketHandlerDecorator : WebSocketServerSockJsSession[id=c1tigu1p] closed with CloseStatus[code=1001, reason=null]
+2026-09-15T17:05:13.891-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-5] o.s.w.s.m.SubProtocolWebSocketHandler    : Clearing session c1tigu1p
+2026-09-15T17:05:13.893-05:00 DEBUG 14776 --- [proyecto_de_aula] [boundChannel-26] o.s.m.s.b.SimpleBrokerMessageHandler     : Processing DISCONNECT session=c1tigu1p
+2026-09-15T17:05:13.895-05:00 DEBUG 14776 --- [proyecto_de_aula] [tboundChannel-7] o.s.w.s.m.SubProtocolWebSocketHandler    : No session for GenericMessage [payload=byte[0], headers={simpMessageType=DISCONNECT_ACK, simpDisconnectMessage=GenericMessage [payload=byte[0], headers={simpMessageType=DISCONNECT, stompCommand=DISCONNECT, simpSessionAttributes={org.springframework.messaging.simp.SimpAttributes.COMPLETED=true}, simpUser=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=juan12, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_administrador]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=65E96FA73BA47DE528C298352EC350C2], Granted Authorities=[ROLE_administrador]], simpSessionId=c1tigu1p}], simpUser=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=juan12, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_administrador]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=65E96FA73BA47DE528C298352EC350C2], Granted Authorities=[ROLE_administrador]], simpSessionId=c1tigu1p}]
+Hibernate: 
+    select
+        p1_0.id_perro,
+        p1_0.descripcion,
+        p1_0.edad,
+        p1_0.estado,
+        p1_0.estado_publicacion,
+        p1_0.esterilizado,
+        p1_0.fecha_ingreso,
+        p1_0.nivel_salud,
+        p1_0.nombre,
+        p1_0.registro_medico,
+        p1_0.sexo,
+        p1_0.sociabilidad,
+        p1_0.vacunado 
+    from
+        perro p1_0
+Hibernate: 
+    select
+        count(*) 
+    from
+        perro p1_0
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.contrasena,
+        u1_0.direccion,
+        u1_0.email,
+        u1_0.fecha_registro,
+        u1_0.nombre,
+        u1_0.rol,
+        u1_0.telefono,
+        u1_0.usuario 
+    from
+        usuario u1_0
+Hibernate: 
+    select
+        count(*) 
+    from
+        usuario u1_0
+Hibernate: 
+    select
+        c1_0.id_cita,
+        c1_0.id_admin,
+        c1_0.cond_evaluacion,
+        c1_0.cond_no_abandono,
+        c1_0.cond_seguimiento,
+        c1_0.cubre_emergencias,
+        c1_0.cubre_vet,
+        c1_0.estado,
+        c1_0.fecha_cita,
+        c1_0.fecha_decision,
+        c1_0.fecha_solicitud,
+        c1_0.hora_cita,
+        c1_0.id_horario,
+        c1_0.horas_solo,
+        c1_0.mascotas_actual,
+        c1_0.mascotas_anteriores,
+        c1_0.motivacion,
+        c1_0.num_personas,
+        c1_0.permiten_mascotas,
+        c1_0.id_perro,
+        c1_0.perros_antes,
+        c1_0.propiedad,
+        c1_0.puede_pasear,
+        c1_0.responsable,
+        c1_0.sede,
+        c1_0.tipo_perro_buscado,
+        c1_0.tipo_vivienda,
+        c1_0.todos_acuerdo,
+        c1_0.id_usuario 
+    from
+        cita c1_0
+Hibernate: 
+    select
+        count(c1_0.id_cita) 
+    from
+        cita c1_0 
+    where
+        c1_0.estado=?
+Hibernate: 
+    select
+        count(c1_0.id_cita) 
+    from
+        cita c1_0 
+    where
+        c1_0.estado=?
+2026-09-15T17:05:14.786-05:00 DEBUG 14776 --- [proyecto_de_aula] [io-8080-exec-10] o.s.w.s.s.s.WebSocketHandlerMapping      : Mapped to org.springframework.web.socket.sockjs.support.SockJsHttpRequestHandler@6f93af08
+2026-09-15T17:05:14.786-05:00 DEBUG 14776 --- [proyecto_de_aula] [io-8080-exec-10] o.s.w.s.s.t.h.DefaultSockJsService       : Processing transport request: GET http://localhost:8080/ws/info?t=1789509914760
+2026-09-15T17:05:14.815-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-2] o.s.w.s.s.s.WebSocketHandlerMapping      : Mapped to org.springframework.web.socket.sockjs.support.SockJsHttpRequestHandler@6f93af08
+2026-09-15T17:05:14.815-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-2] o.s.w.s.s.t.h.DefaultSockJsService       : Processing transport request: GET http://localhost:8080/ws/323/x5xbv1i1/websocket
+2026-09-15T17:05:14.829-05:00 DEBUG 14776 --- [proyecto_de_aula] [nio-8080-exec-2] s.w.s.h.LoggingWebSocketHandlerDecorator : New WebSocketServerSockJsSession[id=x5xbv1i1]
+2026-09-15T17:05:14.834-05:00 DEBUG 14776 --- [proyecto_de_aula] [boundChannel-29] o.s.m.s.b.SimpleBrokerMessageHandler     : Processing CONNECT user=juan12 session=x5xbv1i1
+2026-09-15T17:05:14.842-05:00 DEBUG 14776 --- [proyecto_de_aula] [boundChannel-16] o.s.m.s.b.SimpleBrokerMessageHandler     : Processing SUBSCRIBE /topic/admin-notificaciones id=sub-0 session=x5xbv1i1
+2026-09-15T17:05:15.274-05:00 DEBUG 14776 --- [proyecto_de_aula] [MessageBroker-1] o.s.w.s.s.t.h.DefaultSockJsService       : Closed 1 sessions: [055mojyp]
+2026-09-15T17:05:20.276-05:00 DEBUG 14776 --- [proyecto_de_aula] [MessageBroker-1] o.s.w.s.s.t.h.DefaultSockJsService       : Closed 1 sessions: [c1tigu1p]
+2026-09-15T17:06:50.041-05:00  INFO 14776 --- [proyecto_de_aula] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 90 class path changes (0 additions, 90 deletions, 0 modifications)
+2026-09-15T17:06:50.084-05:00 DEBUG 14776 --- [proyecto_de_aula] [       Thread-5] o.s.m.s.ExecutorSubscribableChannel      : clientOutboundChannel removed SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
+2026-09-15T17:06:50.084-05:00 DEBUG 14776 --- [proyecto_de_aula] [       Thread-5] s.w.s.s.t.s.WebSocketServerSockJsSession : Closing SockJS session x5xbv1i1 with CloseStatus[code=1001, reason=null]
+2026-09-15T17:06:50.098-05:00 DEBUG 14776 --- [proyecto_de_aula] [       Thread-5] o.s.w.s.adapter.NativeWebSocketSession   : Closing StandardWebSocketSession[id=f8466a5d-5ab0-67c3-ba9d-6215858362cf, uri=ws://localhost:8080/ws/323/x5xbv1i1/websocket]
+2026-09-15T17:06:50.098-05:00 DEBUG 14776 --- [proyecto_de_aula] [       Thread-5] s.w.s.h.LoggingWebSocketHandlerDecorator : WebSocketServerSockJsSession[id=x5xbv1i1] closed with CloseStatus[code=1001, reason=null]
+2026-09-15T17:06:50.098-05:00 DEBUG 14776 --- [proyecto_de_aula] [       Thread-5] o.s.w.s.m.SubProtocolWebSocketHandler    : Clearing session x5xbv1i1
+2026-09-15T17:06:50.100-05:00 DEBUG 14776 --- [proyecto_de_aula] [       Thread-5] o.s.m.s.ExecutorSubscribableChannel      : clientInboundChannel removed WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
+2026-09-15T17:06:50.102-05:00 DEBUG 14776 --- [proyecto_de_aula] [boundChannel-33] o.s.m.s.b.SimpleBrokerMessageHandler     : Processing DISCONNECT session=x5xbv1i1
+2026-09-15T17:06:50.104-05:00  INFO 14776 --- [proyecto_de_aula] [       Thread-5] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2026-09-15T17:06:50.104-05:00  INFO 14776 --- [proyecto_de_aula] [       Thread-5] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@6413b0e6]]
+2026-09-15T17:06:50.104-05:00 DEBUG 14776 --- [proyecto_de_aula] [       Thread-5] o.s.m.s.ExecutorSubscribableChannel      : clientInboundChannel removed SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@6413b0e6]
+2026-09-15T17:06:50.104-05:00 DEBUG 14776 --- [proyecto_de_aula] [       Thread-5] o.s.m.s.ExecutorSubscribableChannel      : brokerChannel removed SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@6413b0e6]
+2026-09-15T17:06:50.104-05:00  INFO 14776 --- [proyecto_de_aula] [       Thread-5] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2026-09-15T17:06:50.106-05:00 DEBUG 14776 --- [proyecto_de_aula] [       Thread-5] o.s.m.s.ExecutorSubscribableChannel      : clientInboundChannel removed UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2026-09-15T17:06:50.106-05:00 DEBUG 14776 --- [proyecto_de_aula] [       Thread-5] o.s.m.s.ExecutorSubscribableChannel      : brokerChannel removed UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2026-09-15T17:06:50.134-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#0-2] o.s.a.r.l.SimpleMessageListenerContainer : Waiting for workers to finish.
+2026-09-15T17:06:50.140-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-2] o.s.a.r.l.SimpleMessageListenerContainer : Waiting for workers to finish.
+2026-09-15T17:06:50.354-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#1-2] o.s.a.r.l.SimpleMessageListenerContainer : Successfully waited for workers to finish.
+2026-09-15T17:06:50.685-05:00  INFO 14776 --- [proyecto_de_aula] [ntContainer#0-2] o.s.a.r.l.SimpleMessageListenerContainer : Successfully waited for workers to finish.
+2026-09-15T17:06:50.778-05:00  INFO 14776 --- [proyecto_de_aula] [       Thread-5] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-09-15T17:06:50.788-05:00  INFO 14776 --- [proyecto_de_aula] [       Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-09-15T17:06:50.827-05:00  INFO 14776 --- [proyecto_de_aula] [       Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.0)
+
+2026-09-15T17:06:51.113-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] c.r.n.p.ProyectoDeAulaApplication        : Starting ProyectoDeAulaApplication using Java 17.0.12 with PID 14776 (C:\Users\enriq\Downloads\PDA\target\classes started by enriq in C:\Users\enriq\Downloads\PDA)
+2026-09-15T17:06:51.113-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] c.r.n.p.ProyectoDeAulaApplication        : No active profile set, falling back to 1 default profile: "default"
+2026-09-15T17:06:51.954-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-15T17:06:52.033-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 78 ms. Found 6 JPA repository interfaces.
+2026-09-15T17:06:52.458-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-09-15T17:06:52.462-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-09-15T17:06:52.462-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.24]
+2026-09-15T17:06:52.541-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-09-15T17:06:52.541-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1420 ms
+2026-09-15T17:06:52.615-05:00  WARN 14776 --- [proyecto_de_aula] [  restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Failed to initialize dependency 'dataSourceScriptDatabaseInitializer' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'dataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/sql/init/DataSourceInitializationConfiguration.class]: Unsatisfied dependency expressed through method 'dataSourceScriptDatabaseInitializer' parameter 0: Error creating bean with name 'dataSource' defined in class path resource [org/springframework/boot/autoconfigure/jdbc/DataSourceConfiguration$Hikari.class]: Failed to instantiate [com.zaxxer.hikari.HikariDataSource]: Factory method 'dataSource' threw exception with message: Failed to determine a suitable driver class
+2026-09-15T17:06:52.617-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-09-15T17:06:52.637-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-09-15T17:06:52.689-05:00 ERROR 14776 --- [proyecto_de_aula] [  restartedMain] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
+
+Reason: Failed to determine a suitable driver class
+
+
+Action:
+
+Consider the following:
+	If you want an embedded database (H2, HSQL or Derby), please put it on the classpath.
+	If you have database settings to be loaded from a particular profile you may need to activate it (no profiles are currently active).
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.0)
+
+2026-09-15T17:06:54.245-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] c.r.n.p.ProyectoDeAulaApplication        : Starting ProyectoDeAulaApplication using Java 17.0.12 with PID 14776 (C:\Users\enriq\Downloads\PDA\target\classes started by enriq in C:\Users\enriq\Downloads\PDA)
+2026-09-15T17:06:54.245-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] c.r.n.p.ProyectoDeAulaApplication        : No active profile set, falling back to 1 default profile: "default"
+2026-09-15T17:06:54.812-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-15T17:06:54.863-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 48 ms. Found 6 JPA repository interfaces.
+2026-09-15T17:06:55.164-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-09-15T17:06:55.168-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-09-15T17:06:55.168-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.24]
+2026-09-15T17:06:55.214-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2026-09-15T17:06:55.214-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 965 ms
+2026-09-15T17:06:55.265-05:00  WARN 14776 --- [proyecto_de_aula] [  restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Failed to initialize dependency 'dataSourceScriptDatabaseInitializer' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'dataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/sql/init/DataSourceInitializationConfiguration.class]: Unsatisfied dependency expressed through method 'dataSourceScriptDatabaseInitializer' parameter 0: Error creating bean with name 'dataSource' defined in class path resource [org/springframework/boot/autoconfigure/jdbc/DataSourceConfiguration$Hikari.class]: Failed to instantiate [com.zaxxer.hikari.HikariDataSource]: Factory method 'dataSource' threw exception with message: Failed to determine a suitable driver class
+2026-09-15T17:06:55.265-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-09-15T17:06:55.285-05:00  INFO 14776 --- [proyecto_de_aula] [  restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-09-15T17:06:55.296-05:00 ERROR 14776 --- [proyecto_de_aula] [  restartedMain] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
+
+Reason: Failed to determine a suitable driver class
+
+
+Action:
+
+Consider the following:
+	If you want an embedded database (H2, HSQL or Derby), please put it on the classpath.
+	If you have database settings to be loaded from a particular profile you may need to activate it (no profiles are currently active).
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  08:00 min
+[INFO] Finished at: 2026-09-15T17:07:19-05:00
+[INFO] ------------------------------------------------------------------------

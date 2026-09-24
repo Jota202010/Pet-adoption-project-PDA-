@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Transferir dinero — Refugio Nueva Vida</title>
+    <link rel="stylesheet" th:href="@{/css/cuenta.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<header class="cuenta-header">
+    <h1>💸 Transferir dinero</h1>
+    <p>Transfiere fondos del refugio a la tienda</p>
+</header>
+
+<main class="cuenta-container">
+
+    <div th:if="${mensajeError}" class="alerta alerta-error">
+        <span th:text="${mensajeError}">Error al procesar</span>
+    </div>
+
+    <div class="saldos-info">
+        <div class="info-item">
+            <span>💰 Saldo refugio:</span>
+            <strong th:text="'$ ' + ${#numbers.formatDecimal(cuentaRefugio.saldo, 1, 'POINT', 0, 'COMMA')}">
+                $ 500.000
+            </strong>
+        </div>
+        <div class="info-item">
+            <span>🏪 Saldo tienda:</span>
+            <strong th:text="'$ ' + ${#numbers.formatDecimal(cuentaTienda.saldo, 1, 'POINT', 0, 'COMMA')}">
+                $ 0
+            </strong>
+        </div>
+    </div>
+
+    <form th:action="@{/admin/cuenta/transferir}"
+          th:object="${dto}"
+          method="post"
+          class="form-card">
+
+        <div class="form-group">
+            <label for="monto">Monto a transferir:</label>
+            <div class="input-prefix">
+                <span class="prefix">$</span>
+                <input type="number"
+                       id="monto"
+                       th:field="*{monto}"
+                       min="1000"
+                       step="1000"
+                       required
+                       placeholder="25000"/>
+            </div>
+            <small>Mínimo: $1.000</small>
+        </div>
+
+        <div class="form-group">
+            <label for="descripcion">Descripción (opcional):</label>
+            <textarea id="descripcion"
+                      th:field="*{descripcion}"
+                      maxlength="255"
+                      rows="3"
+                      placeholder="Ej: Compra mensual de vacunas"></textarea>
+        </div>
+
+        <div class="form-botones">
+            <a th:href="@{/admin/cuenta}" class="btn-cancelar">← Cancelar</a>
+            <button type="submit" class="btn-confirmar">💸 Confirmar transferencia</button>
+        </div>
+
+    </form>
+
+    <div class="ayuda-transferencia">
+        <h3>💡 ¿Cómo funciona?</h3>
+        <p>
+            Al transferir, el saldo del <strong>refugio disminuye</strong> y el saldo de la
+            <strong>tienda aumenta</strong>. Esto simula el pago de las compras que hace el
+            refugio a la tienda.
+        </p>
+    </div>
+
+</main>
+
+<footer class="cuenta-footer">
+    <p>© 2025 Refugio Nueva Vida · Panel de Cuenta</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Cuenta — Refugio Nueva Vida</title>
+    <link rel="stylesheet" th:href="@{/css/tienda.css}"/>
+    <link rel="stylesheet" th:href="@{/css/cuenta.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<header class="cuenta-header">
+    <h1>🐾 REFUGIO NUEVA VIDA</h1>
+    <p>Panel de Cuenta y Transferencias</p>
+</header>
+
+<main class="cuenta-container">
+
+    <!-- Mensajes flash -->
+    <div th:if="${mensajeExito}" class="alerta alerta-exito">
+        <span th:text="${mensajeExito}">Transferencia realizada con éxito</span>
+    </div>
+    <div th:if="${mensajeError}" class="alerta alerta-error">
+        <span th:text="${mensajeError}">Error al procesar</span>
+    </div>
+
+    <!-- Alerta de saldo bajo -->
+    <div th:if="${alertaSaldoBajo}" class="alerta alerta-advertencia">
+        ⚠️
+        <div>
+            <strong>Saldo bajo.</strong>
+            El refugio tiene menos de $50.000 disponibles.
+        </div>
+        <a th:href="@{/admin/cuenta/transferir}" class="btn-alerta">Recargar ahora</a>
+    </div>
+
+    <!-- Tarjetas de saldo -->
+    <section class="saldos-grid">
+
+        <div class="saldo-card saldo-refugio">
+            <div class="saldo-icono">🐾</div>
+            <div class="saldo-label">SALDO DEL REFUGIO</div>
+            <div class="saldo-monto"
+                 th:text="'$ ' + ${#numbers.formatDecimal(cuentaRefugio.saldo, 1, 'POINT', 0, 'COMMA')}">
+                $ 475.000
+            </div>
+            <div class="saldo-titular" th:text="${cuentaRefugio.titular}">
+                Refugio Nueva Vida
+            </div>
+            <a th:href="@{/admin/cuenta/transferir}" class="btn-transferir">
+                💸 Transferir dinero
+            </a>
+        </div>
+
+        <div class="saldo-card saldo-tienda">
+            <div class="saldo-icono">🏪</div>
+            <div class="saldo-label">SALDO DE LA TIENDA</div>
+            <div class="saldo-monto"
+                 th:text="'$ ' + ${#numbers.formatDecimal(cuentaTienda.saldo, 1, 'POINT', 0, 'COMMA')}">
+                $ 25.000
+            </div>
+            <div class="saldo-titular" th:text="${cuentaTienda.titular}">
+                Tienda del Refugio
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Historial -->
+    <section class="historial-section">
+        <h2 class="historial-title">📜 Historial de transferencias</h2>
+
+        <div th:if="${#lists.isEmpty(transferencias)}" class="estado-vacio">
+            <div class="vacio-icono">💸</div>
+            <h3>No hay transferencias registradas</h3>
+            <p>Cuando realices tu primera transferencia, aparecerá aquí.</p>
+        </div>
+
+        <div th:if="${not #lists.isEmpty(transferencias)}" class="tabla-wrapper">
+            <table class="tabla-transf">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Origen</th>
+                        <th>Destino</th>
+                        <th>Monto</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="t : ${transferencias}">
+                        <td th:text="${#temporals.format(t.fecha, 'dd/MM/yyyy HH:mm')}">
+                            22/09/2026 10:35
+                        </td>
+                        <td>
+                            <span class="badge badge-refugio"
+                                  th:text="${t.cuentaOrigen.tipo}">REFUGIO</span>
+                        </td>
+                        <td>
+                            <span class="badge badge-tienda"
+                                  th:text="${t.cuentaDestino.tipo}">TIENDA</span>
+                        </td>
+                        <td class="monto-col"
+                            th:text="'$ ' + ${#numbers.formatDecimal(t.monto, 1, 'POINT', 0, 'COMMA')}">
+                            $ 25.000
+                        </td>
+                        <td th:text="${t.descripcion}">Compra Pedido #1</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- 🆕 Botones de navegación -->
+    <div class="volver-panel" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:40px;">
+
+        <a th:href="@{/tienda}" class="btn-volver"
+           style="background:linear-gradient(135deg,#F97316,#FB923C); color:#fff; border:none; font-weight:800;">
+            🛒 Volver a la tienda
+        </a>
+
+        <a th:href="@{/admin/productos}" class="btn-volver">
+            ⚙️ Administrar productos
+        </a>
+
+        <a th:href="@{/admin/notificaciones-tienda}" class="btn-volver">
+            🔔 Notificaciones
+        </a>
+
+    </div>
+
+</main>
+
+<footer class="cuenta-footer">
+    <p>© 2025 Refugio Nueva Vida · Panel de Cuenta</p>
+</footer>
+
+</body>
+</html>

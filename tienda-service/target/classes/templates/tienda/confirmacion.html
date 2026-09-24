@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Compra confirmada</title>
+    <link rel="stylesheet" th:href="@{/css/tienda.css}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Compra confirmada</h1>
+
+    <p>
+        Tu pedido fue registrado correctamente.
+    </p>
+
+    <div th:if="${pedido != null}">
+
+        <h2>
+            Pedido #
+            <span th:text="${pedido.idPedido}"></span>
+        </h2>
+
+        <p>
+            Total:
+            <strong th:text="${pedido.total}"></strong>
+        </p>
+
+        <p>
+            Estado:
+            <strong>PREPARANDO</strong>
+        </p>
+
+        <h3>Productos</h3>
+
+        <ul>
+            <li th:each="item : ${pedido.items}">
+                <span th:text="${item.nombreProducto}"></span>
+                x
+                <span th:text="${item.cantidad}"></span>
+            </li>
+        </ul>
+
+    </div>
+
+    <a th:href="@{/tienda}">
+        Volver a la tienda
+    </a>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,267 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------< com.refugio.nueva_vida:proyecto_de_aula >---------------
+[INFO] Building proyecto_de_aula 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ proyecto_de_aula ---
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ proyecto_de_aula ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 44 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ proyecto_de_aula ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 66 source files with javac [debug parameters release 17] to target\classes
+[INFO] -------------------------------------------------------------
+[WARNING] COMPILATION WARNING : 
+[INFO] -------------------------------------------------------------
+[WARNING] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/Notificacion.java:[36,21] @Builder will ignore the initializing expression entirely. If you want the initializing expression to serve as default, add @Builder.Default. If it is not supposed to be settable during building, make the field final.
+[INFO] 1 warning
+[INFO] -------------------------------------------------------------
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/ProyectoDeAulaApplication.java:[7,2] cannot find symbol
+  symbol: class EnableScheduling
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/RecetaService.java:[7,34] cannot find symbol
+  symbol:   class PerroRepository
+  location: package com.refugio.pda.repository
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/RecetaService.java:[31,19] cannot find symbol
+  symbol:   class PerroRepository
+  location: class com.refugio.pda.service.RecetaService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/messaging/RecetaPublisher.java:[3,30] cannot find symbol
+  symbol:   class RabbitMQConfig
+  location: package com.refugio.pda.config
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/RecetaService.java:[44,13] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.service.RecetaService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/RecetaService.java:[122,13] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.service.RecetaService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/RecetaService.java:[172,13] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.service.RecetaService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/RecetaService.java:[222,13] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.service.RecetaService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/RecetaService.java:[286,13] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.service.RecetaService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/RecetaService.java:[374,13] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.service.RecetaService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/RecetaService.java:[24,1] cannot find symbol
+  symbol:   class PerroRepository
+  location: class com.refugio.pda.service.RecetaService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/Receta.java:[27,13] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.model.Receta
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/Receta.java:[27,19] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.model.Receta
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/Receta.java:[14,1] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.model.Receta
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/Receta.java:[17,1] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.model.Receta
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/Receta.java:[15,1] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.model.Receta.RecetaBuilder
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/SimulacionTiempoService.java:[3,29] cannot find symbol
+  symbol:   class Perro
+  location: package com.refugio.pda.model
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/SimulacionTiempoService.java:[4,34] cannot find symbol
+  symbol:   class PerroRepository
+  location: package com.refugio.pda.repository
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/SimulacionTiempoService.java:[17,19] cannot find symbol
+  symbol:   class PerroRepository
+  location: class com.refugio.pda.service.SimulacionTiempoService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/BarraService.java:[8,34] cannot find symbol
+  symbol:   class PerroRepository
+  location: package com.refugio.pda.repository
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/SimulacionTiempoService.java:[14,1] cannot find symbol
+  symbol:   class PerroRepository
+  location: class com.refugio.pda.service.SimulacionTiempoService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/BarraService.java:[21,19] cannot find symbol
+  symbol:   class PerroRepository
+  location: class com.refugio.pda.service.BarraService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/BarraService.java:[272,13] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.service.BarraService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/BarraService.java:[368,13] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.service.BarraService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/BarraService.java:[401,13] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.service.BarraService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/BarraService.java:[431,13] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.service.BarraService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/BarraService.java:[523,13] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.service.BarraService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/BarraService.java:[559,13] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.service.BarraService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/BarraService.java:[18,1] cannot find symbol
+  symbol:   class PerroRepository
+  location: class com.refugio.pda.service.BarraService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/EventoBarra.java:[27,13] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.model.EventoBarra
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/EventoBarra.java:[27,19] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.model.EventoBarra
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/EventoBarra.java:[14,1] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.model.EventoBarra
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/EventoBarra.java:[17,1] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.model.EventoBarra
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/EventoBarra.java:[15,1] cannot find symbol
+  symbol:   class Perro
+  location: class com.refugio.pda.model.EventoBarra.EventoBarraBuilder
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/scheduler/BarraScheduler.java:[3,29] cannot find symbol
+  symbol:   class Perro
+  location: package com.refugio.pda.model
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/scheduler/BarraScheduler.java:[4,34] cannot find symbol
+  symbol:   class PerroRepository
+  location: package com.refugio.pda.repository
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/scheduler/BarraScheduler.java:[23,19] cannot find symbol
+  symbol:   class PerroRepository
+  location: class com.refugio.pda.scheduler.BarraScheduler
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/scheduler/BarraScheduler.java:[20,1] cannot find symbol
+  symbol:   class PerroRepository
+  location: class com.refugio.pda.scheduler.BarraScheduler
+[INFO] 38 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  8.393 s
+[INFO] Finished at: 2026-09-22T16:59:22-05:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project proyecto_de_aula: Compilation failure: Compilation failure: 
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/ProyectoDeAulaApplication.java:[7,2] cannot find symbol
+[ERROR]   symbol: class EnableScheduling
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/RecetaService.java:[7,34] cannot find symbol
+[ERROR]   symbol:   class PerroRepository
+[ERROR]   location: package com.refugio.pda.repository
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/RecetaService.java:[31,19] cannot find symbol
+[ERROR]   symbol:   class PerroRepository
+[ERROR]   location: class com.refugio.pda.service.RecetaService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/messaging/RecetaPublisher.java:[3,30] cannot find symbol
+[ERROR]   symbol:   class RabbitMQConfig
+[ERROR]   location: package com.refugio.pda.config
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/RecetaService.java:[44,13] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.service.RecetaService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/RecetaService.java:[122,13] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.service.RecetaService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/RecetaService.java:[172,13] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.service.RecetaService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/RecetaService.java:[222,13] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.service.RecetaService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/RecetaService.java:[286,13] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.service.RecetaService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/RecetaService.java:[374,13] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.service.RecetaService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/RecetaService.java:[24,1] cannot find symbol
+[ERROR]   symbol:   class PerroRepository
+[ERROR]   location: class com.refugio.pda.service.RecetaService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/Receta.java:[27,13] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.model.Receta
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/Receta.java:[27,19] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.model.Receta
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/Receta.java:[14,1] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.model.Receta
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/Receta.java:[17,1] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.model.Receta
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/Receta.java:[15,1] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.model.Receta.RecetaBuilder
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/SimulacionTiempoService.java:[3,29] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: package com.refugio.pda.model
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/SimulacionTiempoService.java:[4,34] cannot find symbol
+[ERROR]   symbol:   class PerroRepository
+[ERROR]   location: package com.refugio.pda.repository
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/SimulacionTiempoService.java:[17,19] cannot find symbol
+[ERROR]   symbol:   class PerroRepository
+[ERROR]   location: class com.refugio.pda.service.SimulacionTiempoService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/BarraService.java:[8,34] cannot find symbol
+[ERROR]   symbol:   class PerroRepository
+[ERROR]   location: package com.refugio.pda.repository
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/SimulacionTiempoService.java:[14,1] cannot find symbol
+[ERROR]   symbol:   class PerroRepository
+[ERROR]   location: class com.refugio.pda.service.SimulacionTiempoService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/BarraService.java:[21,19] cannot find symbol
+[ERROR]   symbol:   class PerroRepository
+[ERROR]   location: class com.refugio.pda.service.BarraService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/BarraService.java:[272,13] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.service.BarraService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/BarraService.java:[368,13] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.service.BarraService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/BarraService.java:[401,13] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.service.BarraService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/BarraService.java:[431,13] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.service.BarraService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/BarraService.java:[523,13] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.service.BarraService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/BarraService.java:[559,13] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.service.BarraService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/service/BarraService.java:[18,1] cannot find symbol
+[ERROR]   symbol:   class PerroRepository
+[ERROR]   location: class com.refugio.pda.service.BarraService
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/EventoBarra.java:[27,13] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.model.EventoBarra
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/EventoBarra.java:[27,19] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.model.EventoBarra
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/EventoBarra.java:[14,1] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.model.EventoBarra
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/EventoBarra.java:[17,1] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.model.EventoBarra
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/model/EventoBarra.java:[15,1] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: class com.refugio.pda.model.EventoBarra.EventoBarraBuilder
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/scheduler/BarraScheduler.java:[3,29] cannot find symbol
+[ERROR]   symbol:   class Perro
+[ERROR]   location: package com.refugio.pda.model
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/scheduler/BarraScheduler.java:[4,34] cannot find symbol
+[ERROR]   symbol:   class PerroRepository
+[ERROR]   location: package com.refugio.pda.repository
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/scheduler/BarraScheduler.java:[23,19] cannot find symbol
+[ERROR]   symbol:   class PerroRepository
+[ERROR]   location: class com.refugio.pda.scheduler.BarraScheduler
+[ERROR] /C:/Users/enriq/Downloads/mi-proyecto-pda-maestro/mi-proyecto-pda/PDA/src/main/java/com/refugio/nueva_vida/proyecto_de_aula/scheduler/BarraScheduler.java:[20,1] cannot find symbol
+[ERROR]   symbol:   class PerroRepository
+[ERROR]   location: class com.refugio.pda.scheduler.BarraScheduler
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

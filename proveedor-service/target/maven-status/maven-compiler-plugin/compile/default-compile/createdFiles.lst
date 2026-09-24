@@ -1,0 +1,15 @@
+com\refugio\proveedor\proveedor_service\ProveedorServiceApplication.class
+com\refugio\proveedor\proveedor_service\controller\ProveedorWebController.class
+com\refugio\proveedor\proveedor_service\dto\SeguimientoDTO.class
+com\refugio\proveedor\proveedor_service\dto\ItemPedidoDTO$ItemPedidoDTOBuilder.class
+com\refugio\proveedor\proveedor_service\dto\SeguimientoDTO$SeguimientoDTOBuilder.class
+com\refugio\proveedor\proveedor_service\dto\ItemPedidoDTO.class
+com\refugio\proveedor\proveedor_service\consumer\PedidoConsumer.class
+com\refugio\proveedor\proveedor_service\model\Envio$Estado.class
+com\refugio\proveedor\proveedor_service\repository\EnvioRepository.class
+com\refugio\proveedor\proveedor_service\dto\PedidoPagadoDTO.class
+com\refugio\proveedor\proveedor_service\model\Envio.class
+com\refugio\proveedor\proveedor_service\config\RabbitMQConfig.class
+com\refugio\proveedor\proveedor_service\service\EnvioService$1.class
+com\refugio\proveedor\proveedor_service\service\EnvioService.class
+com\refugio\proveedor\proveedor_service\dto\PedidoPagadoDTO$PedidoPagadoDTOBuilder.class

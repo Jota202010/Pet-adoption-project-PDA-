@@ -1,0 +1,704 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Nunito', Arial, sans-serif;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    min-height: 100vh;
+    color: #334155;
+}
+
+/* ═══ HEADER ═══ */
+.cuenta-header {
+    background: linear-gradient(135deg, #172033 0%, #253653 55%, #ff6b35 160%);
+    color: white;
+    text-align: center;
+    padding: 45px 25px 55px;
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.18);
+}
+
+.cuenta-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    margin-bottom: 8px;
+}
+
+.cuenta-header p {
+    color: #dbe4f0;
+    font-size: 1rem;
+}
+
+/* ═══ CONTAINER ═══ */
+.cuenta-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* ═══ ALERTAS ═══ */
+.alerta {
+    padding: 14px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.alerta-exito {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.alerta-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.alerta-advertencia {
+    background: #fff7ed;
+    color: #9a3412;
+    border: 2px solid #fb923c;
+}
+
+.btn-alerta {
+    margin-left: auto;
+    background: #F97316;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 800;
+    transition: all 0.2s ease;
+}
+
+.btn-alerta:hover {
+    background: #EA580C;
+    transform: scale(1.03);
+}
+
+/* ═══ TARJETAS DE SALDO ═══ */
+.saldos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 22px;
+    margin-bottom: 40px;
+}
+
+.saldo-card {
+    padding: 30px 28px;
+    border-radius: 20px;
+    text-align: center;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.saldo-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+}
+
+.saldo-refugio {
+    background: linear-gradient(135deg, #ff6b35 0%, #ff9f43 100%);
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+}
+
+.saldo-tienda {
+    background: linear-gradient(135deg, #172033 0%, #2d3f5c 100%);
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(23, 32, 51, 0.3);
+}
+
+.saldo-icono {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+}
+
+.saldo-label {
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    opacity: 0.9;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.saldo-monto {
+    font-size: 2.6rem;
+    font-weight: 800;
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 8px;
+    line-height: 1.1;
+}
+
+.saldo-titular {
+    font-size: 0.88rem;
+    opacity: 0.85;
+    margin-bottom: 18px;
+}
+
+.btn-transferir {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 12px 22px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 0.9rem;
+    border: 2px solid rgba(255,255,255,0.35);
+    transition: all 0.2s ease;
+}
+
+.btn-transferir:hover {
+    background: rgba(255,255,255,0.35);
+    transform: scale(1.03);
+}
+
+/* ═══ HISTORIAL ═══ */
+.historial-section {
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.historial-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: #2C3E50;
+    margin-bottom: 22px;
+}
+
+.tabla-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+}
+
+.tabla-transf {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.tabla-transf thead {
+    background: #f8fafc;
+}
+
+.tabla-transf th {
+    padding: 14px 16px;
+    text-align: left;
+    color: #6B7280;
+    font-weight: 800;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.tabla-transf td {
+    padding: 14px 16px;
+    border-top: 1px solid #f0e0d5;
+    color: #475569;
+}
+
+.tabla-transf tr:hover td {
+    background: #FFF8F3;
+}
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.badge-refugio {
+    background: #fed7aa;
+    color: #9a3412;
+}
+
+.badge-tienda {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.monto-col {
+    font-weight: 800;
+    color: #16a34a;
+    font-family: 'Playfair Display', serif;
+}
+
+/* ═══ ESTADO VACÍO ═══ */
+.estado-vacio {
+    text-align: center;
+    padding: 50px 25px;
+    border: 2px dashed #e2e8f0;
+    border-radius: 16px;
+    color: #94a3b8;
+}
+
+.vacio-icono {
+    font-size: 3.5rem;
+    margin-bottom: 15px;
+}
+
+.estado-vacio h3 {
+    color: #475569;
+    margin-bottom: 6px;
+    font-size: 1.1rem;
+}
+
+/* ═══ BOTONES FINALES ═══ */
+.volver-panel {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+.btn-volver {
+    padding: 12px 22px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #2C3E50;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.btn-volver:hover {
+    border-color: #F97316;
+    color: #F97316;
+    transform: translateY(-2px);
+}
+
+/* ═══ FORMULARIO TRANSFERIR ═══ */
+.saldos-info {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.info-item {
+    background: #fff;
+    padding: 14px 22px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    font-size: 0.9rem;
+    color: #475569;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+}
+
+.info-item strong {
+    color: #16a34a;
+    font-size: 1.05rem;
+    font-family: 'Playfair Display', serif;
+}
+
+.form-card {
+    max-width: 550px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 800;
+    color: #2C3E50;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    background: #fff;
+    color: #334155;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #F97316;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12);
+}
+
+.form-group small {
+    display: block;
+    color: #94a3b8;
+    font-size: 0.78rem;
+    margin-top: 6px;
+}
+
+/* Input con prefijo $ */
+.input-prefix {
+    display: flex;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-prefix:focus-within {
+    border-color: #F97316;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12);
+}
+
+.input-prefix .prefix {
+    background: #FFF8F3;
+    padding: 12px 18px;
+    font-weight: 800;
+    color: #F97316;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    border-right: 1px solid #f0e0d5;
+}
+
+.input-prefix input {
+    border: none;
+    padding: 12px 16px;
+    flex: 1;
+    font-size: 1rem;
+    background: transparent;
+}
+
+.input-prefix input:focus {
+    outline: none;
+}
+
+/* Errores de validación */
+.error-campo {
+    display: block;
+    color: #dc2626;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-top: 6px;
+    padding: 6px 10px;
+    background: #fef2f2;
+    border-radius: 8px;
+    border-left: 3px solid #dc2626;
+}
+
+/* Botones del formulario */
+.form-botones {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.btn-cancelar {
+    padding: 12px 20px;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    color: #2C3E50;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-cancelar:hover {
+    border-color: #F97316;
+    color: #F97316;
+    transform: translateY(-1px);
+}
+
+.btn-confirmar {
+    padding: 12px 22px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg, #F97316, #FB923C);
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.92rem;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(249, 115, 22, 0.28);
+    transition: all 0.2s ease;
+    font-family: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-confirmar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(249, 115, 22, 0.4);
+}
+
+/* Ayuda extra en transferir */
+.ayuda-transferencia {
+    max-width: 550px;
+    margin: 30px auto 0;
+    padding: 20px 25px;
+    background: #FFF8F3;
+    border-radius: 16px;
+    border-left: 4px solid #F97316;
+}
+
+.ayuda-transferencia h3 {
+    color: #2C3E50;
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+
+.ayuda-transferencia p {
+    color: #64748b;
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+
+.ayuda-transferencia strong {
+    color: #F97316;
+}
+
+/* ═══ FOOTER ═══ */
+.cuenta-footer {
+    text-align: center;
+    padding: 30px 20px;
+    color: #94a3b8;
+    font-size: 0.85rem;
+    margin-top: 60px;
+    background: #172033;
+}
+
+/* ═══ ERROR PAGE ═══ */
+.error-body {
+    background: linear-gradient(135deg, #fff7ed 0%, #fff 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.error-card {
+    background: #fff;
+    padding: 50px 40px;
+    border-radius: 24px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+    max-width: 500px;
+    width: 100%;
+}
+
+.error-icono {
+    font-size: 4.5rem;
+    margin-bottom: 20px;
+}
+
+.error-card h1 {
+    font-family: 'Playfair Display', serif;
+    color: #2C3E50;
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+}
+
+.error-card p {
+    color: #64748b;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.error-botones {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ═══════════════════════════════════════════════════════
+   🆕 NOTIFICACIONES DE LA TIENDA
+   ═══════════════════════════════════════════════════════ */
+
+.notif-resumen {
+    margin-bottom: 25px;
+}
+
+.notif-botones-top {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.notif-botones-top button {
+    cursor: pointer;
+}
+
+.notif-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 22px 25px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    border-left: 6px solid #eab308;
+    margin-bottom: 18px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    animation: fadeIn 0.4s ease;
+}
+
+.notif-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.notif-card.no-leida { border-left-color: #dc2626; }
+.notif-card.leida    { border-left-color: #94a3b8; opacity: 0.75; }
+
+.notif-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.notif-titulo {
+    margin: 0;
+    color: #2C3E50;
+    font-size: 1.15rem;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+}
+
+.notif-badge-nueva {
+    background: #dc2626;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.notif-mensaje {
+    color: #64748b;
+    margin: 10px 0;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.notif-fecha {
+    color: #94a3b8;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.notif-acciones {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.notif-btn {
+    padding: 9px 16px;
+    border-radius: 10px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.notif-btn:hover {
+    transform: translateY(-2px);
+}
+
+.notif-btn-leer {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.notif-btn-leer:hover {
+    background: #bbf7d0;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+}
+
+.notif-btn-tienda {
+    background: linear-gradient(135deg, #F97316, #ff9f43);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25);
+}
+
+.notif-btn-tienda:hover {
+    box-shadow: 0 8px 20px rgba(249, 115, 22, 0.4);
+}
+
+.notif-btn-eliminar {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.notif-btn-eliminar:hover {
+    background: #fecaca;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+}
+
+.notif-volver {
+    text-align: center;
+    margin-top: 35px;
+}
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 650px) {
+    .saldo-monto { font-size: 2rem; }
+    .cuenta-header h1 { font-size: 1.6rem; }
+    .form-card { padding: 25px; }
+    .form-botones { flex-direction: column; }
+    .form-botones > * { width: 100%; justify-content: center; }
+    .volver-panel { flex-direction: column; }
+    .volver-panel > * { width: 100%; text-align: center; }
+    .alerta-advertencia { flex-direction: column; align-items: flex-start; }
+    .btn-alerta { margin-left: 0; }
+    .tabla-transf { font-size: 0.82rem; }
+    .tabla-transf th, .tabla-transf td { padding: 10px 12px; }
+
+    /* Notificaciones responsive */
+    .notif-acciones { flex-direction: column; }
+    .notif-btn { width: 100%; justify-content: center; }
+    .notif-badge-nueva { font-size: 0.65rem; }
+}

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Proveedor - PDA</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/proveedor.css}">
+
+</head>
+
+<body>
+
+<header class="hero">
+
+    <div class="hero-content">
+
+        <span class="badge">
+            PDA LOGÍSTICA
+        </span>
+
+        <h1>
+            Sistema de Proveedor
+        </h1>
+
+        <p>
+            Gestión y seguimiento de pedidos
+            en tiempo real.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="/proveedor/admin"
+               class="btn btn-primary">
+                Panel de pedidos
+            </a>
+
+            <a href="http://localhost:8081/tienda"
+               class="btn btn-secondary">
+                Ir a la tienda
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<section class="info">
+
+    <div class="info-card">
+
+        <div class="icon">
+            📦
+        </div>
+
+        <h2>
+            Gestión de envíos
+        </h2>
+
+        <p>
+            Visualiza los pedidos recibidos
+            desde la tienda y su estado actual.
+        </p>
+
+    </div>
+
+
+    <div class="info-card">
+
+        <div class="icon">
+            🚚
+        </div>
+
+        <h2>
+            Seguimiento
+        </h2>
+
+        <p>
+            Los pedidos avanzan automáticamente
+            por las diferentes etapas de entrega.
+        </p>
+
+    </div>
+
+
+    <div class="info-card">
+
+        <div class="icon">
+            🐇
+        </div>
+
+        <h2>
+            RabbitMQ
+        </h2>
+
+        <p>
+            Los cambios de estado se comunican
+            mediante mensajería entre servicios.
+        </p>
+
+    </div>
+
+</section>
+
+</body>
+</html>
