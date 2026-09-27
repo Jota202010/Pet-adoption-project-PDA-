@@ -51,4 +51,10 @@ public class ProductoService {
     public Optional<Producto> buscarPorNombreYCategoria(String nombre, Producto.Categoria categoria) {
         return productoRepository.findFirstByNombreContainingIgnoreCaseAndCategoria(nombre, categoria);
     }
+    
+    @Transactional(readOnly = true)
+    public Optional<Producto> buscarPorNombreExacto(String nombre) {
+    return productoRepository
+     .findFirstByNombreIgnoreCase(nombre);
+}
 }

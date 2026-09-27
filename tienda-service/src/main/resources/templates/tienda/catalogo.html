@@ -16,6 +16,7 @@
         .producto-categoria.cat-higiene        { background:#F0FDFA; color:#0D9488; }
         .producto-categoria.cat-hidratacion    { background:#ECFEFF; color:#0891B2; }
         .producto-categoria.cat-desparasitante { background:#DCFCE7; color:#15803D; }
+        .producto-categoria.cat-esterilizacion { background:#FFE4E6; color:#BE123C; }
     </style>
 </head>
 
@@ -164,6 +165,7 @@
             <th:block th:case="'HIGIENE'">🧴 Higiene</th:block>
             <th:block th:case="'HIDRATACION'">💧 Hidratación</th:block>
             <th:block th:case="'DESPARASITANTE'">🪱 Desparasitante</th:block>
+            <th:block th:case="'ESTERILIZACION'">✂️ Esterilización</th:block>
             <th:block th:case="*" th:text="${producto.categoria}">CATEGORÍA</th:block>
         </div>
 
@@ -175,6 +177,7 @@
             <th:block th:case="'HIGIENE'">🧴</th:block>
             <th:block th:case="'HIDRATACION'">💧</th:block>
             <th:block th:case="'DESPARASITANTE'">🪱</th:block>
+            <th:block th:case="'ESTERILIZACION'">✂️</th:block>
             <th:block th:case="*">📦</th:block>
         </div>
 

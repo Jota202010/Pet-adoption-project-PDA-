@@ -30,6 +30,13 @@ public class BarrasConfig {
     private int saludDecaimientoPorcentaje;
 
 
+    @Value("${refugio.barras.energia.decaimiento-horas:6}")
+    private long energiaDecaimientoHoras;
+
+    @Value("${refugio.barras.energia.decaimiento-porcentaje:4}")
+    private int energiaDecaimientoPorcentaje;
+
+
     @Value("${refugio.recetas.umbral-nutricion:50}")
     private int umbralNutricion;
 

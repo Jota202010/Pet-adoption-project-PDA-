@@ -35,6 +35,8 @@
     .nav-links a:hover { background: #374151; color: #fff; }
     .btn-exit { display: inline-block; text-decoration: none; font-family: 'Nunito', sans-serif; font-size: 0.82rem; font-weight: 700; background: transparent; color: #9CA3AF; border: 1.5px solid #4B5563; border-radius: 7px; padding: 7px 16px; transition: all 0.2s; }
     .btn-exit:hover { border-color: #9CA3AF; color: #fff; }
+    .btn-perfil-nav { display: inline-block; text-decoration: none; font-family: 'Nunito', sans-serif; font-size: 0.82rem; font-weight: 700; background: rgba(249,115,22,.15); color: var(--orange-mid); border: 1.5px solid rgba(249,115,22,.3); border-radius: 7px; padding: 7px 16px; transition: all 0.2s; white-space: nowrap; }
+    .btn-perfil-nav:hover { background: var(--orange); color: #fff; border-color: var(--orange); }
 
     /* ── BREADCRUMB ── */
     .breadcrumb { max-width: 1150px; margin: 0 auto; padding: 20px 32px 0; display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--text-muted); font-weight: 600; }
@@ -61,6 +63,24 @@
     /* ── MAIN CARD ── */
     .detail-card { background: var(--card-bg); border: 1px solid var(--detail); border-radius: var(--radius); box-shadow: var(--shadow-lg); overflow: hidden; animation: fadeUp 0.4s ease both; }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── CARD HEADER (igual que Agregar mascota) ── */
+    .card-top { background: linear-gradient(135deg,#1F2937 0%,#111827 100%); padding: 32px 40px; display: flex; align-items: center; justify-content: space-between; gap: 20px; position: relative; overflow: hidden; }
+    .card-top::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 80% 50%, rgba(249,115,22,.12) 0%, transparent 65%); }
+    .card-top-text { position: relative; z-index: 1; }
+    .card-top-text h1 { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .card-top-text p { color: #9CA3AF; font-size: .88rem; }
+    .card-top-icon { font-size: 2.5rem; position: relative; z-index: 1; }
+    @media (max-width: 700px) { .card-top { padding: 24px 20px; } }
+
+    /* ── ESTADO DE PUBLICACIÓN (igual que Agregar mascota) ── */
+    .estado-publicacion-card { display: flex; gap: 16px; align-items: flex-start; background: linear-gradient(135deg,var(--orange-light) 0%,#fff 100%); border: 2px solid var(--orange-mid); border-radius: 14px; padding: 18px 20px; margin: 16px 0; }
+    .estado-publicacion-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--orange); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; box-shadow: 0 6px 16px rgba(249,115,22,.3); }
+    .estado-publicacion-body { flex: 1; min-width: 0; }
+    .estado-publicacion-hint { font-size: .78rem; color: var(--orange-dark); margin-bottom: 10px; font-weight: 700; line-height: 1.5; }
+    .estado-publicacion-select { width: 100%; border: 2px solid var(--orange-mid); border-radius: 10px; padding: 12px 40px 12px 14px; font-family: 'Nunito', sans-serif; font-size: .92rem; background-color: #fff; color: var(--text); font-weight: 800; outline: none; cursor: pointer; transition: border-color .2s, box-shadow .2s; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23F97316' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
+    .estado-publicacion-select:focus { border-color: var(--orange); box-shadow: 0 0 0 4px rgba(249,115,22,.15); }
+    .estado-publicacion-select:hover { border-color: var(--orange); }
 
     /* ── TOP: GALLERY + INFO ── */
     .detail-top { display: grid; grid-template-columns: 460px 1fr; min-height: 460px; }
@@ -185,6 +205,10 @@
     .btn-cancel:hover { border-color: #9CA3AF; color: var(--text); }
     .btn-save { background: var(--orange); color: #fff; font-family: 'Nunito', sans-serif; font-size: 0.88rem; font-weight: 800; border: none; border-radius: 999px; padding: 10px 28px; cursor: pointer; display: flex; align-items: center; gap: 7px; transition: background 0.2s, transform 0.15s; }
     .btn-save:hover { background: var(--orange-dark); transform: translateY(-1px); }
+    .save-buttons { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .btn-delete { background: linear-gradient(135deg,#EF4444 0%,#DC2626 100%); color: #fff; font-family: 'Nunito', sans-serif; font-size: 0.88rem; font-weight: 800; border: none; border-radius: 999px; padding: 10px 26px; cursor: pointer; display: flex; align-items: center; gap: 7px; box-shadow: 0 4px 14px rgba(220,38,38,.35); transition: transform 0.15s, box-shadow 0.2s, background 0.2s; }
+    .btn-delete:hover { background: linear-gradient(135deg,#DC2626 0%,#B91C1C 100%); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(220,38,38,.45); }
+    .btn-delete:active { transform: translateY(0); }
 
     footer { background: #1F2937; color: #9CA3AF; text-align: center; padding: 28px 48px; font-size: 0.82rem; }
     footer span { color: var(--orange); }

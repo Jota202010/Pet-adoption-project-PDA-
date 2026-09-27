@@ -5,9 +5,12 @@ public enum TipoEvento {
     AGUA,
     VACUNA,
     DESPARASITANTE,
+    ESTERILIZACION,
     VITAMINA,
     ENFERMEDAD,
     DECAIMIENTO_TIEMPO,
     RESET,
-    AJUSTE_MANUAL
+    AJUSTE_MANUAL,
+    JUEGO,
+    BANO
 }

@@ -9,6 +9,19 @@ import java.util.Optional;
 
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, Integer> {
-    List<Producto> findByCategoria(Producto.Categoria categoria);
-    Optional<Producto> findFirstByNombreContainingIgnoreCaseAndCategoria(String nombre, Producto.Categoria categoria);
+
+    List<Producto> findByCategoria(
+            Producto.Categoria categoria
+    );
+
+    Optional<Producto>
+    findFirstByNombreContainingIgnoreCaseAndCategoria(
+            String nombre,
+            Producto.Categoria categoria
+    );
+
+    Optional<Producto>
+    findFirstByNombreIgnoreCase(
+            String nombre
+    );
 }

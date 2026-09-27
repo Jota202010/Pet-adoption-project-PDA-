@@ -12,6 +12,7 @@ public enum TipoProducto {
     MEDICAMENTO,
     ACCESORIO,
     HIGIENE,
+    ESTERILIZACION,
     /** Categoría genérica de respaldo para productos con una categoría desconocida/antigua. */
     OTRO
 }

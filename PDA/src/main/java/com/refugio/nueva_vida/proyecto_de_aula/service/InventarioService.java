@@ -22,6 +22,9 @@ public class InventarioService {
 
     private static final int BARRA_MAXIMA = 100;
 
+    /** El baño completo (mojar + espumar + aclarar) gasta 3 unidades de higiene. */
+    private static final int UNIDADES_POR_BANO = 3;
+
     private final ProductoInventarioRepository inventarioRepository;
     private final PerroRepository perroRepository;
     private final BarraService barraService;
@@ -62,20 +65,34 @@ public class InventarioService {
     }
 
     /**
-     * Le da 1 unidad del producto al perro indicado:
-     * valida que la barra correspondiente tenga margen, descuenta stock
-     * y aplica el efecto correspondiente en sus barras.
+     * Le da el producto al perro indicado: valida que la barra
+     * correspondiente tenga margen, descuenta stock y aplica el efecto
+     * correspondiente en sus barras.
      *
-     * Si la barra ya está al 100%, NO se descuenta stock ni se registra
-     * ningún evento: se lanza un error explicando por qué, para que el
-     * admin no desperdicie el producto en un perro que ya no lo necesita.
+     * Normalmente descuenta 1 unidad, excepto los productos de HIGIENE
+     * (un baño completo — mojar, espumar, aclarar — gasta
+     * {@value #UNIDADES_POR_BANO} unidades de una sola vez).
+     *
+     * Si la barra ya está al 100%, o si no hay stock suficiente, NO se
+     * descuenta nada ni se registra ningún evento: se lanza un error
+     * explicando por qué, para que el admin no desperdicie el producto.
      */
     @Transactional
     public void darAlPerro(Integer idProducto, Integer idPerro) {
         ProductoInventario producto = inventarioRepository.findById(idProducto)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado en el inventario."));
 
-        if (!producto.tieneStock()) {
+        int unidadesNecesarias = producto.getTipo() == TipoProducto.HIGIENE
+                ? UNIDADES_POR_BANO
+                : 1;
+
+        if (producto.getCantidad() == null || producto.getCantidad() < unidadesNecesarias) {
+            if (producto.getTipo() == TipoProducto.HIGIENE) {
+                throw new IllegalStateException(
+                        "🛁 Un baño completo gasta " + UNIDADES_POR_BANO + " unidades de \"" +
+                        producto.getNombre() + "\" y solo quedan " +
+                        (producto.getCantidad() == null ? 0 : producto.getCantidad()) + ".");
+            }
             throw new IllegalStateException("No queda stock de \"" + producto.getNombre() + "\".");
         }
 
@@ -86,11 +103,11 @@ public class InventarioService {
 
         aplicarEfecto(producto, idPerro);
 
-        producto.setCantidad(producto.getCantidad() - 1);
+        producto.setCantidad(producto.getCantidad() - unidadesNecesarias);
         inventarioRepository.save(producto);
 
-        log.info("🐶 Se entregó 1x {} al perro #{}. Quedan {} en inventario.",
-                producto.getNombre(), idPerro, producto.getCantidad());
+        log.info("🐶 Se entregó {}x {} al perro #{}. Quedan {} en inventario.",
+                unidadesNecesarias, producto.getNombre(), idPerro, producto.getCantidad());
     }
 
     /**
@@ -119,9 +136,18 @@ public class InventarioService {
                 nombreBarra = "nutrición";
                 emoji = "🍖";
             }
+            case ACCESORIO -> {
+                valorActual = perro.getEnergia();
+                nombreBarra = "energía";
+                emoji = "⚡";
+            }
+            case HIGIENE -> {
+                valorActual = perro.getHidratacion();
+                nombreBarra = "hidratación";
+                emoji = "💧";
+            }
             default -> {
-                // ACCESORIO, HIGIENE, OTRO: no llenan ninguna barra,
-                // así que siempre se pueden entregar.
+                // OTRO: no llena ninguna barra, siempre se puede entregar.
                 return;
             }
         }
@@ -146,8 +172,11 @@ public class InventarioService {
                         ? "premium" : "normal";
                 barraService.registrarComida(idPerro, tipoComida);
             }
-            case ACCESORIO, HIGIENE, OTRO -> log.info(
-                    "🎒 \"{}\" es un producto sin efecto en barras (accesorio/higiene); "
+            case ACCESORIO -> barraService.registrarJuego(idPerro);
+            case HIGIENE -> barraService.registrarBano(idPerro);
+            case ESTERILIZACION -> barraService.registrarEsterilizacion(idPerro);
+            case OTRO -> log.info(
+                    "📦 \"{}\" es un producto sin efecto en barras; "
                     + "solo se descuenta del inventario.", producto.getNombre());
         }
     }
@@ -155,8 +184,9 @@ public class InventarioService {
     /**
      * Traduce la categoría de un producto de la tienda (Producto.Categoria:
      * VACUNA, ALIMENTO, MEDICAMENTO, ACCESORIO, HIGIENE, HIDRATACION,
-     * DESPARASITANTE) al TipoProducto que usa el inventario del refugio.
-     * Es un mapeo 1 a 1: cada categoría de la tienda tiene su propio tipo aquí.
+     * DESPARASITANTE, ESTERILIZACION) al TipoProducto que usa el inventario
+     * del refugio. Es un mapeo 1 a 1: cada categoría de la tienda tiene su
+     * propio tipo aquí.
      */
     public static TipoProducto tipoDesdeCategoria(String categoria) {
         if (categoria == null) return TipoProducto.OTRO;
@@ -168,6 +198,7 @@ public class InventarioService {
             case "MEDICAMENTO" -> TipoProducto.MEDICAMENTO;
             case "ACCESORIO" -> TipoProducto.ACCESORIO;
             case "HIGIENE" -> TipoProducto.HIGIENE;
+            case "ESTERILIZACION", "ESTERILIZACIÓN" -> TipoProducto.ESTERILIZACION;
             default -> TipoProducto.OTRO;
         };
     }

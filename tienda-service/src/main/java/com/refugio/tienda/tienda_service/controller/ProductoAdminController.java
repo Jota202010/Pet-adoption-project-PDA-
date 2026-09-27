@@ -56,7 +56,10 @@ public class ProductoAdminController {
             if (descripcion != null && !descripcion.isBlank()) {
                 String desc = descripcion.toLowerCase();
 
-                if (desc.contains("categoría: vacuna") || desc.contains("vacun")) {
+                if (desc.contains("categoría: esterilizacion") || desc.contains("categoría: esterilización")
+                        || desc.contains("esteriliz")) {
+                    producto.setCategoria(Producto.Categoria.ESTERILIZACION);
+                } else if (desc.contains("categoría: vacuna") || desc.contains("vacun")) {
                     producto.setCategoria(Producto.Categoria.VACUNA);
                 } else if (desc.contains("categoría: alimento") || desc.contains("nutri")) {
                     producto.setCategoria(Producto.Categoria.ALIMENTO);

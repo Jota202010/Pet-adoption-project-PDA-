@@ -1,90 +1,448 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
 <head>
+
     <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Transferir dinero — Refugio Nueva Vida</title>
-    <link rel="stylesheet" th:href="@{/css/cuenta.css}"/>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0"/>
+
+    <title>
+        Registrar Ingreso / Cobro a Tienda — Refugio Nueva Vida
+    </title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/transferir.css}"/>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet"/>
+
 </head>
+
 <body>
 
-<header class="cuenta-header">
-    <h1>💸 Transferir dinero</h1>
-    <p>Transfiere fondos del refugio a la tienda</p>
+<header class="ingreso-header">
+
+    <div class="header-icon">
+        📊
+    </div>
+
+    <div>
+
+        <h1>
+            Registrar Ingreso / Cobro a Tienda
+        </h1>
+
+        <p>
+            Liquidación de dinero que la Tienda debe pagar al Refugio
+        </p>
+
+    </div>
+
 </header>
 
-<main class="cuenta-container">
 
-    <div th:if="${mensajeError}" class="alerta alerta-error">
-        <span th:text="${mensajeError}">Error al procesar</span>
+<main class="ingreso-container">
+
+
+    <!-- MENSAJE DE ERROR -->
+
+    <div th:if="${mensajeError}"
+         class="alerta alerta-error">
+
+        ⚠️
+
+        <span th:text="${mensajeError}">
+            Error al procesar
+        </span>
+
     </div>
 
-    <div class="saldos-info">
-        <div class="info-item">
-            <span>💰 Saldo refugio:</span>
-            <strong th:text="'$ ' + ${#numbers.formatDecimal(cuentaRefugio.saldo, 1, 'POINT', 0, 'COMMA')}">
-                $ 500.000
-            </strong>
-        </div>
-        <div class="info-item">
-            <span>🏪 Saldo tienda:</span>
-            <strong th:text="'$ ' + ${#numbers.formatDecimal(cuentaTienda.saldo, 1, 'POINT', 0, 'COMMA')}">
-                $ 0
-            </strong>
-        </div>
+
+    <!-- MENSAJE: COMPROBANTE GENERADO -->
+
+    <div th:if="${comprobanteGenerado}"
+         class="alerta alerta-info">
+
+        ✨
+
+        <span>
+            Se generó un nuevo comprobante válido.
+            Puedes usarlo o volver a generar otro.
+        </span>
+
     </div>
+
+
+    <!-- ESTADO DE CUENTAS -->
+
+    <section class="cuentas-resumen">
+
+        <div class="cuenta-box refugio">
+
+            <div class="cuenta-box-icon">
+                🏦
+            </div>
+
+            <div>
+
+                <span>
+                    SALDO ACTUAL DEL REFUGIO
+                </span>
+
+                <strong
+                    th:text="'$ ' + ${#numbers.formatDecimal(
+                        cuentaRefugio.saldo,
+                        1,
+                        'POINT',
+                        0,
+                        'COMMA'
+                    )}">
+                    $ 500.000
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="flujo-icon">
+            →
+        </div>
+
+
+        <div class="cuenta-box tienda">
+
+            <div class="cuenta-box-icon">
+                🏪
+            </div>
+
+            <div>
+
+                <span>
+                    SALDO ACTUAL DE LA TIENDA
+                </span>
+
+                <strong
+                    th:text="'$ ' + ${#numbers.formatDecimal(
+                        cuentaTienda.saldo,
+                        1,
+                        'POINT',
+                        0,
+                        'COMMA'
+                    )}">
+                    $ 250.000
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- LIQUIDACIÓN -->
+
+    <section class="liquidacion-card">
+
+        <div class="section-heading">
+
+            <div class="section-icon">
+                🧾
+            </div>
+
+            <div>
+
+                <h2>
+                    Resumen de Liquidación
+                </h2>
+
+                <p>
+                    Valor calculado de acuerdo con las ventas registradas durante el mes.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="tabla-liquidacion">
+
+            <div class="liquidacion-row">
+
+                <span>
+                    <span class="concepto-icon">📈</span>
+                    Ventas del mes
+                </span>
+
+                <strong
+                    th:text="'$ ' + ${#numbers.formatDecimal(
+                        liquidacion.ventasMes,
+                        1,
+                        'POINT',
+                        0,
+                        'COMMA'
+                    )}">
+                    $ 0
+                </strong>
+
+            </div>
+
+
+            <div class="liquidacion-row descuento">
+
+                <span>
+                    <span class="concepto-icon">📉</span>
+                    Comisiones
+                </span>
+
+                <strong
+                    th:text="'- $ ' + ${#numbers.formatDecimal(
+                        liquidacion.comisiones,
+                        1,
+                        'POINT',
+                        0,
+                        'COMMA'
+                    )}">
+                    - $ 0
+                </strong>
+
+            </div>
+
+
+            <div class="liquidacion-row">
+
+                <span>
+                    <span class="concepto-icon">⚖️</span>
+                    Ajustes
+                </span>
+
+                <strong
+                    th:text="'$ ' + ${#numbers.formatDecimal(
+                        liquidacion.ajustes,
+                        1,
+                        'POINT',
+                        0,
+                        'COMMA'
+                    )}">
+                    $ 0
+                </strong>
+
+            </div>
+
+
+            <div class="liquidacion-total">
+
+                <div>
+
+                    <span>
+                        TOTAL A RECIBIR
+                    </span>
+
+                    <small>
+                        Valor fijo de la liquidación
+                    </small>
+
+                </div>
+
+                <strong
+                    th:text="'$ ' + ${#numbers.formatDecimal(
+                        liquidacion.totalARecibir,
+                        1,
+                        'POINT',
+                        0,
+                        'COMMA'
+                    )}">
+                    $ 0
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FORMULARIO -->
 
     <form th:action="@{/admin/cuenta/transferir}"
           th:object="${dto}"
           method="post"
-          class="form-card">
+          class="ingreso-form">
+
+
+        <div class="form-title">
+
+            <span>💳</span>
+
+            Datos del ingreso
+
+        </div>
+
+
+        <!-- MÉTODO DE PAGO -->
 
         <div class="form-group">
-            <label for="monto">Monto a transferir:</label>
-            <div class="input-prefix">
-                <span class="prefix">$</span>
-                <input type="number"
-                       id="monto"
-                       th:field="*{monto}"
-                       min="1000"
-                       step="1000"
-                       required
-                       placeholder="25000"/>
+
+            <label for="metodoPago">
+                Método de pago
+            </label>
+
+            <select id="metodoPago"
+                    th:field="*{metodoPago}"
+                    required>
+
+                <option value="">
+                    Selecciona un método
+                </option>
+
+                <option value="TRANSFERENCIA_BANCARIA">
+                    🏦 Transferencia Bancaria
+                </option>
+
+                <option value="EFECTIVO">
+                    💵 Efectivo
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- REFERENCIA -->
+
+        <div class="form-group">
+
+            <label for="referenciaComprobante">
+
+                Referencia o Número de Comprobante
+
+            </label>
+
+            <div class="comprobante-input-row">
+
+                <input type="text"
+                       id="referenciaComprobante"
+                       th:field="*{referenciaComprobante}"
+                       maxlength="20"
+                       autocomplete="off"
+                       placeholder="Ej: TRX-4F7K-9XPQ-8T"
+                       required/>
+
+                <!--
+                    Submit normal del MISMO formulario, pero
+                    hacia otra ruta del Controller (formaction)
+                    que responde con HTML (recarga esta misma
+                    página con el comprobante ya generado).
+                    No usa JavaScript ni JSON para generarlo.
+
+                    formnovalidate: permite generarlo aunque
+                    todavía no se haya completado el resto
+                    del formulario.
+                -->
+                <button type="submit"
+                        id="btnGenerarComprobante"
+                        class="btn-generar"
+                        th:formaction="@{/admin/cuenta/transferir/generar-comprobante}"
+                        formmethod="post"
+                        formnovalidate>
+
+                    ✨ Generar
+
+                </button>
+
             </div>
-            <small>Mínimo: $1.000</small>
+
+            <span id="comprobanteBadge"
+                  class="comprobante-badge">
+            </span>
+
+            <small>
+                Usa <strong>«Generar»</strong> para crear un comprobante
+                válido automáticamente, o escribe uno existente:
+                se valida al instante y, si no es correcto,
+                el sistema no dejará confirmar el ingreso.
+            </small>
+
         </div>
 
-        <div class="form-group">
-            <label for="descripcion">Descripción (opcional):</label>
-            <textarea id="descripcion"
-                      th:field="*{descripcion}"
-                      maxlength="255"
-                      rows="3"
-                      placeholder="Ej: Compra mensual de vacunas"></textarea>
-        </div>
+
+        <!-- BOTONES -->
 
         <div class="form-botones">
-            <a th:href="@{/admin/cuenta}" class="btn-cancelar">← Cancelar</a>
-            <button type="submit" class="btn-confirmar">💸 Confirmar transferencia</button>
+
+            <a th:href="@{/admin/cuenta}"
+               class="btn-cancelar">
+
+                ← Cancelar
+
+            </a>
+
+
+            <button type="submit"
+                    class="btn-confirmar">
+
+                ✓ Confirmar Ingreso al Refugio
+
+            </button>
+
         </div>
 
     </form>
 
-    <div class="ayuda-transferencia">
-        <h3>💡 ¿Cómo funciona?</h3>
-        <p>
-            Al transferir, el saldo del <strong>refugio disminuye</strong> y el saldo de la
-            <strong>tienda aumenta</strong>. Esto simula el pago de las compras que hace el
-            refugio a la tienda.
-        </p>
-    </div>
+
+    <!-- EXPLICACIÓN -->
+
+    <section class="ayuda-ingreso">
+
+        <div class="ayuda-icon">
+            💰
+        </div>
+
+        <div>
+
+            <h3>
+                ¿Qué ocurre al confirmar?
+            </h3>
+
+            <p>
+
+                Al confirmar este ingreso,
+                el <strong>saldo del Refugio AUMENTA</strong>
+                por el valor de la liquidación.
+
+                Al mismo tiempo,
+                el <strong>saldo de la Tienda DISMINUYE</strong>
+                por el mismo valor.
+
+            </p>
+
+            <p>
+
+                De esta forma queda registrado que la
+                <strong>Tienda realizó el pago correspondiente al Refugio</strong>,
+                junto con el método de pago y la referencia del comprobante.
+
+            </p>
+
+        </div>
+
+    </section>
+
 
 </main>
 
-<footer class="cuenta-footer">
-    <p>© 2025 Refugio Nueva Vida · Panel de Cuenta</p>
+
+<footer class="ingreso-footer">
+
+    © 2025 Refugio Nueva Vida · Gestión financiera
+
 </footer>
+
+
+<script th:src="@{/js/transferir.js}" defer></script>
 
 </body>
 </html>

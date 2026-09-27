@@ -29,6 +29,25 @@ public class Transferencia {
     @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal monto;
 
+    /*
+     * Nuevo:
+     * TRANSFERENCIA_BANCARIA o EFECTIVO
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "metodo_pago")
+    private MetodoPago metodoPago;
+
+    /*
+     * Nuevo:
+     * número de comprobante, referencia bancaria,
+     * número de recibo, etc.
+     */
+    @Column(name = "referencia_comprobante", length = 255)
+    private String referenciaComprobante;
+
+    /*
+     * Se conserva para no romper registros antiguos.
+     */
     @Column(length = 255)
     private String descripcion;
 

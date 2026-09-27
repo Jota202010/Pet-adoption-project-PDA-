@@ -56,6 +56,7 @@ public class RecetaPublisher {
             case "HIDRATACION"     -> "MEDICAMENTO";
             case "VACUNACION"      -> "VACUNA";
             case "DESPARASITACION" -> "MEDICAMENTO";
+            case "ESTERILIZACION"  -> "ESTERILIZACION";
             default                -> "ACCESORIO";
         };
     }
@@ -66,6 +67,7 @@ public class RecetaPublisher {
             case "HIDRATACION"     -> "Suero Oral Canino";
             case "VACUNACION"      -> "Vacuna Antirrábica";
             case "DESPARASITACION" -> "Desparasitante Canino";
+            case "ESTERILIZACION"  -> "Cirugía de esterilización";
             default                -> "Producto para el refugio";
         };
     }
@@ -76,6 +78,7 @@ public class RecetaPublisher {
             case "HIDRATACION"     -> 12000;
             case "VACUNACION"      -> 25000;
             case "DESPARASITACION" -> 18000;
+            case "ESTERILIZACION"  -> 20000;
             default                -> 20000;
         };
     }

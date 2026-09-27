@@ -45,6 +45,7 @@ public class BarraService {
         registrarEvento(perro, TipoBarra.NUTRICION, TipoEvento.COMIDA,
                 nuevo - anterior, nuevo, "Comida " + tipo);
 
+        recetaService.resolverPendientesSiCorresponde(perro);
         recetaService.generarRecetaSiNecesario(perro);
     }
 
@@ -61,6 +62,7 @@ public class BarraService {
         registrarEvento(perro, TipoBarra.HIDRATACION, TipoEvento.AGUA,
                 nuevo - anterior, nuevo, "Agua registrada");
 
+        recetaService.resolverPendientesSiCorresponde(perro);
         recetaService.generarRecetaSiNecesario(perro);
     }
 
@@ -78,6 +80,48 @@ public class BarraService {
         registrarEvento(perro, TipoBarra.SALUD, TipoEvento.VACUNA,
                 nuevo - anterior, nuevo, "Vacuna: " + tipoVacuna);
 
+        recetaService.resolverPendientesSiCorresponde(perro);
+        recetaService.generarRecetaSiNecesario(perro);
+    }
+
+    /**
+     * Interacción "Jugar" — usa un accesorio (ej. Correa Reforzada).
+     * Sube la barra de Energía y guarda cuándo fue la última vez
+     * que se jugó con el perro (lo usa el cooldown del frontend).
+     */
+    @Transactional
+    public void registrarJuego(Integer idPerro) {
+        Perro perro = obtenerPerro(idPerro);
+        int anterior = perro.getEnergia();
+        int nuevo = limitar(anterior + 30);
+
+        perro.setEnergia(nuevo);
+        perro.setUltimoJuego(LocalDateTime.now());
+        perroRepository.save(perro);
+
+        registrarEvento(perro, TipoBarra.ENERGIA, TipoEvento.JUEGO,
+                nuevo - anterior, nuevo, "Sesión de juego con la correa");
+    }
+
+    /**
+     * Interacción "Bañar" — usa 3 unidades de un producto de higiene
+     * (ej. Shampoo Antipulgas). Sube la barra de Hidratación (+15).
+     */
+    @Transactional
+    public void registrarBano(Integer idPerro) {
+        Perro perro = obtenerPerro(idPerro);
+        int anterior = perro.getHidratacion();
+        int nuevo = limitar(anterior + 15);
+
+        perro.setHidratacion(nuevo);
+        perro.setUltimaHidratacion(LocalDateTime.now());
+        perro.setUltimoBano(LocalDateTime.now());
+        perroRepository.save(perro);
+
+        registrarEvento(perro, TipoBarra.HIDRATACION, TipoEvento.BANO,
+                nuevo - anterior, nuevo, "Baño completo (mojar, espumar, aclarar)");
+
+        recetaService.resolverPendientesSiCorresponde(perro);
         recetaService.generarRecetaSiNecesario(perro);
     }
 
@@ -94,6 +138,29 @@ public class BarraService {
         registrarEvento(perro, TipoBarra.SALUD, TipoEvento.DESPARASITANTE,
                 nuevo - anterior, nuevo, "Desparasitación registrada");
 
+        recetaService.resolverPendientesSiCorresponde(perro);
+        recetaService.generarRecetaSiNecesario(perro);
+    }
+
+    /**
+     * Interacción "Esterilizar" — usa 1 unidad de un producto de
+     * tipo Esterilización desde el inventario. No sube ninguna
+     * barra por sí sola (por eso el inventario no le exige margen
+     * en ninguna barra antes de darla); simplemente marca al perro
+     * como esterilizado, igual que registrarVacuna marca el
+     * checkbox "vacunado".
+     */
+    @Transactional
+    public void registrarEsterilizacion(Integer idPerro) {
+        Perro perro = obtenerPerro(idPerro);
+
+        perro.setEsterilizado(true);
+        perroRepository.save(perro);
+
+        registrarEvento(perro, TipoBarra.SALUD, TipoEvento.ESTERILIZACION,
+                0, perro.getSalud(), "Esterilización realizada");
+
+        recetaService.resolverPendientesSiCorresponde(perro);
         recetaService.generarRecetaSiNecesario(perro);
     }
 
@@ -136,6 +203,12 @@ public class BarraService {
             cambiarSalud(perro, -cambio, "Envejecimiento natural");
         }
 
+        long intervalosEnergia = horasExtra / config.getEnergiaDecaimientoHoras();
+        if (intervalosEnergia > 0) {
+            int cambio = (int) (intervalosEnergia * config.getEnergiaDecaimientoPorcentaje());
+            cambiarEnergia(perro, -cambio, "Decaimiento por tiempo (falta de juego)");
+        }
+
         perroRepository.save(perro);
         recetaService.generarRecetaSiNecesario(perro);
     }
@@ -164,6 +237,14 @@ public class BarraService {
                 cambio, nuevo, descripcion);
     }
 
+    private void cambiarEnergia(Perro perro, int cambio, String descripcion) {
+        int anterior = perro.getEnergia();
+        int nuevo = limitar(anterior + cambio);
+        perro.setEnergia(nuevo);
+        registrarEvento(perro, TipoBarra.ENERGIA, TipoEvento.DECAIMIENTO_TIEMPO,
+                cambio, nuevo, descripcion);
+    }
+
     @Transactional
     public void resetearBarras(Integer idPerro) {
         Perro perro = obtenerPerro(idPerro);
@@ -171,6 +252,7 @@ public class BarraService {
         perro.setNutricion(100);
         perro.setHidratacion(100);
         perro.setSalud(100);
+        perro.setEnergia(100);
         perro.setVacunado(true);
         perro.setNivelSalud(Perro.NivelSalud.SANO);
         perro.setUltimaComida(LocalDateTime.now());
@@ -183,6 +265,7 @@ public class BarraService {
         registrarEvento(perro, TipoBarra.NUTRICION, TipoEvento.RESET, 100, 100, "Reset de barras");
         registrarEvento(perro, TipoBarra.HIDRATACION, TipoEvento.RESET, 100, 100, "Reset de barras");
         registrarEvento(perro, TipoBarra.SALUD, TipoEvento.RESET, 100, 100, "Reset de barras");
+        registrarEvento(perro, TipoBarra.ENERGIA, TipoEvento.RESET, 100, 100, "Reset de barras");
     }
 
     public List<EventoBarra> eventosDePerro(Perro perro) {

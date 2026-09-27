@@ -33,5 +33,5 @@ public class Producto {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal precio;
 
-    public enum Categoria { VACUNA, ALIMENTO, MEDICAMENTO, ACCESORIO, HIGIENE, HIDRATACION, DESPARASITANTE }
+    public enum Categoria { VACUNA, ALIMENTO, MEDICAMENTO, ACCESORIO, HIGIENE, HIDRATACION, DESPARASITANTE, ESTERILIZACION }
 }

@@ -124,16 +124,18 @@
 
           <!-- Estado de publicación — reemplaza los dos booleanos adoptado y listaParaAdoptar -->
           <div class="form-group" style="grid-column:1/-1;">
-            <label class="form-label" for="estadoPublicacion" style="margin-bottom:10px;">Estado de publicación *</label>
-            <div style="background:linear-gradient(135deg,#1F2937 0%,#111827 100%);border-radius:12px;padding:16px 18px;border:2px solid #F97316;">
-              <p style="font-size:.75rem;color:#9CA3AF;margin-bottom:10px;font-weight:600;">Controla si el animal aparece en el listado público y en qué etapa se encuentra.</p>
-              <select id="estadoPublicacion" th:field="*{estadoPublicacion}" required
-                      style="width:100%;border:1px solid #4B5563;border-radius:8px;padding:10px 12px;font-size:.9rem;background:#374151;color:#F9FAFB;font-weight:700;">
-                <option th:each="ep : ${estadosPublicacion}"
-                        th:value="${ep}"
-                        th:text="${ep.label}">
-                </option>
-              </select>
+            <label class="form-label" for="estadoPublicacion">Estado de publicación *</label>
+            <div class="estado-publicacion-card">
+              <div class="estado-publicacion-icon">🐾</div>
+              <div class="estado-publicacion-body">
+                <p class="estado-publicacion-hint">Controla si el animal aparece en el listado público y en qué etapa se encuentra.</p>
+                <select id="estadoPublicacion" th:field="*{estadoPublicacion}" required class="estado-publicacion-select">
+                  <option th:each="ep : ${estadosPublicacion}"
+                          th:value="${ep}"
+                          th:text="${ep.label}">
+                  </option>
+                </select>
+              </div>
             </div>
           </div>
 

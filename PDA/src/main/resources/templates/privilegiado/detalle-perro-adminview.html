@@ -7,28 +7,6 @@
   <link rel="stylesheet" th:href="@{/css/detalle-perro-adminview.css}"/>
   <link rel="stylesheet" th:href="@{/css/barras.css}"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-  
-  <!-- CSS para corregir el botón de guardar -->
-  <style>
-    /* Asegurar que el botón de guardar quede dentro de la tarjeta */
-    .detail-card > .save-actions-wrapper {
-      margin: 0 !important;
-      padding: 24px 40px !important;
-      border-top: 1px solid #E5E7EB !important;
-      background: #FAFAFA !important;
-      display: flex !important;
-      justify-content: flex-end !important;
-      align-items: center !important;
-      gap: 12px !important;
-      border-bottom-left-radius: var(--radius, 16px) !important;
-      border-bottom-right-radius: var(--radius, 16px) !important;
-    }
-    @media (max-width: 960px) {
-      .detail-card > .save-actions-wrapper {
-        padding: 20px 24px !important;
-      }
-    }
-  </style>
 </head>
 <body>
   <nav>
@@ -70,6 +48,18 @@
                 padding:14px 20px;margin-bottom:20px;font-weight:700;color:#065F46;
                 display:flex;align-items:center;gap:10px;animation:fadeUp .3s ease both;">
       ✅ <span th:text="${mensajeExito}"></span>
+    </div>
+
+    <!-- 🆕 Banner de error visible: antes ${errorMsg} se guardaba pero
+         nunca se mostraba en esta vista, así que cualquier fallo del
+         backend (barra al 100%, sin stock, etc.) quedaba invisible
+         para el admin y parecía que "no pasaba nada". -->
+    <div th:if="${errorMsg}"
+         id="errorToast"
+         style="background:#FEE2E2;border:1px solid #FCA5A5;border-radius:12px;
+                padding:14px 20px;margin-bottom:20px;font-weight:700;color:#991B1B;
+                display:flex;align-items:center;gap:10px;animation:fadeUp .3s ease both;">
+      ⚠️ <span th:text="${errorMsg}"></span>
     </div>
 
     <div class="admin-banner">
@@ -198,6 +188,58 @@
              th:if="${perro.salud > 75}">🌟 Excelente</p>
         </div>
 
+        <!-- ⚡ ENERGÍA -->
+        <div class="life-bar">
+          <div class="life-header">
+            <div class="life-label">
+              <span class="life-icon">⚡</span>
+              <strong>Energía</strong>
+            </div>
+            <strong class="life-percentage" th:text="${perro.energia} + '%'">100%</strong>
+          </div>
+          <div class="big-progress">
+            <div class="progress-value"
+                 th:classappend="${perro.energia <= 25} ? ' critical'
+                               : (${perro.energia <= 50} ? ' low'
+                               : (${perro.energia <= 75} ? ' medium' : ' high'))"
+                 th:style="'width:' + ${perro.energia} + '%'"></div>
+          </div>
+          <p class="life-status"
+             th:classappend="${perro.energia <= 25} ? ' critico'
+                           : (${perro.energia <= 50} ? ' bajo'
+                           : (${perro.energia <= 75} ? ' bien' : ' excelente'))"
+             th:if="${perro.energia <= 25}">⚠️ ¡Agotado!</p>
+          <p class="life-status"
+             th:classappend="${perro.energia <= 25} ? ' critico'
+                           : (${perro.energia <= 50} ? ' bajo'
+                           : (${perro.energia <= 75} ? ' bien' : ' excelente'))"
+             th:if="${perro.energia > 25 and perro.energia <= 50}">⚠️ Bajo</p>
+          <p class="life-status"
+             th:classappend="${perro.energia <= 25} ? ' critico'
+                           : (${perro.energia <= 50} ? ' bajo'
+                           : (${perro.energia <= 75} ? ' bien' : ' excelente'))"
+             th:if="${perro.energia > 50 and perro.energia <= 75}">🙂 Bien</p>
+          <p class="life-status"
+             th:classappend="${perro.energia <= 25} ? ' critico'
+                           : (${perro.energia <= 50} ? ' bajo'
+                           : (${perro.energia <= 75} ? ' bien' : ' excelente'))"
+             th:if="${perro.energia > 75}">🌟 Lleno de energía</p>
+        </div>
+
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════
+           ZONA DE JUEGO Y CUIDADO — escenario de animaciones
+           ═══════════════════════════════════════════════════ -->
+      <h3 class="life-bars-title" style="margin-top:35px;font-size:1.2rem;">🎬 Zona de juego y cuidado</h3>
+      <p style="text-align:center;color:#64748b;font-size:.9rem;margin-bottom:15px;">
+        Usa los productos de <strong>Accesorio</strong> e <strong>Higiene</strong> del inventario para jugar
+        y bañar a <span th:text="${perro.nombre}"></span>. La animación aparece aquí.
+      </p>
+      <div id="escena-ad" class="escena-ad" th:attr="data-idperro=${perro.idPerro},data-nombre=${perro.nombre}">
+        <div id="escena-fx" class="escena-fx"></div>
+        <div id="escena-emoji" class="escena-emoji">🐕</div>
+        <div id="escena-mensaje" class="escena-mensaje"></div>
       </div>
 
       <!-- ═══════════════════════════════════════════════════
@@ -245,6 +287,7 @@
               <th:block th:case="'HIGIENE'">🧴 Higiene</th:block>
               <th:block th:case="'HIDRATACION'">💧 Hidratación</th:block>
               <th:block th:case="'DESPARASITANTE'">🪱 Desparasitante</th:block>
+              <th:block th:case="'ESTERILIZACION'">✂️ Esterilización</th:block>
               <th:block th:case="*" th:text="${p.tipo}">Otro</th:block>
             </span>
 
@@ -252,21 +295,32 @@
                  BOTÓN DINÁMICO SEGÚN CATEGORÍA
                  ═══════════════════════════════════════════════ -->
             <form th:action="@{/perros/{id}/inventario/dar/{idProducto}(id=${perro.idPerro}, idProducto=${p.idProducto})}"
-                  method="post" class="pv-form">
+                  method="post" class="pv-form"
+                  th:classappend="${p.tipo.name() == 'ACCESORIO'} ? ' js-form-jugar'
+                                : (${p.tipo.name() == 'HIGIENE'} ? ' js-form-banar' : '')"
+                  th:attr="data-tipo=${p.tipo},data-cantidad=${p.cantidad},data-idperro=${perro.idPerro},data-idproducto=${p.idProducto},data-nombre=${p.nombre}">
               <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-              <button class="pv-btn-dar" type="submit" th:disabled="${p.cantidad == 0}">
+              <button class="pv-btn-dar" type="submit"
+                      th:disabled="${p.tipo.name() == 'HIGIENE'} ? (${p.cantidad < 3}) : (${p.cantidad == 0})">
                 <th:block th:switch="${p.tipo.name()}">
                   <th:block th:case="'HIGIENE'">
-                    <span th:if="${p.cantidad > 0}">🛁 Bañar a <span th:text="${perro.nombre}"></span></span>
+                    <span th:if="${p.cantidad >= 3}">🛁 Bañar a <span th:text="${perro.nombre}"></span></span>
+                    <span th:if="${p.cantidad > 0 and p.cantidad < 3}">🧴 Faltan unidades (necesita 3)</span>
+                    <span th:if="${p.cantidad == 0}">Sin stock</span>
                   </th:block>
                   <th:block th:case="'ACCESORIO'">
                     <span th:if="${p.cantidad > 0}">🎾 Jugar con <span th:text="${perro.nombre}"></span></span>
+                    <span th:if="${p.cantidad == 0}">Sin stock</span>
+                  </th:block>
+                  <th:block th:case="'ESTERILIZACION'">
+                    <span th:if="${p.cantidad > 0}">✂️ Esterilizar a <span th:text="${perro.nombre}"></span></span>
+                    <span th:if="${p.cantidad == 0}">Sin stock</span>
                   </th:block>
                   <th:block th:case="*">
                     <span th:if="${p.cantidad > 0}">🐶 Dar a <span th:text="${perro.nombre}"></span></span>
+                    <span th:if="${p.cantidad == 0}">Sin stock</span>
                   </th:block>
                 </th:block>
-                <span th:if="${p.cantidad == 0}">Sin stock</span>
               </button>
             </form>
 
@@ -360,6 +414,7 @@
         .pv-card[data-tipo="HIDRATACION"]    .pv-badge { background:#ECFEFF; color:#0891B2; }
         .pv-card[data-tipo="DESPARASITANTE"] .pv-badge { background:#DCFCE7; color:#15803D; }
         .pv-card[data-tipo="OTRO"]           .pv-badge { background:#F1F5F9; color:#475569; }
+        .pv-card[data-tipo="ESTERILIZACION"] .pv-badge { background:#FFE4E6; color:#BE123C; }
 
         .pv-form { margin-top: auto; }
         .pv-btn-dar {
@@ -410,6 +465,7 @@
             HIGIENE:        { emoji: '🧴', label: 'Higiene' },
             HIDRATACION:    { emoji: '💧', label: 'Hidratación' },
             DESPARASITANTE: { emoji: '🪱', label: 'Desparasitante' },
+            ESTERILIZACION: { emoji: '✂️', label: 'Esterilización' },
             OTRO:           { emoji: '📦', label: 'Otro' }
           };
 
@@ -556,6 +612,15 @@
           class="detail-card">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
+      <!-- Header -->
+      <div class="card-top">
+        <div class="card-top-text">
+          <h1>Editar perfil de <span th:text="${perro.nombre}">Nombre</span></h1>
+          <p>Actualiza la información del perro en el sistema de adopciones.</p>
+        </div>
+        <div class="card-top-icon">🐶</div>
+      </div>
+
       <div class="detail-top">
         <div class="gallery">
           <div id="fotoContainer" style="border-radius:14px;overflow:hidden;background:#1F2937;height:260px;width:100%;position:relative;">
@@ -636,16 +701,18 @@
             <input class="form-input" type="text" th:field="*{nombre}" required style="font-size:1.4rem;font-weight:800;padding:10px 14px;"/>
           </div>
 
-          <div style="background:linear-gradient(135deg,#1F2937 0%,#111827 100%);border-radius:14px;padding:20px 22px;margin:16px 0;border:2px solid var(--orange);">
-            <p style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:6px;">Estado de publicación</p>
-            <p style="font-size:.75rem;color:#9CA3AF;margin-bottom:12px;font-weight:500;">Controla si el animal aparece en el listado público y en qué etapa está.</p>
-            <select th:field="*{estadoPublicacion}"
-                    style="width:100%;border:1px solid #4B5563;border-radius:8px;padding:10px 12px;font-size:.9rem;background:#374151;color:#F9FAFB;font-weight:700;cursor:pointer;">
-              <option th:each="ep : ${estadosPublicacion}"
-                      th:value="${ep}"
-                      th:text="${ep.label}">
-              </option>
-            </select>
+          <div class="estado-publicacion-card">
+            <div class="estado-publicacion-icon">📋</div>
+            <div class="estado-publicacion-body">
+              <p style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);margin-bottom:2px;">Estado de publicación</p>
+              <p class="estado-publicacion-hint">Controla si el animal aparece en el listado público y en qué etapa está.</p>
+              <select th:field="*{estadoPublicacion}" class="estado-publicacion-select">
+                <option th:each="ep : ${estadosPublicacion}"
+                        th:value="${ep}"
+                        th:text="${ep.label}">
+                </option>
+              </select>
+            </div>
           </div>
 
           <div class="attrs-grid">
@@ -821,15 +888,18 @@
       <!-- ═══════════════════════════════════════════════════
            BOTÓN DE GUARDAR (ENVUELTO EN CONTENEDOR CON FONDO)
            ═══════════════════════════════════════════════════ -->
-      <div class="save-actions-wrapper">
-        <a th:href="@{/admin/panel}"
-           style="padding:12px 22px;border-radius:10px;border:1px solid #D1D5DB;background:#fff;color:#374151;font-weight:800;font-size:.9rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;height:46px;box-sizing:border-box;">
-          Cancelar
-        </a>
-        <button type="submit"
-                style="padding:12px 28px;border-radius:10px;border:none;background:var(--orange,#F97316);color:#fff;font-weight:800;font-size:.9rem;cursor:pointer;box-shadow:0 4px 12px rgba(249,115,22,.35);display:inline-flex;align-items:center;justify-content:center;height:46px;box-sizing:border-box;">
-          💾 Guardar cambios
-        </button>
+      <div class="save-bar">
+        <p>🐶 Los cambios se aplicarán al perfil público del perro</p>
+        <div class="save-buttons">
+          <a th:href="@{/admin/panel}" class="btn-cancel">Cancelar</a>
+          <button type="button" class="btn-delete"
+                  onclick="if(confirm('¿Seguro que deseas eliminar este perro? Esta acción no se puede deshacer.')) document.getElementById('formEliminar').submit();">
+            🗑️ Eliminar perro
+          </button>
+          <button type="submit" class="btn-save">
+            💾 Guardar cambios
+          </button>
+        </div>
       </div>
 
     </form>
@@ -922,6 +992,537 @@
 
     function prevPreview() { showPreview(previewIndex - 1); }
     function nextPreview() { showPreview(previewIndex + 1); }
+  </script>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       ANIMACIONES "JUGAR" Y "BAÑAR" — escena-ad
+       ═══════════════════════════════════════════════════════════ -->
+  <style>
+    .escena-ad {
+      position: relative;
+      margin: 10px auto 30px;
+      max-width: 700px;
+      height: 340px;
+      background: linear-gradient(160deg, #FFF7ED, #FFEDD5);
+      border: 2px dashed #FDBA74;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .escena-emoji {
+      font-size: 7.5rem;
+      z-index: 2;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,.18));
+      animation: idleWag 2.4s ease-in-out infinite;
+    }
+    .escena-fx {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3;
+    }
+    .escena-mensaje {
+      position: absolute;
+      top: 10px; left: 50%;
+      transform: translateX(-50%);
+      font-weight: 800; font-size: .92rem; color: #9A3412;
+      background: rgba(255,255,255,.9);
+      padding: 5px 16px; border-radius: 999px;
+      opacity: 0; transition: opacity .25s ease;
+      z-index: 4; white-space: nowrap; max-width: 90%;
+      overflow: hidden; text-overflow: ellipsis;
+    }
+    .escena-mensaje.visible { opacity: 1; }
+
+    @keyframes idleWag {
+      0%, 100% { transform: rotate(0deg); }
+      50%      { transform: rotate(4deg); }
+    }
+
+    /* Saltito al iniciar "Jugar" */
+    @keyframes saltito {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+    .anim-saltito { animation: saltito .3s ease-in-out 3; }
+
+    /* Shake al fallar el mini-juego del hueso */
+    @keyframes dogShake {
+      0%, 100% { transform: translateX(0); }
+      25%      { transform: translateX(-8px); }
+      75%      { transform: translateX(8px); }
+    }
+    .anim-shake { animation: dogShake .3s ease-in-out 2; }
+
+    /* Shake post-baño (simula secarse), más corto y repetido 4 veces */
+    @keyframes banoShake {
+      0%, 100% { transform: translateX(0); }
+      25%      { transform: translateX(-4px); }
+      75%      { transform: translateX(4px); }
+    }
+    .anim-shake-bano { animation: banoShake .125s ease-in-out 4; }
+
+    /* Hueso flotante del mini-juego */
+    .hueso-flotante {
+      position: absolute;
+      font-size: 2.4rem;
+      cursor: pointer;
+      pointer-events: all;
+      z-index: 5;
+      animation: huesoFlote 1s ease-in-out infinite alternate;
+    }
+    @keyframes huesoFlote {
+      from { transform: translateY(0) rotate(-8deg); }
+      to   { transform: translateY(-12px) rotate(8deg); }
+    }
+
+    /* Gotas cayendo — paso "Mojar" */
+    .gota-cae {
+      position: absolute;
+      top: -20px;
+      font-size: 1.4rem;
+      animation: gotaCaer 1s ease-in forwards;
+    }
+    @keyframes gotaCaer {
+      to { transform: translateY(240px); opacity: 0; }
+    }
+
+    /* Burbujas subiendo — paso "Espumar" */
+    .burbuja-sube {
+      position: absolute;
+      bottom: -10px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffffff, #dbeafe 70%);
+      opacity: .85;
+      animation: burbujaSubir 1.5s ease-out forwards;
+    }
+    @keyframes burbujaSubir {
+      0%   { transform: translateY(0) scale(.6);  opacity: .9; }
+      70%  { opacity: .7; }
+      100% { transform: translateY(-190px) scale(1.15); opacity: 0; }
+    }
+
+    /* Brillo — paso "Aclarar" */
+    .escena-ad.glow-limpio { animation: banoGlow 1s ease-in-out; }
+    @keyframes banoGlow {
+      0%   { box-shadow: 0 0 0 rgba(56,189,248,0); }
+      50%  { box-shadow: 0 0 40px 12px rgba(56,189,248,.55); }
+      100% { box-shadow: 0 0 0 rgba(56,189,248,0); }
+    }
+
+    /* Texto flotante de puntos ganados */
+    @keyframes puntosFlote {
+      0%   { transform: translate(-50%, 0);   opacity: 0; }
+      20%  { opacity: 1; }
+      100% { transform: translate(-50%, -40px); opacity: 0; }
+    }
+
+    /* Toast genérico para avisos (falta inventario, cooldown, etc.) */
+    .toast-ad {
+      position: fixed;
+      bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1F2937; color: #fff;
+      padding: 12px 20px; border-radius: 12px;
+      font-weight: 700; font-size: .9rem;
+      opacity: 0; transition: all .25s ease;
+      z-index: 9999;
+      box-shadow: 0 10px 25px rgba(0,0,0,.25);
+    }
+    .toast-ad.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 640px) {
+      .escena-ad { max-width: 100%; height: 190px; }
+      .escena-emoji { font-size: 4rem; }
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var escena = document.getElementById('escena-ad');
+      if (!escena) return;
+
+      var idPerro = escena.getAttribute('data-idperro');
+      var emoji   = document.getElementById('escena-emoji');
+      var fx      = document.getElementById('escena-fx');
+      var mensaje = document.getElementById('escena-mensaje');
+
+      var EMOJI_BASE  = '🐕';
+      var EMOJI_JUEGO = '🐕\u200d🦺';
+
+      var animando = false;
+      var mensajeTimeout = null;
+
+      function mostrarMensaje(texto, ms) {
+        clearTimeout(mensajeTimeout);
+        mensaje.textContent = texto;
+        mensaje.classList.add('visible');
+        if (ms) {
+          mensajeTimeout = setTimeout(function () {
+            mensaje.classList.remove('visible');
+          }, ms);
+        }
+      }
+
+      function toast(texto) {
+        var t = document.createElement('div');
+        t.className = 'toast-ad';
+        t.textContent = texto;
+        document.body.appendChild(t);
+        requestAnimationFrame(function () { t.classList.add('visible'); });
+        setTimeout(function () {
+          t.classList.remove('visible');
+          setTimeout(function () { t.remove(); }, 300);
+        }, 2600);
+      }
+
+      /** Beep corto tipo "woof" con Web Audio API (sin archivos de audio). */
+      function beep(frecuencia, duracionMs) {
+        try {
+          var Ctx = window.AudioContext || window.webkitAudioContext;
+          var ctx = new Ctx();
+          var osc = ctx.createOscillator();
+          var gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = frecuencia || 620;
+          gain.gain.setValueAtTime(0.18, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + (duracionMs || 220) / 1000);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + (duracionMs || 220) / 1000);
+        } catch (e) {
+          // Web Audio no disponible en este navegador: se omite el sonido.
+        }
+      }
+
+      function flotarTexto(texto, color) {
+        var el = document.createElement('div');
+        el.textContent = texto;
+        el.style.cssText =
+          'position:absolute;left:50%;top:42%;font-weight:900;font-size:1.35rem;' +
+          'color:' + color + ';z-index:6;animation:puntosFlote 1s ease-out forwards;';
+        fx.appendChild(el);
+        setTimeout(function () { el.remove(); }, 1050);
+      }
+
+      // ═══════════════════════════════════════════════════════
+      // COOLDOWN de "Jugar" — 5 minutos, persistido en localStorage
+      // ═══════════════════════════════════════════════════════
+      var COOLDOWN_MS = 5 * 60 * 1000;
+      var cooldownKey = 'pda_cooldown_jugar_' + idPerro;
+
+      var formsJugar = Array.prototype.slice.call(document.querySelectorAll('.js-form-jugar'));
+      var formsBanar = Array.prototype.slice.call(document.querySelectorAll('.js-form-banar'));
+
+      function textoOriginal(form) {
+        if (!form.dataset.textoOriginal) {
+          form.dataset.textoOriginal = form.querySelector('.pv-btn-dar').innerHTML;
+        }
+        return form.dataset.textoOriginal;
+      }
+
+      /** Actualiza los botones de "Jugar" según el cooldown activo. Devuelve true si sigue en cooldown. */
+      function actualizarCooldownUI() {
+        var fin = parseInt(localStorage.getItem(cooldownKey) || '0', 10);
+        var restanteMs = fin - Date.now();
+
+        if (restanteMs <= 0) {
+          formsJugar.forEach(function (form) {
+            var cantidad = parseInt(form.getAttribute('data-cantidad'), 10) || 0;
+            var btn = form.querySelector('.pv-btn-dar');
+            btn.innerHTML = textoOriginal(form);
+            btn.disabled = animando || cantidad === 0;
+          });
+          return false;
+        }
+
+        var mins = Math.floor(restanteMs / 60000);
+        var segs = Math.floor((restanteMs % 60000) / 1000);
+        var texto = '⏳ Espera ' + mins + ':' + (segs < 10 ? '0' : '') + segs;
+
+        formsJugar.forEach(function (form) {
+          textoOriginal(form); // asegura que quede guardado antes de sobrescribir
+          var btn = form.querySelector('.pv-btn-dar');
+          btn.disabled = true;
+          btn.innerHTML = texto;
+        });
+        return true;
+      }
+
+      function iniciarCooldownJugar() {
+        localStorage.setItem(cooldownKey, String(Date.now() + COOLDOWN_MS));
+        actualizarCooldownUI();
+      }
+
+      if (formsJugar.length) {
+        actualizarCooldownUI();
+        setInterval(actualizarCooldownUI, 1000);
+      }
+
+      // ═══════════════════════════════════════════════════════
+      // INTERACCIÓN "JUGAR" — saltito + mini-juego del hueso
+      // ═══════════════════════════════════════════════════════
+      formsJugar.forEach(function (form) {
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          if (animando) return;
+
+          if (actualizarCooldownUI()) {
+            toast('🐾 Todavía necesita descansar antes de volver a jugar.');
+            return;
+          }
+
+          var cantidad = parseInt(form.getAttribute('data-cantidad'), 10) || 0;
+          if (cantidad === 0) {
+            toast('🎒 Falta inventario: no queda ningún accesorio para jugar.');
+            return;
+          }
+
+          var nombreProducto = form.getAttribute('data-nombre') || 'la correa';
+
+          animando = true;
+
+          emoji.textContent = EMOJI_JUEGO;
+          emoji.classList.add('anim-saltito');
+          mostrarMensaje('¡Vamos a jugar con ' + nombreProducto + '! 🎾');
+
+          setTimeout(function () {
+            emoji.classList.remove('anim-saltito');
+            lanzarHueso(form);
+          }, 950); // 3 saltos de .3s + margen
+        });
+      });
+
+      function lanzarHueso(form) {
+        var hueso = document.createElement('div');
+        hueso.className = 'hueso-flotante';
+        hueso.textContent = '🦴';
+
+        var maxX = Math.max(20, fx.clientWidth - 50);
+        var maxY = Math.max(20, fx.clientHeight - 90);
+        hueso.style.left = (10 + Math.random() * maxX) + 'px';
+        hueso.style.top  = (20 + Math.random() * maxY) + 'px';
+        fx.appendChild(hueso);
+
+        mostrarMensaje('¡Atrápalo! 🦴 Tienes 2 segundos');
+
+        var atrapado = false;
+        var limite = setTimeout(function () {
+          if (atrapado) return;
+          hueso.remove();
+          fallarJuego();
+        }, 2000);
+
+        hueso.addEventListener('click', function () {
+          if (atrapado) return;
+          atrapado = true;
+          clearTimeout(limite);
+          hueso.remove();
+          ganarJuego(form);
+        });
+      }
+
+      function ganarJuego(form) {
+        beep(740, 180);
+        setTimeout(function () { beep(920, 160); }, 130);
+
+        flotarTexto('+30 ⚡', '#16a34a');
+        mostrarMensaje('¡Woof! Energía +30 ⚡', 1400);
+
+        setTimeout(function () {
+          emoji.textContent = EMOJI_BASE;
+          animando = false;
+          // El cooldown de 5 min SOLO se activa si el backend confirma que
+          // sí aplicó el efecto (ver comentario en enviarFormularioReal).
+          enviarFormularioReal(form, function (exito) {
+            if (exito) iniciarCooldownJugar();
+          });
+        }, 900);
+      }
+
+      function fallarJuego() {
+        emoji.classList.add('anim-shake');
+        mostrarMensaje('Se le escapó el hueso… ¡la próxima lo atrapa! 🐾', 1800);
+
+        setTimeout(function () {
+          emoji.classList.remove('anim-shake');
+          emoji.textContent = EMOJI_BASE;
+          animando = false;
+          actualizarCooldownUI(); // reactiva el botón: no hubo cooldown ni gasto de inventario
+        }, 700);
+      }
+
+      // ═══════════════════════════════════════════════════════
+      // INTERACCIÓN "BAÑAR" — mojar → espumar → aclarar → secarse
+      // ═══════════════════════════════════════════════════════
+      formsBanar.forEach(function (form) {
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          if (animando) return;
+
+          var cantidad = parseInt(form.getAttribute('data-cantidad'), 10) || 0;
+          if (cantidad < 3) {
+            toast('🧴 Falta inventario: un baño completo necesita 3 unidades de shampoo.');
+            return;
+          }
+
+          animando = true;
+          secuenciaBano(form);
+        });
+      });
+
+      function secuenciaBano(form) {
+        // Paso 1 — MOJAR: 8 gotas cayendo (0s - 1.5s)
+        mostrarMensaje('🚿 Mojando...');
+        for (var i = 0; i < 8; i++) {
+          (function (i) {
+            setTimeout(function () {
+              var gota = document.createElement('div');
+              gota.className = 'gota-cae';
+              gota.textContent = '💧';
+              gota.style.left = (10 + Math.random() * 80) + '%';
+              fx.appendChild(gota);
+              setTimeout(function () { gota.remove(); }, 1100);
+            }, i * 130);
+          })(i);
+        }
+
+        // Paso 2 — ESPUMAR: 15 burbujas subiendo (1.5s - 3s)
+        setTimeout(function () {
+          mostrarMensaje('🧼 Espumando...');
+          for (var i = 0; i < 15; i++) {
+            (function (i) {
+              setTimeout(function () {
+                var burbuja = document.createElement('div');
+                burbuja.className = 'burbuja-sube';
+                var tam = 10 + Math.random() * 18;
+                burbuja.style.width  = tam + 'px';
+                burbuja.style.height = tam + 'px';
+                burbuja.style.left = (5 + Math.random() * 90) + '%';
+                fx.appendChild(burbuja);
+                setTimeout(function () { burbuja.remove(); }, 1550);
+              }, i * 90);
+            })(i);
+          }
+        }, 1500);
+
+        // Paso 3 — ACLARAR: brillo (3s - 4s)
+        setTimeout(function () {
+          mostrarMensaje('✨ Aclarando...');
+          escena.classList.add('glow-limpio');
+        }, 3000);
+
+        // Post-baño: shake de "secado" + resultado (4s en adelante)
+        setTimeout(function () {
+          escena.classList.remove('glow-limpio');
+          emoji.classList.add('anim-shake-bano');
+          flotarTexto('+15 💧', '#0891b2');
+          mostrarMensaje('¡Listo! Hidratación +15 💧', 1600);
+        }, 4000);
+
+        setTimeout(function () {
+          emoji.classList.remove('anim-shake-bano');
+          animando = false;
+          enviarFormularioReal(form); // backend descuenta 3 unidades y aplica +15 hidratación
+        }, 4550);
+      }
+    });
+
+    /**
+     * Envío real del formulario hacia el backend.
+     *
+     * ── POR QUÉ SE CAMBIÓ ────────────────────────────────────────────
+     * Antes esta función llamaba a `HTMLFormElement.prototype.submit.call(form)`
+     * (o `form.submit()`) para enviar el formulario DESPUÉS de la animación,
+     * es decir, hasta 1.8-4.5 segundos después del clic original del usuario.
+     *
+     * El problema es que un envío de formulario disparado tan tarde ya no
+     * está ligado a la interacción real del usuario ("user activation"), y
+     * algunos navegadores (y sobre todo los webviews / iframes donde se
+     * prueban estos prototipos) simplemente IGNORAN esa navegación sin
+     * lanzar ningún error de JavaScript. Como no había excepción, el
+     * `catch` que debía servir de respaldo con fetch nunca se ejecutaba,
+     * así que la petición jamás llegaba al servidor: por eso la energía
+     * no subía y el inventario tampoco se descontaba, sin importar cuántas
+     * veces se repitiera la animación.
+     *
+     * Encima, `ganarJuego()` activaba el cooldown de 5 minutos de forma
+     * INMEDIATA (antes de saber si el backend había aplicado el cambio).
+     * Si ese primer intento se perdía en silencio, el botón quedaba
+     * bloqueado igual, dando la sensación de "ya lo usé varias veces y no
+     * hace nada".
+     *
+     * ── LA SOLUCIÓN ──────────────────────────────────────────────────
+     * Ahora el envío usa `fetch` como método PRINCIPAL (no como respaldo).
+     * `fetch` no depende de la "activación reciente del usuario": se
+     * ejecuta siempre, sin importar cuánto tiempo pasó desde el clic.
+     * Solo cuando el servidor responde de verdad:
+     *   - Si detecta el banner de error (#errorToast) en el HTML que
+     *     devolvió el servidor, avisa con un toast y NO activa el
+     *     cooldown ni recarga (para que el usuario pueda reintentar).
+     *   - Si todo salió bien, recién ahí llama a onResultado(true) (que
+     *     activa el cooldown) y recarga la página para reflejar los
+     *     nuevos valores de las barras y del inventario.
+     * Solo si `fetch` en sí falla (sin red, servidor caído) se intenta
+     * como último recurso un envío nativo del formulario.
+     *
+     * @param {HTMLFormElement} form
+     * @param {function(boolean)} [onResultado] callback opcional que
+     *        recibe `true` si el backend confirmó el cambio, `false` si no.
+     */
+    function enviarFormularioReal(form, onResultado) {
+      var avisar = typeof onResultado === 'function' ? onResultado : function () {};
+
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        credentials: 'same-origin'
+      })
+        .then(function (respuesta) {
+          return respuesta.text().then(function (html) {
+            return { ok: respuesta.ok, html: html };
+          });
+        })
+        .then(function (resultado) {
+          if (!resultado.ok) {
+            toast('No se pudo guardar el cambio (error del servidor). Intenta de nuevo.');
+            avisar(false);
+            actualizarCooldownUI();
+            return;
+          }
+
+          var doc = new DOMParser().parseFromString(resultado.html, 'text/html');
+          var errorEl = doc.getElementById('errorToast');
+
+          if (errorEl) {
+            // El backend respondió pero rechazó la acción (p. ej. la barra
+            // ya está al 100%, o no había stock suficiente). No se pierde
+            // el intento: se avisa y se libera el botón para reintentar.
+            var textoError = errorEl.textContent.trim();
+            toast(textoError || 'La acción no se pudo completar.');
+            avisar(false);
+            actualizarCooldownUI();
+            return;
+          }
+
+          avisar(true);
+          window.location.reload();
+        })
+        .catch(function () {
+          // Sin red o fetch bloqueado por completo: último intento con
+          // envío nativo del formulario (mejor esto que no hacer nada).
+          avisar(false);
+          try {
+            HTMLFormElement.prototype.submit.call(form);
+          } catch (err) {
+            toast('No se pudo guardar el cambio, por favor intenta de nuevo.');
+            actualizarCooldownUI();
+          }
+        });
+    }
   </script>
 </body>
 </html>

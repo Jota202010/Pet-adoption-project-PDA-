@@ -2,11 +2,9 @@ package com.refugio.nueva_vida.proyecto_de_aula.service;
 
 import com.refugio.nueva_vida.proyecto_de_aula.messaging.RecetaPublisher;
 import com.refugio.nueva_vida.proyecto_de_aula.model.*;
-
 import com.refugio.nueva_vida.proyecto_de_aula.repository.NotificacionRepository;
 import com.refugio.nueva_vida.proyecto_de_aula.repository.PerroRepository;
 import com.refugio.nueva_vida.proyecto_de_aula.repository.RecetaRepository;
-
 import com.refugio.nueva_vida.proyecto_de_aula.config.BarrasConfig;
 
 import lombok.RequiredArgsConstructor;
@@ -37,15 +35,24 @@ public class RecetaService {
 
     @Transactional
     public void eliminarPorPerro(Integer idPerro) {
-        List<Receta> recetas = recetaRepository.findByPerroIdPerro(idPerro);
-        if (recetas.isEmpty()) return;
 
-        List<Notificacion> notificaciones = notificacionRepository.findByRecetaIn(recetas);
+        List<Receta> recetas =
+                recetaRepository.findByPerroIdPerro(idPerro);
+
+        if (recetas.isEmpty()) {
+            return;
+        }
+
+        List<Notificacion> notificaciones =
+                notificacionRepository.findByRecetaIn(recetas);
+
         if (!notificaciones.isEmpty()) {
             notificacionRepository.deleteAll(notificaciones);
         }
+
         recetaRepository.deleteAll(recetas);
     }
+
 
     @Transactional
     public List<Receta> generarRecetaSiNecesario(
@@ -54,7 +61,6 @@ public class RecetaService {
         List<Receta> generadas =
                 new ArrayList<>();
 
-
         if (perro.getNutricion()
                 < barrasConfig.getUmbralNutricion()) {
 
@@ -62,13 +68,11 @@ public class RecetaService {
                     perro,
                     TipoNecesidad.NUTRICION)) {
 
-                Receta receta =
-                        crearRecetaNutricion(perro);
-
-                generadas.add(receta);
+                generadas.add(
+                        crearRecetaNutricion(perro)
+                );
             }
         }
-
 
         if (perro.getHidratacion()
                 < barrasConfig.getUmbralHidratacion()) {
@@ -77,34 +81,67 @@ public class RecetaService {
                     perro,
                     TipoNecesidad.HIDRATACION)) {
 
-                Receta receta =
-                        crearRecetaHidratacion(perro);
-
-                generadas.add(receta);
+                generadas.add(
+                        crearRecetaHidratacion(perro)
+                );
             }
         }
 
-
-        if (perro.getSalud()
-                < barrasConfig.getUmbralSalud()) {
-
-            TipoNecesidad necesidad =
-                    determinarNecesidadSalud(perro);
+        // VACUNACIÓN: se dispara directamente en cuanto el perro no está
+        // vacunado (o no tiene fecha de última vacuna), sin depender del
+        // umbral general de salud — igual que nutrición e hidratación.
+        if (Boolean.FALSE.equals(perro.getVacunado())
+                || perro.getUltimaVacuna() == null) {
 
             if (!existePendiente(
                     perro,
-                    necesidad)) {
+                    TipoNecesidad.VACUNACION)) {
 
-                Receta receta =
+                generadas.add(
                         crearRecetaSalud(
                                 perro,
-                                necesidad
-                        );
-
-                generadas.add(receta);
+                                TipoNecesidad.VACUNACION
+                        )
+                );
             }
         }
 
+        // ESTERILIZACIÓN: mismo criterio directo que vacunación.
+        if (Boolean.FALSE.equals(perro.getEsterilizado())) {
+
+            if (!existePendiente(
+                    perro,
+                    TipoNecesidad.ESTERILIZACION)) {
+
+                generadas.add(
+                        crearRecetaSalud(
+                                perro,
+                                TipoNecesidad.ESTERILIZACION
+                        )
+                );
+            }
+        }
+
+        // DESPARASITACIÓN: se mantiene como respaldo general de salud,
+        // solo cuando vacunación y esterilización ya están al día pero
+        // el puntaje de salud sigue bajo (p. ej. por enfermedad).
+        if (perro.getSalud()
+                < barrasConfig.getUmbralSalud()
+                && Boolean.TRUE.equals(perro.getVacunado())
+                && Boolean.TRUE.equals(perro.getEsterilizado())) {
+
+            if (!existePendiente(
+                    perro,
+                    TipoNecesidad.DESPARASITACION)) {
+
+                generadas.add(
+                        crearRecetaSalud(
+                                perro,
+                                TipoNecesidad.DESPARASITACION
+                        )
+                );
+            }
+        }
 
         return generadas;
     }
@@ -118,7 +155,6 @@ public class RecetaService {
                         perro.getNutricion()
                 );
 
-
         Receta receta =
                 Receta.builder()
 
@@ -129,14 +165,15 @@ public class RecetaService {
                         )
 
                         .descripcion(
-                                "La nutrición del perro está "
-                                + "por debajo del nivel recomendado."
+                                "La nutrición del perro está " +
+                                "por debajo del nivel recomendado."
                         )
 
                         .productosSugeridos(
-                                "[{\"producto\":\"Concentrado Premium\","
-                                + "\"cantidad\":1,"
-                                + "\"motivo\":\"Mejorar nutrición\"}]"
+                                "[{\"producto\":\"Concentrado Premium\"," +
+                                "\"cantidad\":1," +
+                                "\"categoria\":\"ALIMENTO\"," +
+                                "\"motivo\":\"Mejorar nutrición\"}]"
                         )
 
                         .prioridad(prioridad)
@@ -150,7 +187,6 @@ public class RecetaService {
                         )
 
                         .build();
-
 
         return guardarYNotificar(receta);
     }
@@ -164,7 +200,6 @@ public class RecetaService {
                         perro.getHidratacion()
                 );
 
-
         Receta receta =
                 Receta.builder()
 
@@ -175,14 +210,15 @@ public class RecetaService {
                         )
 
                         .descripcion(
-                                "La hidratación del perro "
-                                + "está por debajo del nivel recomendado."
+                                "La hidratación del perro " +
+                                "está por debajo del nivel recomendado."
                         )
 
                         .productosSugeridos(
-                                "[{\"producto\":\"Suero Oral\","
-                                + "\"cantidad\":1,"
-                                + "\"motivo\":\"Mejorar hidratación\"}]"
+                                "[{\"producto\":\"Suero Oral\"," +
+                                "\"cantidad\":1," +
+                                "\"categoria\":\"HIDRATACION\"," +
+                                "\"motivo\":\"Mejorar hidratación\"}]"
                         )
 
                         .prioridad(prioridad)
@@ -196,7 +232,6 @@ public class RecetaService {
                         )
 
                         .build();
-
 
         return guardarYNotificar(receta);
     }
@@ -211,33 +246,34 @@ public class RecetaService {
                         perro.getSalud()
                 );
 
-
         String productos;
 
         if (necesidad ==
                 TipoNecesidad.VACUNACION) {
 
             productos =
-                    "[{\"producto\":\"Vacuna Antirrábica\","
-                    + "\"cantidad\":1,"
-                    + "\"motivo\":\"Refuerzo de vacunación\"}]";
+                    "[{\"producto\":\"Vacuna Antirrábica\"," +
+                    "\"cantidad\":1," +
+                    "\"categoria\":\"VACUNA\"," +
+                    "\"motivo\":\"Refuerzo de vacunación\"}]";
 
         } else if (necesidad ==
                 TipoNecesidad.ESTERILIZACION) {
 
             productos =
-                    "[{\"producto\":\"Cirugía de esterilización\","
-                    + "\"cantidad\":1,"
-                    + "\"motivo\":\"Esterilización pendiente\"}]";
+                    "[{\"producto\":\"Cirugía de esterilización\"," +
+                    "\"cantidad\":1," +
+                    "\"categoria\":\"ESTERILIZACION\"," +
+                    "\"motivo\":\"Esterilización pendiente\"}]";
 
         } else {
 
             productos =
-                    "[{\"producto\":\"Desparasitante\","
-                    + "\"cantidad\":1,"
-                    + "\"motivo\":\"Control antiparasitario\"}]";
+                    "[{\"producto\":\"Desparasitante\"," +
+                    "\"cantidad\":1," +
+                    "\"categoria\":\"DESPARASITANTE\"," +
+                    "\"motivo\":\"Control antiparasitario\"}]";
         }
-
 
         Receta receta =
                 Receta.builder()
@@ -247,8 +283,8 @@ public class RecetaService {
                         .tipoNecesidad(necesidad)
 
                         .descripcion(
-                                "La salud del perro "
-                                + "está por debajo del nivel recomendado."
+                                "La salud del perro " +
+                                "está por debajo del nivel recomendado."
                         )
 
                         .productosSugeridos(productos)
@@ -265,26 +301,7 @@ public class RecetaService {
 
                         .build();
 
-
         return guardarYNotificar(receta);
-    }
-
-
-    private TipoNecesidad determinarNecesidadSalud(
-            Perro perro) {
-
-        if (Boolean.FALSE.equals(perro.getVacunado())
-                || perro.getUltimaVacuna() == null) {
-
-            return TipoNecesidad.VACUNACION;
-        }
-
-        if (Boolean.FALSE.equals(perro.getEsterilizado())) {
-
-            return TipoNecesidad.ESTERILIZACION;
-        }
-
-        return TipoNecesidad.DESPARASITACION;
     }
 
 
@@ -293,7 +310,6 @@ public class RecetaService {
 
         Receta guardada =
                 recetaRepository.save(receta);
-
 
         Notificacion notificacion =
                 Notificacion.builder()
@@ -317,11 +333,9 @@ public class RecetaService {
 
                         .build();
 
-
         notificacionRepository.save(
                 notificacion
         );
-
 
         try {
 
@@ -338,8 +352,52 @@ public class RecetaService {
             );
         }
 
-
         return guardada;
+    }
+
+
+    // =========================================================
+    // ACTUALIZAR PRODUCTOS DE UNA RECETA
+    // =========================================================
+
+    @Transactional
+    public void actualizarProductosSugeridos(
+            Long idNotificacion,
+            String productosJson) {
+
+        Notificacion notificacion =
+                notificacionRepository
+                        .findById(idNotificacion)
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Notificación no encontrada."
+                                )
+                        );
+
+        if (notificacion.getReceta() == null) {
+
+            throw new IllegalStateException(
+                    "La notificación no tiene una receta."
+            );
+        }
+
+        if (productosJson == null
+                || productosJson.isBlank()
+                || "[]".equals(productosJson)) {
+
+            throw new IllegalArgumentException(
+                    "Debes seleccionar al menos un producto."
+            );
+        }
+
+        Receta receta =
+                notificacion.getReceta();
+
+        receta.setProductosSugeridos(
+                productosJson
+        );
+
+        recetaRepository.save(receta);
     }
 
 
@@ -360,12 +418,10 @@ public class RecetaService {
             int valor) {
 
         if (valor < 25) {
-
             return PrioridadReceta.ALTA;
         }
 
         if (valor < 50) {
-
             return PrioridadReceta.MEDIA;
         }
 
@@ -373,55 +429,72 @@ public class RecetaService {
     }
 
 
-    /**
-     * Descarta automáticamente las recetas PENDIENTES que ya no aplican
-     * porque el estado real del perro cambió (se marcó vacunado,
-     * esterilizado, o la barra correspondiente volvió a estar bien).
-     * Así se evita que quede una receta pidiendo algo que el perro
-     * ya tiene.
-     */
     @Transactional
-    public void resolverPendientesSiCorresponde(Perro perro) {
+    public void resolverPendientesSiCorresponde(
+            Perro perro) {
 
         List<Receta> pendientes =
-                recetaRepository.findByPerroIdPerro(perro.getIdPerro());
+                recetaRepository
+                        .findByPerroIdPerro(
+                                perro.getIdPerro()
+                        );
 
         for (Receta receta : pendientes) {
 
-            if (receta.getEstado() != EstadoReceta.PENDIENTE) {
+            if (receta.getEstado()
+                    != EstadoReceta.PENDIENTE) {
+
                 continue;
             }
 
-            boolean resuelta = switch (receta.getTipoNecesidad()) {
+            boolean resuelta =
+                    switch (receta.getTipoNecesidad()) {
 
-                case VACUNACION ->
-                        Boolean.TRUE.equals(perro.getVacunado())
+                        case VACUNACION ->
+                                Boolean.TRUE.equals(
+                                        perro.getVacunado()
+                                )
                                 && perro.getUltimaVacuna() != null;
 
-                case ESTERILIZACION ->
-                        Boolean.TRUE.equals(perro.getEsterilizado());
+                        case ESTERILIZACION ->
+                                Boolean.TRUE.equals(
+                                        perro.getEsterilizado()
+                                );
 
-                case NUTRICION ->
-                        perro.getNutricion() >= barrasConfig.getUmbralNutricion();
+                        case NUTRICION ->
+                                perro.getNutricion()
+                                >= barrasConfig
+                                    .getUmbralNutricion();
 
-                case HIDRATACION ->
-                        perro.getHidratacion() >= barrasConfig.getUmbralHidratacion();
+                        case HIDRATACION ->
+                                perro.getHidratacion()
+                                >= barrasConfig
+                                    .getUmbralHidratacion();
 
-                case DESPARASITACION ->
-                        perro.getSalud() >= barrasConfig.getUmbralSalud();
+                        case DESPARASITACION ->
+                                perro.getSalud()
+                                >= barrasConfig
+                                    .getUmbralSalud();
 
-                default -> false;
-            };
+                        default -> false;
+                    };
 
             if (resuelta) {
 
-                receta.setEstado(EstadoReceta.DESCARTADA);
+                receta.setEstado(
+                        EstadoReceta.DESCARTADA
+                );
+
                 recetaRepository.save(receta);
 
                 notificacionRepository
-                        .findByRecetaIn(List.of(receta))
+                        .findByRecetaIn(
+                                List.of(receta)
+                        )
                         .forEach(n -> {
+
                             n.setLeida(true);
+
                             notificacionRepository.save(n);
                         });
             }
@@ -453,7 +526,6 @@ public class RecetaService {
                         .findById(idNotificacion)
                         .orElseThrow();
 
-
         notificacion.setLeida(true);
 
         notificacion.getReceta()
@@ -465,7 +537,6 @@ public class RecetaService {
                 .setFechaLectura(
                         LocalDateTime.now()
                 );
-
 
         notificacionRepository.save(
                 notificacion
@@ -482,7 +553,6 @@ public class RecetaService {
                         .findById(idNotificacion)
                         .orElseThrow();
 
-
         if (notificacion.getReceta() != null) {
 
             notificacion
@@ -495,7 +565,6 @@ public class RecetaService {
                     notificacion.getReceta()
             );
         }
-
 
         notificacionRepository.delete(
                 notificacion

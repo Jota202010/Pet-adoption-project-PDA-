@@ -1,142 +1,587 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org"
-                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
+
     <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Notificaciones y Recetas — Refugio Nueva Vida</title>
-    <link rel="stylesheet" th:href="@{/css/barras.css}"/>
-    <link rel="stylesheet" th:href="@{/css/notificaciones.css}"/>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0"/>
+
+    <title>
+        Notificaciones y Recetas — Refugio Nueva Vida
+    </title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/barras.css}"/>
+
+    <link rel="stylesheet"
+          th:href="@{/css/notificaciones.css}"/>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet"/>
+
 </head>
+
 <body>
 
 <div th:replace="~{fragments/header :: header}"></div>
 
+
 <main class="noti-container">
 
+
+    <!-- CABECERA -->
+
     <section class="noti-hero">
-        <h1>🔔 Notificaciones y Recetas</h1>
-        <p th:if="${totalNoLeidas > 0}"
-           th:text="'Tienes ' + ${totalNoLeidas} + ' receta(s) pendiente(s)'">
-            Tienes 3 recetas pendientes
-        </p>
-        <p th:if="${totalNoLeidas == 0}">
-            🎉 ¡Todo al día! No hay recetas pendientes.
-        </p>
 
-        <form th:action="@{/admin/notificaciones/generar-todas}" method="post" class="form-inline">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-            <button type="submit" class="btn-generar">🔄 Generar recetas ahora</button>
-        </form>
-    </section>
-
-    <!-- Mensajes flash -->
-    <div th:if="${mensajeExito}" class="alert alert-success" th:text="${mensajeExito}"></div>
-    <div th:if="${errorMsg}" class="alert alert-error" th:text="${errorMsg}"></div>
-
-    <!-- LISTA DE RECETAS -->
-    <section class="noti-list">
-
-        <!-- Estado vacío -->
-        <div th:if="${#lists.isEmpty(notificaciones)}" class="empty-state">
-            <div class="empty-icon">🐾</div>
-            <h2>¡Todo al día!</h2>
-            <p>No hay recetas pendientes por ahora.</p>
+        <div class="hero-icon">
+            🔔
         </div>
 
-        <!-- Tarjetas de recetas -->
+        <h1>
+            Notificaciones y Recetas
+        </h1>
+
+        <p th:if="${totalNoLeidas > 0}"
+           th:text="'Tienes ' + ${totalNoLeidas} + ' receta(s) pendiente(s)'">
+
+            Tienes 3 recetas pendientes
+
+        </p>
+
+        <p th:if="${totalNoLeidas == 0}">
+            Todo al día. No hay recetas pendientes.
+        </p>
+
+
+        <form th:action="@{/admin/notificaciones/generar-todas}"
+              method="post">
+
+            <input type="hidden"
+                   th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}"/>
+
+            <button type="submit"
+                    class="btn-generar">
+
+                ⚙ Generar receta automática
+
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <!-- MENSAJES -->
+
+    <div th:if="${mensajeExito}"
+         class="alert alert-success"
+         th:text="${mensajeExito}">
+    </div>
+
+    <div th:if="${mensajeError}"
+         class="alert alert-error"
+         th:text="${mensajeError}">
+    </div>
+
+
+    <!-- LISTA -->
+
+    <section class="noti-list">
+
+
+        <div th:if="${#lists.isEmpty(notificaciones)}"
+             class="empty-state">
+
+            <div class="empty-icon">
+                ✓
+            </div>
+
+            <h2>
+                Todo al día
+            </h2>
+
+            <p>
+                No hay recetas pendientes por ahora.
+            </p>
+
+        </div>
+
+
         <article th:each="noti : ${notificaciones}"
                  class="receta-card"
                  th:classappend="' prioridad-' + ${noti.receta.prioridad}">
 
+
+            <!-- HEADER RECETA -->
+
             <div class="receta-header">
 
                 <div class="receta-icono">
+
                     <span th:switch="${noti.receta.tipoNecesidad}">
-                        <span th:case="'VACUNACION'">💉</span>
-                        <span th:case="'NUTRICION'">🍖</span>
-                        <span th:case="'HIDRATACION'">💧</span>
-                        <span th:case="'ESTERILIZACION'">✂️</span>
-                        <span th:case="'DESPARASITACION'">🪱</span>
-                        <span th:case="*">📋</span>
+
+                        <span th:case="'VACUNACION'">
+                            💉
+                        </span>
+
+                        <span th:case="'NUTRICION'">
+                            🍖
+                        </span>
+
+                        <span th:case="'HIDRATACION'">
+                            💧
+                        </span>
+
+                        <span th:case="'ESTERILIZACION'">
+                            ✂️
+                        </span>
+
+                        <span th:case="'DESPARASITACION'">
+                            🪱
+                        </span>
+
+                        <span th:case="*">
+                            📋
+                        </span>
+
                     </span>
+
                 </div>
+
 
                 <div class="receta-info">
-                    <h3 th:text="${noti.titulo}">Nueva receta para Firulais</h3>
+
+                    <h3 th:text="${noti.titulo}">
+                        Nueva receta para Sebass
+                    </h3>
+
                     <span class="badge-prioridad"
                           th:classappend="' badge-' + ${noti.receta.prioridad}"
-                          th:text="${noti.receta.prioridad}">ALTA</span>
+                          th:text="${noti.receta.prioridad}">
+
+                        ALTA
+
+                    </span>
+
                 </div>
+
 
                 <div class="receta-fecha">
-                    <small th:text="${#temporals.format(noti.fecha, 'dd/MM/yyyy HH:mm')}">
-                        22/09/2026 10:35
+
+                    <small
+                        th:text="${#temporals.format(
+                            noti.fecha,
+                            'dd/MM/yyyy HH:mm'
+                        )}">
+
+                        25/09/2026
+
                     </small>
+
                 </div>
+
             </div>
+
+
+            <!-- CUERPO -->
 
             <div class="receta-body">
-                <p class="receta-desc" th:text="${noti.receta.descripcion}">
-                    Descripción de la necesidad detectada.
+
+                <p class="receta-desc"
+                   th:text="${noti.receta.descripcion}">
+
+                    La nutrición del perro está por debajo del nivel recomendado.
+
                 </p>
+
 
                 <p>
-                    <strong>🐶 Perro:</strong>
-                    <span th:text="${noti.receta.perro.nombre}">Firulais</span>
+
+                    <strong>
+                        🐶 Perro:
+                    </strong>
+
+                    <span th:text="${noti.receta.perro.nombre}">
+                        Sebass
+                    </span>
+
                 </p>
 
-                <!-- 🆕 Productos sugeridos PARSEADOS -->
+
+                <!-- PRODUCTOS -->
+
                 <div class="receta-productos">
-                    <strong>🛒 Productos sugeridos:</strong>
 
-                    <!-- Si se pudo parsear el JSON, muestra la lista bonita -->
-                    <ul th:if="${noti.receta.productosParseados != null and not #lists.isEmpty(noti.receta.productosParseados)}">
-                        <li th:each="prod : ${noti.receta.productosParseados}">
-                            <span th:text="${prod['producto']}">Suero Oral</span>
-                            <span th:if="${prod['cantidad'] != null}"
-                                  th:text="' × ' + ${prod['cantidad']}"> × 1</span>
-                            <span th:if="${prod['motivo'] != null}"
-                                  style="color:#94a3b8; font-size:0.85rem;"
-                                  th:text="' — ' + ${prod['motivo']}"> — Mejorar hidratación</span>
-                        </li>
-                    </ul>
+                    <div class="productos-heading">
 
-                    <!-- Fallback: si no se pudo parsear, muestra el texto crudo -->
-                    <p th:if="${noti.receta.productosParseados == null or #lists.isEmpty(noti.receta.productosParseados)}"
-                       th:text="${noti.receta.productosSugeridos}">
-                        Concentrado Premium x1
-                    </p>
+                        <strong>
+                            🛒 Productos sugeridos
+                        </strong>
+
+                        <span>
+                            Selecciona los productos que deseas incluir.
+                        </span>
+
+                    </div>
+
+
+                    <form th:action="@{/admin/notificaciones/{id}/crear-receta(
+                            id=${noti.idNotificacion}
+                          )}"
+                          method="post"
+                          class="productos-form">
+
+
+                        <input type="hidden"
+                               th:name="${_csrf.parameterName}"
+                               th:value="${_csrf.token}"/>
+
+
+                        <input type="hidden"
+                               class="productos-seleccionados"
+                               name="productosSeleccionados"
+                               value="[]"/>
+
+
+                        <div th:if="${noti.receta.productosParseados != null and
+                                     not #lists.isEmpty(noti.receta.productosParseados)}"
+                             class="productos-lista">
+
+
+                            <div th:each="prod : ${noti.receta.productosParseados}"
+                                 class="producto-sugerido"
+                                 th:attr="
+                                    data-producto=${prod['producto']},
+                                    data-cantidad=${prod['cantidad']},
+                                    data-categoria=${prod['categoria']},
+                                    data-motivo=${prod['motivo']}">
+
+
+                                <div class="producto-icono"
+                                     th:text="${prod['icono']}">
+                                    🥩
+                                </div>
+
+
+                                <div class="producto-datos">
+
+                                    <strong th:text="${prod['producto']}">
+                                        Concentrado Premium
+                                    </strong>
+
+                                    <span class="producto-categoria"
+                                          th:text="${prod['categoria']}">
+                                        ALIMENTO
+                                    </span>
+
+                                    <small
+                                        th:if="${prod['motivo'] != null}"
+                                        th:text="${prod['motivo']}">
+                                        Mejorar nutrición
+                                    </small>
+
+                                </div>
+
+
+                                <div class="producto-cantidad"
+                                     th:text="'x' + ${prod['cantidad']}">
+                                    x1
+                                </div>
+
+
+                                <button type="button"
+                                        class="btn-accion-producto btn-accion-categoria"
+                                        th:text="${prod['accion']}">
+
+                                    🍖 Dar a Sebass
+
+                                </button>
+
+
+                                <button type="button"
+                                        class="btn-anadir-receta">
+
+                                    + Añadir a receta
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <p th:if="${noti.receta.productosParseados == null or
+                                   #lists.isEmpty(noti.receta.productosParseados)}"
+                           class="producto-fallback"
+                           th:text="${noti.receta.productosSugeridos}">
+
+                            Productos sugeridos
+
+                        </p>
+
+
+                        <button type="submit"
+                                class="btn-crear-receta-productos">
+
+                            📝 Crear Receta con estos productos
+
+                        </button>
+
+                    </form>
+
                 </div>
+
             </div>
+
+
+            <!-- ACCIONES GENERALES -->
 
             <div class="receta-actions">
-                <form th:action="@{/admin/notificaciones/{id}/leer(id=${noti.idNotificacion})}"
-                      method="post" style="display:inline;">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                    <button type="submit" class="btn-accion btn-leer">✅ Marcar como leída</button>
+
+
+                <form th:action="@{/admin/notificaciones/{id}/crear-receta(
+                        id=${noti.idNotificacion}
+                      )}"
+                      method="post"
+                      class="form-crear-general">
+
+                    <input type="hidden"
+                           th:name="${_csrf.parameterName}"
+                           th:value="${_csrf.token}"/>
+
+                    <input type="hidden"
+                           name="productosSeleccionados"
+                           class="productos-general"
+                           value="[]"/>
+
+                    <button type="submit"
+                            class="btn-accion btn-receta">
+
+                        📝 Crear Receta
+
+                    </button>
+
                 </form>
 
-                <a href="http://localhost:8081/tienda" target="_blank" class="btn-accion btn-tienda">
-                    🛒 Ir a la tienda
+
+                <a href="http://localhost:8081/tienda/carrito"
+                   class="btn-accion btn-tienda btn-comprar-tienda">
+
+                    🛒 Comprar en Tienda
+
                 </a>
 
-                <form th:action="@{/admin/notificaciones/{id}/descartar(id=${noti.idNotificacion})}"
-                      method="post" style="display:inline;">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                    <button type="submit" class="btn-accion btn-descartar">🗑️ Descartar</button>
+
+                <form th:action="@{/admin/notificaciones/{id}/descartar(
+                        id=${noti.idNotificacion}
+                      )}"
+                      method="post">
+
+                    <input type="hidden"
+                           th:name="${_csrf.parameterName}"
+                           th:value="${_csrf.token}"/>
+
+                    <button type="submit"
+                            class="btn-accion btn-descartar">
+
+                        ❌ Descartar
+
+                    </button>
+
                 </form>
+
             </div>
+
         </article>
 
     </section>
 
 </main>
 
+
 <footer class="main-footer">
-    <p>© 2025 Refugio Nueva Vida · Hecho con ❤️ para los perros</p>
+
+    <p>
+        © 2025 Refugio Nueva Vida
+    </p>
+
 </footer>
+
+
+<script>
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+        document
+            .querySelectorAll('.receta-card')
+            .forEach(function (card) {
+
+                const productos =
+                    Array.from(
+                        card.querySelectorAll(
+                            '.producto-sugerido'
+                        )
+                    );
+
+                const seleccionados = [];
+
+                function obtenerProducto(elemento) {
+
+                    return {
+                        producto:
+                            elemento.dataset.producto,
+
+                        cantidad:
+                            parseInt(
+                                elemento.dataset.cantidad || '1',
+                                10
+                            ),
+
+                        categoria:
+                            elemento.dataset.categoria,
+
+                        motivo:
+                            elemento.dataset.motivo || ''
+                    };
+                }
+
+
+                function actualizarCampos() {
+
+                    const json =
+                        JSON.stringify(
+                            seleccionados
+                        );
+
+                    const hidden =
+                        card.querySelector(
+                            '.productos-seleccionados'
+                        );
+
+                    if (hidden) {
+                        hidden.value = json;
+                    }
+
+                    const general =
+                        card.querySelector(
+                            '.productos-general'
+                        );
+
+                    if (general) {
+                        general.value = json;
+                    }
+
+                    const comprar =
+                        card.querySelector(
+                            '.btn-comprar-tienda'
+                        );
+
+                    if (comprar) {
+
+                        const lista =
+                            seleccionados.length > 0
+                                ? seleccionados
+                                : productos.map(
+                                    obtenerProducto
+                                );
+
+                        comprar.href =
+                            'http://localhost:8081/tienda/carrito/pre-cargar?productos='
+                            + encodeURIComponent(
+                                JSON.stringify(lista)
+                            );
+                    }
+                }
+
+
+                function agregarProducto(elemento) {
+
+                    const producto =
+                        obtenerProducto(elemento);
+
+                    const existe =
+                        seleccionados.some(
+                            function (p) {
+                                return p.producto ===
+                                    producto.producto;
+                            }
+                        );
+
+                    if (!existe) {
+
+                        seleccionados.push(
+                            producto
+                        );
+
+                        elemento.classList.add(
+                            'producto-seleccionado'
+                        );
+                    }
+
+                    actualizarCampos();
+                }
+
+
+                card.querySelectorAll(
+                    '.btn-anadir-receta'
+                ).forEach(function (boton, index) {
+
+                    boton.addEventListener(
+                        'click',
+                        function () {
+
+                            agregarProducto(
+                                productos[index]
+                            );
+
+                            boton.textContent =
+                                '✓ Añadido';
+
+                        }
+                    );
+                });
+
+
+                card.querySelectorAll(
+                    '.btn-accion-categoria'
+                ).forEach(function (boton, index) {
+
+                    boton.addEventListener(
+                        'click',
+                        function () {
+
+                            agregarProducto(
+                                productos[index]
+                            );
+
+                            boton.classList.add(
+                                'accion-realizada'
+                            );
+
+                            boton.textContent =
+                                '✓ Seleccionado';
+
+                        }
+                    );
+                });
+
+
+                actualizarCampos();
+
+            });
+
+    }
+);
+
+</script>
+
 
 </body>
 </html>

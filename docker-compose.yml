@@ -31,10 +31,10 @@ services:
       - "15672:15672"
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 20s
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 40s
 
   pda:
     build:
@@ -55,6 +55,7 @@ services:
       - RABBITMQ_PORT=5672
       - RABBITMQ_USER=guest
       - RABBITMQ_PASSWORD=guest
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
     ports:
       - "8080:8080"
     volumes:

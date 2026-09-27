@@ -70,6 +70,20 @@ public class Perro {
     @Column(name = "hidratacion", nullable = false)
     private Integer hidratacion = 100;
 
+    /*
+     * Barra de energía (0 - 100). Sube al jugar con el perro
+     * (interacción "Jugar" con un accesorio, ej. correa) y se
+     * muestra junto a nutrición, hidratación y salud.
+     */
+    @Column(name = "energia", nullable = false)
+    private Integer energia = 100;
+
+    @Column(name = "ultimo_juego")
+    private LocalDateTime ultimoJuego;
+
+    @Column(name = "ultimo_bano")
+    private LocalDateTime ultimoBano;
+
     @Column(name = "ultima_comida")
     private LocalDateTime ultimaComida;
 

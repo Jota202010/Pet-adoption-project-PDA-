@@ -17,3 +17,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Variables de entorno / secretos locales
+.env
