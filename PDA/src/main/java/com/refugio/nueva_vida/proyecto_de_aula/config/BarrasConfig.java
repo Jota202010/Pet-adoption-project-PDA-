@@ -9,32 +9,32 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 public class BarrasConfig {
 
-    @Value("${refugio.barras.nutricion.decaimiento-horas:12}")
-    private long nutricionDecaimientoHoras;
+    @Value("${refugio.barras.nutricion.desgaste-horas:12}")
+    private long nutricionDesgasteHoras;
 
-    @Value("${refugio.barras.nutricion.decaimiento-porcentaje:2}")
-    private int nutricionDecaimientoPorcentaje;
-
-
-    @Value("${refugio.barras.hidratacion.decaimiento-horas:8}")
-    private long hidratacionDecaimientoHoras;
-
-    @Value("${refugio.barras.hidratacion.decaimiento-porcentaje:3}")
-    private int hidratacionDecaimientoPorcentaje;
+    @Value("${refugio.barras.nutricion.desgaste-porcentaje:2}")
+    private int nutricionDesgastePorcentaje;
 
 
-    @Value("${refugio.barras.salud.decaimiento-dias:7}")
-    private long saludDecaimientoDias;
+    @Value("${refugio.barras.hidratacion.desgaste-horas:8}")
+    private long hidratacionDesgasteHoras;
 
-    @Value("${refugio.barras.salud.decaimiento-porcentaje:1}")
-    private int saludDecaimientoPorcentaje;
+    @Value("${refugio.barras.hidratacion.desgaste-porcentaje:3}")
+    private int hidratacionDesgastePorcentaje;
 
 
-    @Value("${refugio.barras.energia.decaimiento-horas:6}")
-    private long energiaDecaimientoHoras;
+    @Value("${refugio.barras.salud.desgaste-dias:7}")
+    private long saludDesgasteDias;
 
-    @Value("${refugio.barras.energia.decaimiento-porcentaje:4}")
-    private int energiaDecaimientoPorcentaje;
+    @Value("${refugio.barras.salud.desgaste-porcentaje:1}")
+    private int saludDesgastePorcentaje;
+
+
+    @Value("${refugio.barras.energia.desgaste-horas:6}")
+    private long energiaDesgasteHoras;
+
+    @Value("${refugio.barras.energia.desgaste-porcentaje:4}")
+    private int energiaDesgastePorcentaje;
 
 
     @Value("${refugio.recetas.umbral-nutricion:50}")
