@@ -342,6 +342,7 @@ public class BarraService {
         perro.setUltimaHidratacion(LocalDateTime.now());
         perro.setUltimaVacuna(LocalDateTime.now());
         perro.setUltimaDesparasitacion(LocalDateTime.now());
+        perro.setUltimoJuego(LocalDateTime.now());
 
         perroRepository.save(perro);
 
@@ -349,6 +350,11 @@ public class BarraService {
         registrarEvento(perro, TipoBarra.HIDRATACION, TipoEvento.RESET, 100, 100, "Reset de barras");
         registrarEvento(perro, TipoBarra.SALUD, TipoEvento.RESET, 100, 100, "Reset de barras");
         registrarEvento(perro, TipoBarra.ENERGIA, TipoEvento.RESET, 100, 100, "Reset de barras");
+
+        // Nutrición e hidratación quedaron en 100%: las recetas pendientes
+        // de esos tipos (y sus notificaciones) ya no se necesitan.
+        // Las recetas de salud no se tocan.
+        recetaService.resolverPendientesPorReset(perro);
     }
 
     public List<EventoBarra> eventosDePerro(Perro perro) {
