@@ -23,13 +23,9 @@ import java.util.List;
 public class RecetaService {
 
     private final RecetaRepository recetaRepository;
-
     private final NotificacionRepository notificacionRepository;
-
     private final PerroRepository perroRepository;
-
     private final RecetaPublisher recetaPublisher;
-
     private final BarrasConfig barrasConfig;
 
 
@@ -498,6 +494,64 @@ public class RecetaService {
                             notificacionRepository.save(n);
                         });
             }
+        }
+    }
+
+
+    /**
+     * Se usa al RESETEAR las barras de un perro.
+     * <p>
+     * Como nutrición e hidratación vuelven a 100%, las recetas
+     * PENDIENTES de esos dos tipos ya no hacen falta: se marcan como
+     * DESCARTADAS y su notificación se marca como leída, con lo cual
+     * desaparece de la lista de notificaciones y del contador.
+     * <p>
+     * La barra de energía no genera recetas, y las recetas de salud
+     * (vacunación, esterilización, desparasitación) NO se tocan aquí.
+     */
+    @Transactional
+    public void resolverPendientesPorReset(
+            Perro perro) {
+
+        List<Receta> recetas =
+                recetaRepository
+                        .findByPerroIdPerro(
+                                perro.getIdPerro()
+                        );
+
+        for (Receta receta : recetas) {
+
+            if (receta.getEstado()
+                    != EstadoReceta.PENDIENTE) {
+
+                continue;
+            }
+
+            TipoNecesidad tipo =
+                    receta.getTipoNecesidad();
+
+            if (tipo != TipoNecesidad.NUTRICION
+                    && tipo != TipoNecesidad.HIDRATACION) {
+
+                continue;
+            }
+
+            receta.setEstado(
+                    EstadoReceta.DESCARTADA
+            );
+
+            recetaRepository.save(receta);
+
+            notificacionRepository
+                    .findByRecetaIn(
+                            List.of(receta)
+                    )
+                    .forEach(n -> {
+
+                        n.setLeida(true);
+
+                        notificacionRepository.save(n);
+                    });
         }
     }
 
