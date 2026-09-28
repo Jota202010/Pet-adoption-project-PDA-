@@ -62,7 +62,35 @@ public class RecetaService {
             notificacionRepository.deleteAll(notificaciones);
         }
 
+        // Avisar a la tienda para que quite sus notificaciones de estas recetas
+        for (Receta receta : recetas) {
+            avisarTiendaRecetaResuelta(receta);
+        }
+
         recetaRepository.deleteAll(recetas);
+    }
+
+
+    /**
+     * Le avisa a la tienda (RabbitMQ) que la notificación de esta receta
+     * ya no existe en PDA, para que ella también la elimine.
+     * Si falla el aviso, solo se registra el error y no se interrumpe
+     * el flujo normal.
+     */
+    private void avisarTiendaRecetaResuelta(Receta receta) {
+
+        try {
+
+            recetaPublisher.publicarResuelta(receta);
+
+        } catch (Exception e) {
+
+            log.error(
+                    "No se pudo avisar a la tienda de la receta #{}",
+                    receta.getIdReceta(),
+                    e
+            );
+        }
     }
 
 
@@ -604,6 +632,9 @@ public class RecetaService {
 
                             notificacionRepository.save(n);
                         });
+
+                // Avisar también a la tienda para que quite su notificación
+                avisarTiendaRecetaResuelta(receta);
             }
         }
     }
@@ -668,20 +699,7 @@ public class RecetaService {
                     });
 
             // Avisar también a la tienda para que quite su notificación
-            try {
-
-                recetaPublisher.publicarResuelta(
-                        receta
-                );
-
-            } catch (Exception e) {
-
-                log.error(
-                        "No se pudo avisar a la tienda de la receta #{}",
-                        receta.getIdReceta(),
-                        e
-                );
-            }
+            avisarTiendaRecetaResuelta(receta);
         }
     }
 
@@ -737,22 +755,27 @@ public class RecetaService {
                         .findById(idNotificacion)
                         .orElseThrow();
 
-        if (notificacion.getReceta() != null) {
+        Receta recetaDescartada = notificacion.getReceta();
 
-            notificacion
-                    .getReceta()
-                    .setEstado(
-                            EstadoReceta.DESCARTADA
-                    );
+        if (recetaDescartada != null) {
+
+            recetaDescartada.setEstado(
+                    EstadoReceta.DESCARTADA
+            );
 
             recetaRepository.save(
-                    notificacion.getReceta()
+                    recetaDescartada
             );
         }
 
         notificacionRepository.delete(
                 notificacion
         );
+
+        // Avisar a la tienda para que quite su notificación de esta receta
+        if (recetaDescartada != null) {
+            avisarTiendaRecetaResuelta(recetaDescartada);
+        }
     }
 
 
