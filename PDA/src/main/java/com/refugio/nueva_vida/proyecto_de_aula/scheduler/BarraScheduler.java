@@ -1,5 +1,6 @@
 package com.refugio.nueva_vida.proyecto_de_aula.scheduler;
 
+import com.refugio.nueva_vida.proyecto_de_aula.config.BarrasConfig;
 import com.refugio.nueva_vida.proyecto_de_aula.model.Perro;
 import com.refugio.nueva_vida.proyecto_de_aula.repository.PerroRepository;
 import com.refugio.nueva_vida.proyecto_de_aula.service.BarraService;
@@ -21,10 +22,9 @@ import java.util.List;
 public class BarraScheduler {
 
     private final PerroRepository perroRepository;
-
     private final BarraService barraService;
-
     private final RecetaService recetaService;
+    private final BarrasConfig config;
 
 
     @Scheduled(cron = "0 0 * * * *")
@@ -73,10 +73,19 @@ public class BarraScheduler {
 
             if (horasMaximas > 0) {
 
+                // Modo demo: si está activo, el tiempo transcurrido se
+                // multiplica por el factor de aceleración, así el
+                // decaimiento de las barras se simula mucho más rápido
+                // (útil para pruebas/demostraciones sin esperar horas reales).
+                long horasEfectivas =
+                        config.isAcelerarTiempo()
+                                ? horasMaximas * config.getFactorAceleracion()
+                                : horasMaximas;
+
                 barraService
                         .aplicarDecaimientoPorTiempo(
                                 perro,
-                                horasMaximas
+                                horasEfectivas
                         );
             }
 
