@@ -18,7 +18,6 @@ import java.util.List;
 public class BarraScheduler {
 
     private final PerroRepository perroRepository;
-
     private final BarraService barraService;
 
 
