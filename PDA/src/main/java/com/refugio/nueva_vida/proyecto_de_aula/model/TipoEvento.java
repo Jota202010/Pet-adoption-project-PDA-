@@ -8,7 +8,7 @@ public enum TipoEvento {
     ESTERILIZACION,
     VITAMINA,
     ENFERMEDAD,
-    DECAIMIENTO_TIEMPO,
+    DESGASTE_TIEMPO,
     RESET,
     AJUSTE_MANUAL,
     JUEGO,
