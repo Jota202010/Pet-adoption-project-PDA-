@@ -15,4 +15,10 @@ public interface NotificacionTiendaRepository
     List<NotificacionTienda> findAllByOrderByFechaDesc();
 
     long countByLeidaFalse();
+
+    // Notificaciones creadas a partir de una receta concreta de PDA
+    List<NotificacionTienda> findByIdReceta(Long idReceta);
+
+    // Respaldo para notificaciones antiguas (sin idReceta): se buscan por título
+    List<NotificacionTienda> findByIdRecetaIsNullAndLeidaFalseAndTitulo(String titulo);
 }

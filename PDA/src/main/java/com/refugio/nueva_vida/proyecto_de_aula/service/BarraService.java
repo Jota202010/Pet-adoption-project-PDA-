@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -180,44 +181,126 @@ public class BarraService {
         recetaService.generarRecetaSiNecesario(perro);
     }
 
+    /**
+     * Aplica el desgaste por tiempo de las 4 barras de un perro.
+     * <p>
+     * Cada barra usa su PROPIA fecha de referencia (última comida,
+     * última hidratación, última vacuna, último juego) para calcular
+     * cuántas horas reales han pasado. Tras aplicar el cambio, esa
+     * fecha se "adelanta" exactamente por las horas ya consumidas en
+     * intervalos completos (dejando el resto pendiente), de forma que
+     * el mismo intervalo nunca se vuelva a contar y restar dos veces
+     * en la siguiente ejecución del scheduler (bug de doble conteo).
+     */
     @Transactional
-    public void aplicarDecaimientoPorTiempo(Perro perro, long horasExtra) {
-        if (horasExtra <= 0) return;
+    public void aplicarDesgastePorTiempo(Perro perro) {
+        LocalDateTime ahora = LocalDateTime.now();
 
-        long intervalosNutricion = horasExtra / config.getNutricionDecaimientoHoras();
-        if (intervalosNutricion > 0) {
-            int cambio = (int) (intervalosNutricion * config.getNutricionDecaimientoPorcentaje());
-            cambiarNutricion(perro, -cambio, "Decaimiento por tiempo");
+        // Modo demo: si está activo, el tiempo real transcurrido se
+        // multiplica por este factor antes de compararlo con los
+        // umbrales de desgaste (útil para pruebas/demostraciones).
+        int factor = config.isAcelerarTiempo()
+                ? Math.max(config.getFactorAceleracion(), 1)
+                : 1;
+
+        boolean huboCambios = false;
+
+        huboCambios |= procesarDesgasteNutricion(perro, ahora, factor);
+        huboCambios |= procesarDesgasteHidratacion(perro, ahora, factor);
+        huboCambios |= procesarDesgasteSalud(perro, ahora, factor);
+        huboCambios |= procesarDesgasteEnergia(perro, ahora, factor);
+
+        if (huboCambios) {
+            perroRepository.save(perro);
+            recetaService.generarRecetaSiNecesario(perro);
         }
+    }
 
-        long intervalosHidratacion = horasExtra / config.getHidratacionDecaimientoHoras();
-        if (intervalosHidratacion > 0) {
-            int cambio = (int) (intervalosHidratacion * config.getHidratacionDecaimientoPorcentaje());
-            cambiarHidratacion(perro, -cambio, "Decaimiento por tiempo");
-        }
+    private boolean procesarDesgasteNutricion(Perro perro, LocalDateTime ahora, int factor) {
+        LocalDateTime referencia = perro.getUltimaComida();
+        if (referencia == null) return false;
 
-        long dias = horasExtra / 24;
-        long intervalosSalud = dias / config.getSaludDecaimientoDias();
-        if (intervalosSalud > 0) {
-            int cambio = (int) (intervalosSalud * config.getSaludDecaimientoPorcentaje());
-            cambiarSalud(perro, -cambio, "Envejecimiento natural");
-        }
+        long horasReales = ChronoUnit.HOURS.between(referencia, ahora);
+        if (horasReales <= 0) return false;
 
-        long intervalosEnergia = horasExtra / config.getEnergiaDecaimientoHoras();
-        if (intervalosEnergia > 0) {
-            int cambio = (int) (intervalosEnergia * config.getEnergiaDecaimientoPorcentaje());
-            cambiarEnergia(perro, -cambio, "Decaimiento por tiempo (falta de juego)");
-        }
+        long periodo = config.getNutricionDesgasteHoras();
+        long intervalos = (horasReales * factor) / periodo;
+        if (intervalos <= 0) return false;
 
-        perroRepository.save(perro);
-        recetaService.generarRecetaSiNecesario(perro);
+        int cambio = (int) (intervalos * config.getNutricionDesgastePorcentaje());
+        cambiarNutricion(perro, -cambio, "Desgaste por tiempo");
+
+        long horasConsumidas = Math.max((intervalos * periodo) / factor, 1);
+        perro.setUltimaComida(referencia.plusHours(horasConsumidas));
+        return true;
+    }
+
+    private boolean procesarDesgasteHidratacion(Perro perro, LocalDateTime ahora, int factor) {
+        LocalDateTime referencia = perro.getUltimaHidratacion();
+        if (referencia == null) return false;
+
+        long horasReales = ChronoUnit.HOURS.between(referencia, ahora);
+        if (horasReales <= 0) return false;
+
+        long periodo = config.getHidratacionDesgasteHoras();
+        long intervalos = (horasReales * factor) / periodo;
+        if (intervalos <= 0) return false;
+
+        int cambio = (int) (intervalos * config.getHidratacionDesgastePorcentaje());
+        cambiarHidratacion(perro, -cambio, "Desgaste por tiempo");
+
+        long horasConsumidas = Math.max((intervalos * periodo) / factor, 1);
+        perro.setUltimaHidratacion(referencia.plusHours(horasConsumidas));
+        return true;
+    }
+
+    private boolean procesarDesgasteSalud(Perro perro, LocalDateTime ahora, int factor) {
+        // Nota: reutiliza "última vacuna" como referencia de envejecimiento
+        // general, igual que en el diseño original — no afecta las
+        // comprobaciones de "¿está vacunado?" en otros lugares, que solo
+        // revisan si el campo es null, no cuánto tiempo ha pasado.
+        LocalDateTime referencia = perro.getUltimaVacuna();
+        if (referencia == null) return false;
+
+        long horasReales = ChronoUnit.HOURS.between(referencia, ahora);
+        if (horasReales <= 0) return false;
+
+        long periodo = config.getSaludDesgasteDias() * 24L;
+        long intervalos = (horasReales * factor) / periodo;
+        if (intervalos <= 0) return false;
+
+        int cambio = (int) (intervalos * config.getSaludDesgastePorcentaje());
+        cambiarSalud(perro, -cambio, "Envejecimiento natural");
+
+        long horasConsumidas = Math.max((intervalos * periodo) / factor, 1);
+        perro.setUltimaVacuna(referencia.plusHours(horasConsumidas));
+        return true;
+    }
+
+    private boolean procesarDesgasteEnergia(Perro perro, LocalDateTime ahora, int factor) {
+        LocalDateTime referencia = perro.getUltimoJuego();
+        if (referencia == null) return false;
+
+        long horasReales = ChronoUnit.HOURS.between(referencia, ahora);
+        if (horasReales <= 0) return false;
+
+        long periodo = config.getEnergiaDesgasteHoras();
+        long intervalos = (horasReales * factor) / periodo;
+        if (intervalos <= 0) return false;
+
+        int cambio = (int) (intervalos * config.getEnergiaDesgastePorcentaje());
+        cambiarEnergia(perro, -cambio, "Desgaste por tiempo (falta de juego)");
+
+        long horasConsumidas = Math.max((intervalos * periodo) / factor, 1);
+        perro.setUltimoJuego(referencia.plusHours(horasConsumidas));
+        return true;
     }
 
     private void cambiarNutricion(Perro perro, int cambio, String descripcion) {
         int anterior = perro.getNutricion();
         int nuevo = limitar(anterior + cambio);
         perro.setNutricion(nuevo);
-        registrarEvento(perro, TipoBarra.NUTRICION, TipoEvento.DECAIMIENTO_TIEMPO,
+        registrarEvento(perro, TipoBarra.NUTRICION, TipoEvento.DESGASTE_TIEMPO,
                 cambio, nuevo, descripcion);
     }
 
@@ -225,7 +308,7 @@ public class BarraService {
         int anterior = perro.getHidratacion();
         int nuevo = limitar(anterior + cambio);
         perro.setHidratacion(nuevo);
-        registrarEvento(perro, TipoBarra.HIDRATACION, TipoEvento.DECAIMIENTO_TIEMPO,
+        registrarEvento(perro, TipoBarra.HIDRATACION, TipoEvento.DESGASTE_TIEMPO,
                 cambio, nuevo, descripcion);
     }
 
@@ -233,7 +316,7 @@ public class BarraService {
         int anterior = perro.getSalud();
         int nuevo = limitar(anterior + cambio);
         perro.setSalud(nuevo);
-        registrarEvento(perro, TipoBarra.SALUD, TipoEvento.DECAIMIENTO_TIEMPO,
+        registrarEvento(perro, TipoBarra.SALUD, TipoEvento.DESGASTE_TIEMPO,
                 cambio, nuevo, descripcion);
     }
 
@@ -241,7 +324,7 @@ public class BarraService {
         int anterior = perro.getEnergia();
         int nuevo = limitar(anterior + cambio);
         perro.setEnergia(nuevo);
-        registrarEvento(perro, TipoBarra.ENERGIA, TipoEvento.DECAIMIENTO_TIEMPO,
+        registrarEvento(perro, TipoBarra.ENERGIA, TipoEvento.DESGASTE_TIEMPO,
                 cambio, nuevo, descripcion);
     }
 
@@ -259,6 +342,7 @@ public class BarraService {
         perro.setUltimaHidratacion(LocalDateTime.now());
         perro.setUltimaVacuna(LocalDateTime.now());
         perro.setUltimaDesparasitacion(LocalDateTime.now());
+        perro.setUltimoJuego(LocalDateTime.now());
 
         perroRepository.save(perro);
 
@@ -266,6 +350,11 @@ public class BarraService {
         registrarEvento(perro, TipoBarra.HIDRATACION, TipoEvento.RESET, 100, 100, "Reset de barras");
         registrarEvento(perro, TipoBarra.SALUD, TipoEvento.RESET, 100, 100, "Reset de barras");
         registrarEvento(perro, TipoBarra.ENERGIA, TipoEvento.RESET, 100, 100, "Reset de barras");
+
+        // Nutrición e hidratación quedaron en 100%: las recetas pendientes
+        // de esos tipos (y sus notificaciones) ya no se necesitan.
+        // Las recetas de salud no se tocan.
+        recetaService.resolverPendientesPorReset(perro);
     }
 
     public List<EventoBarra> eventosDePerro(Perro perro) {

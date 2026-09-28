@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -29,16 +30,10 @@ public class SimulacionTiempoService {
                         .findById(idPerro)
                         .orElseThrow();
 
-
-        long horas =
-                (long) dias * 24;
-
+        retrocederReferencias(perro, dias);
 
         barraService
-                .aplicarDecaimientoPorTiempo(
-                        perro,
-                        horas
-                );
+                .aplicarDesgastePorTiempo(perro);
     }
 
 
@@ -49,18 +44,39 @@ public class SimulacionTiempoService {
         List<Perro> perros =
                 perroRepository.findAll();
 
-
-        long horas =
-                (long) dias * 24;
-
-
         for (Perro perro : perros) {
 
+            retrocederReferencias(perro, dias);
+
             barraService
-                    .aplicarDecaimientoPorTiempo(
-                            perro,
-                            horas
-                    );
+                    .aplicarDesgastePorTiempo(perro);
         }
+    }
+
+    /**
+     * Adelanta artificialmente el "reloj" del perro retrocediendo sus
+     * fechas de referencia (última comida, hidratación, vacuna, juego)
+     * la cantidad de días indicada, para que
+     * BarraService.aplicarDesgastePorTiempo calcule y aplique el
+     * desgaste correspondiente como si ese tiempo hubiera pasado
+     * de verdad. Si el perro nunca tuvo esa acción registrada (campo
+     * en null), se toma "ahora" como punto de partida para que la
+     * simulación funcione igual con perros recién creados.
+     */
+    private void retrocederReferencias(Perro perro, int dias) {
+        long horas = (long) dias * 24;
+        LocalDateTime ahora = LocalDateTime.now();
+
+        LocalDateTime comida = perro.getUltimaComida() != null ? perro.getUltimaComida() : ahora;
+        perro.setUltimaComida(comida.minusHours(horas));
+
+        LocalDateTime hidratacion = perro.getUltimaHidratacion() != null ? perro.getUltimaHidratacion() : ahora;
+        perro.setUltimaHidratacion(hidratacion.minusHours(horas));
+
+        LocalDateTime vacuna = perro.getUltimaVacuna() != null ? perro.getUltimaVacuna() : ahora;
+        perro.setUltimaVacuna(vacuna.minusHours(horas));
+
+        LocalDateTime juego = perro.getUltimoJuego() != null ? perro.getUltimoJuego() : ahora;
+        perro.setUltimoJuego(juego.minusHours(horas));
     }
 }

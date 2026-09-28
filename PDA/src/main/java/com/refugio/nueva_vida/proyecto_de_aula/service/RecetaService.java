@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -31,6 +32,17 @@ public class RecetaService {
     private final RecetaPublisher recetaPublisher;
 
     private final BarrasConfig barrasConfig;
+
+
+    /**
+     * Resultado de pedirle a la tienda que cree la notificación
+     * de una receta.
+     */
+    public enum ResultadoEnvioTienda {
+        ENVIADA,
+        YA_EXISTE,
+        SIN_RESPUESTA
+    }
 
 
     @Transactional
@@ -401,6 +413,101 @@ public class RecetaService {
     }
 
 
+    // =========================================================
+    // CREAR RECETA Y ENVIARLA A LA TIENDA
+    // =========================================================
+
+    /**
+     * Botón "Crear Receta" del panel de notificaciones.
+     * <p>
+     * 1) Si el admin eligió productos, los guarda en la receta. Si no
+     *    eligió ninguno, se conservan los productos que la receta ya tenía.
+     * 2) Le pide a la tienda que cree la notificación de esa receta y
+     *    espera su respuesta:
+     *    - ENVIADA: la tienda no la tenía (por ejemplo, se eliminó por
+     *      error) y la creó de nuevo.
+     *    - YA_EXISTE: la notificación ya estaba en la tienda.
+     *    - SIN_RESPUESTA: la tienda no contestó (apagada o con error).
+     */
+    @Transactional
+    public ResultadoEnvioTienda crearRecetaYEnviarATienda(
+            Long idNotificacion,
+            String productosJson) {
+
+        Notificacion notificacion =
+                notificacionRepository
+                        .findById(idNotificacion)
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Notificación no encontrada."
+                                )
+                        );
+
+        Receta receta =
+                notificacion.getReceta();
+
+        if (receta == null) {
+
+            throw new IllegalStateException(
+                    "La notificación no tiene una receta."
+            );
+        }
+
+        if (productosJson != null
+                && !productosJson.isBlank()
+                && !"[]".equals(productosJson.trim())) {
+
+            receta.setProductosSugeridos(
+                    productosJson
+            );
+
+            recetaRepository.save(receta);
+        }
+
+        Map<String, Object> respuesta;
+
+        try {
+
+            respuesta =
+                    recetaPublisher.solicitarEnvio(
+                            receta
+                    );
+
+        } catch (Exception e) {
+
+            log.error(
+                    "No se pudo enviar la receta #{} a la tienda",
+                    receta.getIdReceta(),
+                    e
+            );
+
+            return ResultadoEnvioTienda.SIN_RESPUESTA;
+        }
+
+        if (respuesta == null) {
+
+            return ResultadoEnvioTienda.SIN_RESPUESTA;
+        }
+
+        String estado =
+                String.valueOf(
+                        respuesta.get("estado")
+                );
+
+        return switch (estado) {
+
+            case "CREADA" ->
+                    ResultadoEnvioTienda.ENVIADA;
+
+            case "YA_EXISTE" ->
+                    ResultadoEnvioTienda.YA_EXISTE;
+
+            default ->
+                    ResultadoEnvioTienda.SIN_RESPUESTA;
+        };
+    }
+
+
     private boolean existePendiente(
             Perro perro,
             TipoNecesidad tipo) {
@@ -497,6 +604,83 @@ public class RecetaService {
 
                             notificacionRepository.save(n);
                         });
+            }
+        }
+    }
+
+
+    /**
+     * Se usa al RESETEAR las barras de un perro.
+     * <p>
+     * Como nutrición e hidratación vuelven a 100%, las recetas
+     * PENDIENTES de esos dos tipos ya no hacen falta: se marcan como
+     * DESCARTADAS y su notificación se marca como leída, con lo cual
+     * desaparece de la lista de notificaciones y del contador.
+     * <p>
+     * También se avisa a la tienda (RabbitMQ) para que elimine la
+     * notificación de esa receta.
+     * <p>
+     * La barra de energía no genera recetas, y las recetas de salud
+     * (vacunación, esterilización, desparasitación) NO se tocan aquí.
+     */
+    @Transactional
+    public void resolverPendientesPorReset(
+            Perro perro) {
+
+        List<Receta> recetas =
+                recetaRepository
+                        .findByPerroIdPerro(
+                                perro.getIdPerro()
+                        );
+
+        for (Receta receta : recetas) {
+
+            if (receta.getEstado()
+                    != EstadoReceta.PENDIENTE) {
+
+                continue;
+            }
+
+            TipoNecesidad tipo =
+                    receta.getTipoNecesidad();
+
+            if (tipo != TipoNecesidad.NUTRICION
+                    && tipo != TipoNecesidad.HIDRATACION) {
+
+                continue;
+            }
+
+            receta.setEstado(
+                    EstadoReceta.DESCARTADA
+            );
+
+            recetaRepository.save(receta);
+
+            notificacionRepository
+                    .findByRecetaIn(
+                            List.of(receta)
+                    )
+                    .forEach(n -> {
+
+                        n.setLeida(true);
+
+                        notificacionRepository.save(n);
+                    });
+
+            // Avisar también a la tienda para que quite su notificación
+            try {
+
+                recetaPublisher.publicarResuelta(
+                        receta
+                );
+
+            } catch (Exception e) {
+
+                log.error(
+                        "No se pudo avisar a la tienda de la receta #{}",
+                        receta.getIdReceta(),
+                        e
+                );
             }
         }
     }

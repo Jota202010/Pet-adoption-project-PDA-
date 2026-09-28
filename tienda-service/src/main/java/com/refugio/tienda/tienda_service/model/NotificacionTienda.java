@@ -17,6 +17,10 @@ public class NotificacionTienda {
     @Column(name = "id_notificacion")
     private Integer idNotificacion;
 
+    // Id de la receta en PDA que originó esta notificación (null en las antiguas)
+    @Column(name = "id_receta")
+    private Long idReceta;
+
     @Column(nullable = false, length = 150)
     private String titulo;
 

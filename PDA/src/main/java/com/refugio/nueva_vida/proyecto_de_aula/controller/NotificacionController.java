@@ -55,6 +55,17 @@ public class NotificacionController {
                                         List<Map<String, Object>>>() {}
                         );
 
+                // Nombre real del perro al que pertenece la receta
+                String nombrePerro = "el perro";
+
+                if (noti.getReceta().getPerro() != null
+                        && noti.getReceta().getPerro().getNombre() != null
+                        && !noti.getReceta().getPerro().getNombre().isBlank()) {
+
+                    nombrePerro =
+                            noti.getReceta().getPerro().getNombre();
+                }
+
                 for (Map<String, Object> producto : productos) {
 
                     String categoria =
@@ -67,7 +78,7 @@ public class NotificacionController {
 
                     producto.put(
                             "accion",
-                            accionParaCategoria(categoria)
+                            accionParaCategoria(categoria, nombrePerro)
                     );
 
                     producto.put(
@@ -103,7 +114,8 @@ public class NotificacionController {
 
 
     // =========================================================
-    // CREAR / ACTUALIZAR RECETA CON PRODUCTOS
+    // CREAR RECETA Y ENVIARLA A LA TIENDA
+    // (si la tienda ya la tiene, avisa; si no, la crea de nuevo)
     // =========================================================
 
     @PostMapping(
@@ -111,20 +123,44 @@ public class NotificacionController {
     )
     public String crearRecetaConProductos(
             @PathVariable Long id,
-            @RequestParam String productosSeleccionados,
+            @RequestParam(
+                    defaultValue = "[]"
+            ) String productosSeleccionados,
             RedirectAttributes ra) {
 
         try {
 
-            recetaService.actualizarProductosSugeridos(
-                    id,
-                    productosSeleccionados
-            );
+            RecetaService.ResultadoEnvioTienda resultado =
+                    recetaService.crearRecetaYEnviarATienda(
+                            id,
+                            productosSeleccionados
+                    );
 
-            ra.addFlashAttribute(
-                    "mensajeExito",
-                    "📝 Receta actualizada con los productos seleccionados."
-            );
+            switch (resultado) {
+
+                case ENVIADA ->
+                        ra.addFlashAttribute(
+                                "mensajeExito",
+                                "📨 Receta enviada a la tienda. "
+                                + "Ya aparece en sus notificaciones."
+                        );
+
+                case YA_EXISTE ->
+                        ra.addFlashAttribute(
+                                "mensajeExito",
+                                "🐾 Esta receta ya está en las "
+                                + "notificaciones de la tienda, "
+                                + "no hace falta enviarla otra vez."
+                        );
+
+                case SIN_RESPUESTA ->
+                        ra.addFlashAttribute(
+                                "mensajeError",
+                                "⚠️ La tienda no respondió. "
+                                + "Revisa que el servicio de tienda "
+                                + "esté encendido e inténtalo de nuevo."
+                        );
+            }
 
         } catch (Exception e) {
 
@@ -299,30 +335,31 @@ public class NotificacionController {
 
 
     private String accionParaCategoria(
-            String categoria) {
+            String categoria,
+            String nombrePerro) {
 
         return switch (categoria) {
 
             case "HIGIENE" ->
-                    "🧴 Bañar a Sebass";
+                    "🧴 Bañar a " + nombrePerro;
 
             case "ACCESORIO" ->
-                    "🎒 Equipar a Sebass";
+                    "🎒 Equipar a " + nombrePerro;
 
             case "ALIMENTO" ->
-                    "🍖 Dar a Sebass";
+                    "🍖 Dar a " + nombrePerro;
 
             case "VACUNA" ->
-                    "💉 Dar a Sebass";
+                    "💉 Dar a " + nombrePerro;
 
             case "MEDICAMENTO" ->
-                    "💊 Dar a Sebass";
+                    "💊 Dar a " + nombrePerro;
 
             case "DESPARASITANTE" ->
-                    "🪱 Dar a Sebass";
+                    "🪱 Dar a " + nombrePerro;
 
             case "HIDRATACION" ->
-                    "💧 Dar a Sebass";
+                    "💧 Dar a " + nombrePerro;
 
             case "ESTERILIZACION" ->
                     "✂️ Gestionar cirugía";

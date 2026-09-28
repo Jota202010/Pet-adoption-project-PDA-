@@ -59,6 +59,22 @@ public class RabbitMQConfig {
 
 
     // ============================================================
+    // 🆕 RECETAS RESUELTAS → TIENDA (al resetear barras en PDA)
+    // ============================================================
+
+    public static final String QUEUE_RECETAS_RESUELTAS       = "receta.resuelta.queue";
+    public static final String ROUTING_KEY_RECETAS_RESUELTAS = "receta.resuelta";
+
+
+    // ============================================================
+    // 🆕 SOLICITUD DE ENVÍO DE RECETA → TIENDA (pregunta y respuesta)
+    // ============================================================
+
+    public static final String QUEUE_RECETAS_SOLICITUD       = "receta.solicitud.queue";
+    public static final String ROUTING_KEY_RECETAS_SOLICITUD = "receta.solicitar";
+
+
+    // ============================================================
     // EXCHANGE DE NOTIFICACIONES
     // ============================================================
 
@@ -225,6 +241,58 @@ public class RabbitMQConfig {
                 .bind(recetasQueue)
                 .to(recetasExchange)
                 .with(ROUTING_KEY_RECETAS);
+    }
+
+
+    // ============================================================
+    // 🆕 COLA DE RECETAS RESUELTAS
+    // ============================================================
+
+    @Bean
+    public Queue recetasResueltasQueue() {
+        return new Queue(QUEUE_RECETAS_RESUELTAS, true);
+    }
+
+
+    // ============================================================
+    // 🆕 BINDING DE RECETAS RESUELTAS
+    // ============================================================
+
+    @Bean
+    public Binding recetasResueltasBinding(
+            Queue recetasResueltasQueue,
+            TopicExchange recetasExchange
+    ) {
+        return BindingBuilder
+                .bind(recetasResueltasQueue)
+                .to(recetasExchange)
+                .with(ROUTING_KEY_RECETAS_RESUELTAS);
+    }
+
+
+    // ============================================================
+    // 🆕 COLA DE SOLICITUD DE ENVÍO DE RECETA
+    // ============================================================
+
+    @Bean
+    public Queue recetasSolicitudQueue() {
+        return new Queue(QUEUE_RECETAS_SOLICITUD, true);
+    }
+
+
+    // ============================================================
+    // 🆕 BINDING DE SOLICITUD DE ENVÍO DE RECETA
+    // ============================================================
+
+    @Bean
+    public Binding recetasSolicitudBinding(
+            Queue recetasSolicitudQueue,
+            TopicExchange recetasExchange
+    ) {
+        return BindingBuilder
+                .bind(recetasSolicitudQueue)
+                .to(recetasExchange)
+                .with(ROUTING_KEY_RECETAS_SOLICITUD);
     }
 
 

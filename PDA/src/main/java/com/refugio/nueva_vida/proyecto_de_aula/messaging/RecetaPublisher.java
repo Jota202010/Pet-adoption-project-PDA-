@@ -21,6 +21,61 @@ public class RecetaPublisher {
 
     public void publicar(Receta receta) {
 
+        Map<String, Object> payload = construirPayload(receta);
+
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EXCHANGE_RECETAS,
+                RabbitMQConfig.ROUTING_KEY_RECETAS,
+                payload
+        );
+
+        log.info("📤 Receta publicada: id={}, perro={}, necesidad={}",
+                receta.getIdReceta(),
+                receta.getPerro().getNombre(),
+                receta.getTipoNecesidad());
+    }
+
+    /**
+     * Le pide a la tienda que cree la notificación de esta receta y ESPERA
+     * su respuesta (máx. 5 segundos). La tienda contesta con un mapa que
+     * trae la clave "estado": "CREADA" si la creó, o "YA_EXISTE" si la
+     * notificación ya estaba. Devuelve null si la tienda no respondió.
+     */
+    public Map<String, Object> solicitarEnvio(Receta receta) {
+
+        Map<String, Object> payload = construirPayload(receta);
+
+        Object respuesta = rabbitTemplate.convertSendAndReceive(
+                RabbitMQConfig.EXCHANGE_RECETAS,
+                RabbitMQConfig.ROUTING_KEY_RECETAS_SOLICITUD,
+                payload,
+                mensaje -> {
+                    // Si la tienda está apagada, el mensaje caduca y no
+                    // se procesa más tarde de forma inesperada.
+                    mensaje.getMessageProperties().setExpiration("5000");
+                    return mensaje;
+                }
+        );
+
+        log.info("📤 Solicitud de envío de receta: id={}, perro={}, respuesta={}",
+                receta.getIdReceta(),
+                receta.getPerro().getNombre(),
+                respuesta);
+
+        if (respuesta instanceof Map<?, ?> mapa) {
+
+            Map<String, Object> resultado = new HashMap<>();
+
+            mapa.forEach((k, v) -> resultado.put(String.valueOf(k), v));
+
+            return resultado;
+        }
+
+        return null;
+    }
+
+    private Map<String, Object> construirPayload(Receta receta) {
+
         Map<String, Object> payload = new HashMap<>();
         payload.put("idReceta", receta.getIdReceta());
         payload.put("idPerro", receta.getPerro().getIdPerro());
@@ -38,13 +93,29 @@ public class RecetaPublisher {
         payload.put("productoSugerido", productoSegunNecesidad(receta.getTipoNecesidad().name()));
         payload.put("precioSugerido", precioSegunNecesidad(receta.getTipoNecesidad().name()));
 
+        return payload;
+    }
+
+    /**
+     * Avisa a la tienda que una receta ya no hace falta (por ejemplo,
+     * porque se reseteó la barra del perro), para que borre su
+     * notificación.
+     */
+    public void publicarResuelta(Receta receta) {
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("idReceta", receta.getIdReceta());
+        payload.put("idPerro", receta.getPerro().getIdPerro());
+        payload.put("nombrePerro", receta.getPerro().getNombre());
+        payload.put("tipoNecesidad", receta.getTipoNecesidad().name());
+
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.EXCHANGE_RECETAS,
-                RabbitMQConfig.ROUTING_KEY_RECETAS,
+                RabbitMQConfig.ROUTING_KEY_RECETAS_RESUELTAS,
                 payload
         );
 
-        log.info("📤 Receta publicada: id={}, perro={}, necesidad={}",
+        log.info("📤 Receta resuelta publicada: id={}, perro={}, necesidad={}",
                 receta.getIdReceta(),
                 receta.getPerro().getNombre(),
                 receta.getTipoNecesidad());

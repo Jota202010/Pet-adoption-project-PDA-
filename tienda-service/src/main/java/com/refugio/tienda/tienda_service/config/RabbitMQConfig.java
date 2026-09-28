@@ -52,6 +52,32 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(colaRecetas).to(exchangeRecetas).with(ROUTING_KEY_RECETAS);
     }
 
+    public static final String QUEUE_RECETAS_RESUELTAS = "receta.resuelta.queue";
+    public static final String ROUTING_KEY_RECETAS_RESUELTAS = "receta.resuelta";
+
+    @Bean
+    public Queue colaRecetasResueltas() {
+        return new Queue(QUEUE_RECETAS_RESUELTAS, true);
+    }
+
+    @Bean
+    public Binding bindingRecetasResueltas(Queue colaRecetasResueltas, TopicExchange exchangeRecetas) {
+        return BindingBuilder.bind(colaRecetasResueltas).to(exchangeRecetas).with(ROUTING_KEY_RECETAS_RESUELTAS);
+    }
+
+    public static final String QUEUE_RECETAS_SOLICITUD = "receta.solicitud.queue";
+    public static final String ROUTING_KEY_RECETAS_SOLICITUD = "receta.solicitar";
+
+    @Bean
+    public Queue colaRecetasSolicitud() {
+        return new Queue(QUEUE_RECETAS_SOLICITUD, true);
+    }
+
+    @Bean
+    public Binding bindingRecetasSolicitud(Queue colaRecetasSolicitud, TopicExchange exchangeRecetas) {
+        return BindingBuilder.bind(colaRecetasSolicitud).to(exchangeRecetas).with(ROUTING_KEY_RECETAS_SOLICITUD);
+    }
+
     @Bean
     public MessageConverter jsonMessageConverter() {
         // Se simplifica eliminando la propiedad obsoleta TypePrecedence
