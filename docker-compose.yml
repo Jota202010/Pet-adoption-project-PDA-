@@ -11,12 +11,17 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pjuanp"]
+      # -h 127.0.0.1 fuerza TCP: durante la inicialización (init.sql) MySQL
+      # levanta un servidor temporal SIN red; con "localhost" (socket) el
+      # healthcheck daría "healthy" antes de tiempo y tienda-service
+      # arrancaría antes de que existan las cuentas.
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-pjuanp"]
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 20
+      start_period: 20s
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -80,6 +85,8 @@ services:
       - RABBITMQ_PORT=5672
       - RABBITMQ_USER=guest
       - RABBITMQ_PASSWORD=guest
+      # Comisión de la liquidación Tienda -> Refugio (%). Editable sin tocar código.
+      - TRANSFERENCIA_COMISION_PORCENTAJE=${TRANSFERENCIA_COMISION_PORCENTAJE:-5.0}
     ports:
       - "8081:8081"
 

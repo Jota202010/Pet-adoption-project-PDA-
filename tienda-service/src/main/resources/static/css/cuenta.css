@@ -832,3 +832,31 @@ body {
     .btn-confirmar-ingreso { width: 100%; text-align: center; }
     .info-ingreso { flex-direction: column; }
 }
+
+
+/* ═══ BORRAR HISTORIAL ═══ */
+.historial-acciones {
+    display: flex;
+    justify-content: center;
+    margin-top: 22px;
+}
+
+.btn-borrar-historial {
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: 2px solid #fecaca;
+    background: #fff;
+    color: #dc2626;
+    font-family: 'Nunito', Arial, sans-serif;
+    font-weight: 800;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-borrar-historial:hover {
+    background: #dc2626;
+    border-color: #dc2626;
+    color: #fff;
+    transform: translateY(-2px);
+}

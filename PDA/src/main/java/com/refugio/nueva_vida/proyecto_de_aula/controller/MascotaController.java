@@ -238,6 +238,12 @@ public class MascotaController {
 
         Perro.EstadoPublicacion estadoAnterior = existente.getEstadoPublicacion();
 
+        // Guardamos los valores médicos anteriores para saber si el admin
+        // realmente los cambió en el formulario.
+        Perro.NivelSalud nivelAnterior = existente.getNivelSalud();
+        boolean vacunadoAnterior = Boolean.TRUE.equals(existente.getVacunado());
+        boolean esterilizadoAnterior = Boolean.TRUE.equals(existente.getEsterilizado());
+
         existente.setNombre(perroActualizado.getNombre().trim());
         existente.setEdad(perroActualizado.getEdad());
         existente.setSexo(perroActualizado.getSexo());
@@ -254,7 +260,16 @@ public class MascotaController {
         existente.setRegistroMedico(perroActualizado.getRegistroMedico());
         perroService.guardar(existente);
 
-        barraService.sincronizarEstadoMedicoManual(existente);
+        boolean cambioMedico = nivelAnterior != existente.getNivelSalud()
+                || vacunadoAnterior != Boolean.TRUE.equals(existente.getVacunado())
+                || esterilizadoAnterior != Boolean.TRUE.equals(existente.getEsterilizado());
+
+        // Solo se fuerza el % de salud si el admin cambió nivel/vacunado/
+        // esterilizado. Si solo editó nombre, foto, etc., se respeta el
+        // progreso logrado dando medicamentos.
+        if (cambioMedico) {
+            barraService.sincronizarEstadoMedicoManual(existente);
+        }
 
         Perro perroGuardado = perroService.buscarPorId(id).orElse(existente);
         historialService.registrar(perroGuardado, estadoAnterior,

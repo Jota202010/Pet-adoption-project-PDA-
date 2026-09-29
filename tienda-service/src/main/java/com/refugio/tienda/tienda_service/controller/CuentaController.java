@@ -2,8 +2,10 @@ package com.refugio.tienda.tienda_service.controller;
 
 import com.refugio.tienda.tienda_service.dto.TransferenciaRequestDTO;
 import com.refugio.tienda.tienda_service.exception.ComprobanteInvalidoException;
+import com.refugio.tienda.tienda_service.exception.FueraDeVentanaException;
 import com.refugio.tienda.tienda_service.exception.SaldoInsuficienteException;
 import com.refugio.tienda.tienda_service.model.TipoCuenta;
+import com.refugio.tienda.tienda_service.model.Transferencia;
 import com.refugio.tienda.tienda_service.service.CuentaService;
 
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 @Controller
 @RequestMapping("/admin/cuenta")
@@ -45,6 +52,11 @@ public class CuentaController {
         model.addAttribute(
                 "alertaSaldoBajo",
                 cuentaService.saldoBajo()
+        );
+
+        model.addAttribute(
+                "comision",
+                cuentaService.obtenerResumenComision()
         );
 
         return "admin/cuenta";
@@ -94,7 +106,7 @@ public class CuentaController {
 
         try {
 
-            cuentaService.registrarIngresoRefugio(
+            Transferencia t = cuentaService.registrarIngresoRefugio(
                     dto.getMetodoPago(),
                     dto.getReferenciaComprobante()
             );
@@ -102,7 +114,10 @@ public class CuentaController {
             ra.addFlashAttribute(
                     "mensajeExito",
                     "Ingreso registrado correctamente. " +
-                    "El saldo del Refugio aumentó y el saldo de la Tienda disminuyó."
+                    "Ventas: $" + pesos(t.getMontoBruto()) +
+                    " · Comisión (" + t.getPorcentajeComision().stripTrailingZeros().toPlainString() +
+                    "%): $" + pesos(t.getMontoComision()) +
+                    " · Neto transferido al Refugio: $" + pesos(t.getMonto())
             );
 
             return "redirect:/admin/cuenta";
@@ -115,6 +130,15 @@ public class CuentaController {
             ra.addFlashAttribute(
                     "mensajeError",
                     "🧾 " + e.getMessage()
+            );
+
+            return "redirect:/admin/cuenta/transferir";
+
+        } catch (FueraDeVentanaException e) {
+
+            ra.addFlashAttribute(
+                    "mensajeError",
+                    "📅 " + e.getMessage()
             );
 
             return "redirect:/admin/cuenta/transferir";
@@ -137,6 +161,34 @@ public class CuentaController {
 
             return "redirect:/admin/cuenta";
         }
+    }
+
+
+    @PostMapping("/historial/borrar")
+    public String borrarHistorial(RedirectAttributes ra) {
+
+        int cantidad = cuentaService.borrarHistorial();
+
+        ra.addFlashAttribute(
+                "mensajeExito",
+                "Historial borrado (" + cantidad + " registros). " +
+                "Los saldos no se modificaron."
+        );
+
+        return "redirect:/admin/cuenta";
+    }
+
+
+    /**
+     * Da formato de pesos colombianos: 67200.00 -> 67.200
+     */
+    private static String pesos(BigDecimal valor) {
+
+        DecimalFormatSymbols simbolos =
+                new DecimalFormatSymbols(Locale.US);
+        simbolos.setGroupingSeparator('.');
+
+        return new DecimalFormat("#,##0", simbolos).format(valor);
     }
 
 
@@ -165,6 +217,11 @@ public class CuentaController {
         model.addAttribute(
                 "liquidacion",
                 cuentaService.obtenerLiquidacionActual()
+        );
+
+        model.addAttribute(
+                "ventana",
+                cuentaService.obtenerVentanaLiquidacion()
         );
 
         model.addAttribute("dto", dto);

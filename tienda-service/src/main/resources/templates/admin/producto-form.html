@@ -436,6 +436,55 @@
 
 
 
+            <!-- COSTO DE STOCK -->
+
+            <div th:if="${porcentajeCostoStock != null}"
+                 style="background:#f1f5f9;
+                        border:1px solid #cbd5e1;
+                        border-radius:12px;
+                        padding:14px 18px;
+                        margin-bottom:22px;
+                        font-size:0.85rem;
+                        line-height:1.6;
+                        color:#334155;">
+
+                <div th:if="${producto.idProducto == null}">
+                    🎁 <strong>El primer producto nuevo que registres en
+                    cada categoría tiene su stock inicial gratis</strong>
+                    (cada categoría es independiente). Después se cobra
+                    el
+                    <strong th:text="${porcentajeCostoStock.stripTrailingZeros().toPlainString()} + '%'">5%</strong>
+                    del valor de las unidades.
+
+                    <div style="margin-top:6px;"
+                         th:if="${not #lists.isEmpty(categoriasGratis)}">
+                        Categorías con stock gratis disponible:
+                        <strong th:text="${#strings.listJoin(categoriasGratis, ', ')}">HIDRATACION</strong>
+                    </div>
+
+                    <div style="margin-top:6px;"
+                         th:if="${#lists.isEmpty(categoriasGratis)}">
+                        Ya usaste el stock gratis de todas las categorías.
+                    </div>
+                </div>
+
+                <div th:if="${producto.idProducto != null}">
+                    📦 Si <strong>aumentas el stock</strong>, se cobra el
+                    <strong th:text="${porcentajeCostoStock.stripTrailingZeros().toPlainString()} + '%'">5%</strong>
+                    del valor de las unidades que agregues, y sale de la
+                    comisión acumulada de la Tienda. Bajar el stock o
+                    cambiar otros datos no cuesta nada.
+                </div>
+
+                <div style="margin-top:6px;">
+                    💰 Disponible para reponer stock:
+                    <strong th:text="'$ ' + ${#numbers.formatDecimal(disponibleStock, 1, 'POINT', 0, 'COMMA')}">$ 0</strong>
+                </div>
+
+            </div>
+
+
+
             <!-- BOTONES -->
 
             <div class="form-actions">

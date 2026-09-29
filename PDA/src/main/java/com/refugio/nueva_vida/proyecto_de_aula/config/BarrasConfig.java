@@ -45,11 +45,4 @@ public class BarrasConfig {
 
     @Value("${refugio.recetas.umbral-salud:60}")
     private int umbralSalud;
-
-
-    @Value("${refugio.demo.acelerar-tiempo:false}")
-    private boolean acelerarTiempo;
-
-    @Value("${refugio.demo.factor-aceleracion:100}")
-    private int factorAceleracion;
 }

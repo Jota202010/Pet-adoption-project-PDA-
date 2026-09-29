@@ -1,5 +1,6 @@
 package com.refugio.tienda.tienda_service.controller;
 
+import com.refugio.tienda.tienda_service.exception.SaldoInsuficienteException;
 import com.refugio.tienda.tienda_service.model.Producto;
 import com.refugio.tienda.tienda_service.model.TipoCuenta;
 import com.refugio.tienda.tienda_service.service.CuentaService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Slf4j
 @Controller
@@ -33,6 +35,7 @@ public class ProductoAdminController {
         model.addAttribute("productos", productoService.listarTodos());
         model.addAttribute("cuentaTienda",  cuentaService.obtenerCuentaPorTipo(TipoCuenta.TIENDA));
         model.addAttribute("cuentaRefugio", cuentaService.obtenerCuentaPorTipo(TipoCuenta.REFUGIO));
+        model.addAttribute("comision", cuentaService.obtenerResumenComision());
         return "admin/productos";
     }
 
@@ -103,6 +106,7 @@ public class ProductoAdminController {
         model.addAttribute("producto",    producto);
         model.addAttribute("categorias",  Producto.Categoria.values());
         model.addAttribute("cuentaTienda", cuentaService.obtenerCuentaPorTipo(TipoCuenta.TIENDA));
+        agregarInfoCostoStock(model);
         return "admin/producto-form";
     }
 
@@ -117,37 +121,80 @@ public class ProductoAdminController {
     ) {
         if (producto.getNombre() == null || producto.getNombre().isBlank()) {
             ra.addFlashAttribute("mensajeError", "❌ El nombre del producto es obligatorio.");
-            return "redirect:/admin/productos/nuevo";
+            return volverAlFormulario(producto);
         }
 
         if (producto.getCategoria() == null) {
             ra.addFlashAttribute("mensajeError", "❌ Debes seleccionar una categoría.");
-            return "redirect:/admin/productos/nuevo";
+            return volverAlFormulario(producto);
         }
 
         if (producto.getPrecio() == null || producto.getPrecio().doubleValue() <= 0) {
             ra.addFlashAttribute("mensajeError", "❌ El precio debe ser mayor a cero.");
-            return "redirect:/admin/productos/nuevo";
+            return volverAlFormulario(producto);
         }
 
         if (producto.getStock() == null || producto.getStock() < 0) {
             ra.addFlashAttribute("mensajeError", "❌ El stock no puede ser negativo.");
-            return "redirect:/admin/productos/nuevo";
+            return volverAlFormulario(producto);
         }
+
+        boolean esNuevo = producto.getIdProducto() == null;
 
         // 🆕 Ya no deja que un error de base de datos tumbe la app con la
         // pantalla en blanco: lo atrapa y te dice exactamente qué pasó.
         try {
-            productoService.guardar(producto);
-            ra.addFlashAttribute("mensajeExito", "✅ Producto \"" + producto.getNombre() + "\" agregado correctamente.");
+            ProductoService.ResultadoGuardado resultado =
+                    productoService.guardarCobrandoStock(producto);
+
+            String mensaje = "✅ Producto \"" + producto.getNombre() + "\" "
+                    + (esNuevo ? "agregado correctamente." : "actualizado correctamente.");
+
+            if (resultado.stockGratis()) {
+                mensaje += " 🎁 El stock inicial de la categoría "
+                        + producto.getCategoria().name()
+                        + " fue gratis.";
+            }
+
+            if (resultado.costoCobrado().signum() > 0) {
+                mensaje += " Se cobraron $"
+                        + resultado.costoCobrado().setScale(0, RoundingMode.HALF_UP).toPlainString()
+                        + " a la Tienda por " + resultado.unidadesAgregadas()
+                        + " unidades de stock.";
+            }
+
+            ra.addFlashAttribute("mensajeExito", mensaje);
             return "redirect:/admin/productos";
+
+        } catch (SaldoInsuficienteException e) {
+            ra.addFlashAttribute("mensajeError", "💰 " + e.getMessage());
+            return volverAlFormulario(producto);
+
         } catch (Exception e) {
             log.error("❌ Error guardando producto '{}' con categoría {}: {}",
                     producto.getNombre(), producto.getCategoria(), e.getMessage(), e);
             ra.addFlashAttribute("mensajeError",
                     "❌ No se pudo guardar el producto. Detalle técnico: " + e.getMessage());
-            return "redirect:/admin/productos/nuevo";
+            return volverAlFormulario(producto);
         }
+    }
+
+    /** Si se estaba editando vuelve a la edición; si era nuevo, al formulario nuevo. */
+    private String volverAlFormulario(Producto producto) {
+        return producto.getIdProducto() == null
+                ? "redirect:/admin/productos/nuevo"
+                : "redirect:/admin/productos/editar/" + producto.getIdProducto();
+    }
+
+    /** Datos para explicar en el formulario cuánto cuesta reponer stock. */
+    private void agregarInfoCostoStock(Model model) {
+        model.addAttribute("porcentajeCostoStock", productoService.getPorcentajeCostoStock());
+        model.addAttribute("disponibleStock", cuentaService.disponibleParaStock());
+        model.addAttribute("categoriasGratis",
+                productoService.categoriasConStockGratis()
+                        .stream()
+                        .map(Enum::name)
+                        .toList());
     }
 
     // ═════════════════════════════════════════════════════
@@ -170,6 +217,7 @@ public class ProductoAdminController {
         model.addAttribute("producto",    producto);
         model.addAttribute("categorias",  Producto.Categoria.values());
         model.addAttribute("cuentaTienda", cuentaService.obtenerCuentaPorTipo(TipoCuenta.TIENDA));
+        agregarInfoCostoStock(model);
         return "admin/producto-form";
     }
 

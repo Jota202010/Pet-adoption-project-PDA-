@@ -6,6 +6,7 @@ import com.refugio.nueva_vida.proyecto_de_aula.model.TipoNecesidad;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface RecetaRepository
@@ -21,5 +22,13 @@ public interface RecetaRepository
             Integer idPerro,
             TipoNecesidad tipoNecesidad,
             EstadoReceta estado
+    );
+
+    /** ¿Se atendió (entregó el producto) una receta de este tipo desde cierta fecha? */
+    boolean existsByPerroIdPerroAndTipoNecesidadAndEstadoAndFechaLecturaAfter(
+            Integer idPerro,
+            TipoNecesidad tipoNecesidad,
+            EstadoReceta estado,
+            LocalDateTime desde
     );
 }

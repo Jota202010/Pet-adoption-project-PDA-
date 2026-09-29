@@ -160,7 +160,7 @@
                 </h2>
 
                 <p>
-                    Valor calculado de acuerdo con las ventas registradas durante el mes.
+                    Se actualiza con cada venta que entra a la Tienda. Recarga la página para ver el valor más reciente.
                 </p>
 
             </div>
@@ -174,7 +174,7 @@
 
                 <span>
                     <span class="concepto-icon">📈</span>
-                    Ventas del mes
+                    Ventas obtenidas hasta hoy
                 </span>
 
                 <strong
@@ -212,16 +212,16 @@
             </div>
 
 
-            <div class="liquidacion-row">
+            <div class="liquidacion-row descuento">
 
                 <span>
-                    <span class="concepto-icon">⚖️</span>
-                    Ajustes
+                    <span class="concepto-icon">✅</span>
+                    Ya liquidado
                 </span>
 
                 <strong
-                    th:text="'$ ' + ${#numbers.formatDecimal(
-                        liquidacion.ajustes,
+                    th:text="'- $ ' + ${#numbers.formatDecimal(
+                        liquidacion.yaLiquidado,
                         1,
                         'POINT',
                         0,
@@ -259,6 +259,45 @@
                 </strong>
 
             </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- LIQUIDACIÓN DEL DÍA (aviso cuando ya se liquidó hoy) -->
+
+    <section th:if="${ventana.restringida}"
+             class="ventana-card"
+             th:classappend="${ventana.habilitada} ? 'abierta' : 'cerrada'">
+
+        <div class="ventana-contador">
+
+            <strong th:text="${ventana.dias}">5</strong>
+
+            <span th:text="${ventana.etiqueta}">
+                días para abrir
+            </span>
+
+        </div>
+
+        <div class="ventana-texto">
+
+            <h3>
+                <span th:text="${ventana.liquidadaHoy} ? '🧾' : (${ventana.habilitada} ? '✅' : '📅')">📅</span>
+                <span th:text="${ventana.titulo}">
+                    Liquidación aún no disponible
+                </span>
+            </h3>
+
+            <p th:text="${ventana.detalle}">
+                Podrás volver a liquidar mañana.
+            </p>
+
+            <small>
+                Solo se permite una liquidación por día.
+                Lo que vendas después quedará pendiente para la próxima.
+            </small>
 
         </div>
 
@@ -382,7 +421,9 @@
 
 
             <button type="submit"
-                    class="btn-confirmar">
+                    class="btn-confirmar"
+                    th:disabled="${ventana.restringida and !ventana.habilitada}"
+                    th:title="${ventana.restringida and !ventana.habilitada} ? 'Ya liquidaste hoy' : null">
 
                 ✓ Confirmar Ingreso al Refugio
 

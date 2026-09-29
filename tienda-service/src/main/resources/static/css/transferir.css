@@ -519,3 +519,81 @@ body {
         flex-direction: column;
     }
 }
+
+
+/* ═══ VENTANA DE LIQUIDACIÓN (contador) ═══ */
+.ventana-card {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 22px 26px;
+    border-radius: 20px;
+    margin-bottom: 26px;
+    border: 1px solid #fed7aa;
+    background: #fff7ed;
+}
+
+.ventana-card.abierta {
+    border-color: #bbf7d0;
+    background: #f0fdf4;
+}
+
+.ventana-contador {
+    min-width: 130px;
+    text-align: center;
+    padding: 14px 10px;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+}
+
+.ventana-contador strong {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.6rem;
+    line-height: 1;
+    color: #ea580c;
+}
+
+.ventana-card.abierta .ventana-contador strong {
+    color: #16a34a;
+}
+
+.ventana-contador span {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #64748b;
+}
+
+.ventana-texto h3 {
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+    color: #1f2937;
+}
+
+.ventana-texto p {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.ventana-texto small {
+    color: #64748b;
+}
+
+.btn-confirmar:disabled {
+    background: #cbd5e1;
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}
+
+@media (max-width: 640px) {
+    .ventana-card {
+        flex-direction: column;
+        text-align: center;
+    }
+}

@@ -33,6 +33,13 @@ public class RecetaService {
 
     private final BarrasConfig barrasConfig;
 
+    /**
+     * Horas durante las que NO se vuelve a generar una receta de un tipo
+     * que ya fue atendida (se entregó el producto). Evita que la receta
+     * reaparezca al instante aunque la barra siga un poco baja.
+     */
+    private static final long COOLDOWN_RECETA_HORAS = 6;
+
 
     /**
      * Resultado de pedirle a la tienda que cree la notificación
@@ -106,6 +113,9 @@ public class RecetaService {
 
             if (!existePendiente(
                     perro,
+                    TipoNecesidad.NUTRICION)
+                    && !atendidaRecientemente(
+                    perro,
                     TipoNecesidad.NUTRICION)) {
 
                 generadas.add(
@@ -118,6 +128,9 @@ public class RecetaService {
                 < barrasConfig.getUmbralHidratacion()) {
 
             if (!existePendiente(
+                    perro,
+                    TipoNecesidad.HIDRATACION)
+                    && !atendidaRecientemente(
                     perro,
                     TipoNecesidad.HIDRATACION)) {
 
@@ -171,6 +184,9 @@ public class RecetaService {
                 && Boolean.TRUE.equals(perro.getEsterilizado())) {
 
             if (!existePendiente(
+                    perro,
+                    TipoNecesidad.DESPARASITACION)
+                    && !atendidaRecientemente(
                     perro,
                     TipoNecesidad.DESPARASITACION)) {
 
@@ -533,6 +549,84 @@ public class RecetaService {
             default ->
                     ResultadoEnvioTienda.SIN_RESPUESTA;
         };
+    }
+
+
+    private boolean atendidaRecientemente(
+            Perro perro,
+            TipoNecesidad tipo) {
+
+        return recetaRepository
+                .existsByPerroIdPerroAndTipoNecesidadAndEstadoAndFechaLecturaAfter(
+                        perro.getIdPerro(),
+                        tipo,
+                        EstadoReceta.DESCARTADA,
+                        LocalDateTime.now()
+                                .minusHours(COOLDOWN_RECETA_HORAS)
+                );
+    }
+
+
+    /**
+     * Se llama cuando el admin le ENTREGA un producto al perro desde el
+     * inventario. Cierra las recetas pendientes que ese producto atiende:
+     * <ul>
+     *   <li>ALIMENTO → NUTRICION</li>
+     *   <li>HIDRATACION, HIGIENE (baño) → HIDRATACION</li>
+     *   <li>DESPARASITANTE, MEDICAMENTO → DESPARASITACION</li>
+     *   <li>VACUNA → VACUNACION, ESTERILIZACION → ESTERILIZACION</li>
+     * </ul>
+     * La receta pasa a DESCARTADA (con fecha de atención, para el
+     * cooldown), su notificación se marca leída y se avisa a la tienda.
+     * Así "ya le di el producto" y la receta desaparece, aunque la barra
+     * todavía no haya alcanzado el umbral.
+     */
+    @Transactional
+    public void resolverPorProductoEntregado(
+            Perro perro,
+            TipoProducto tipoProducto) {
+
+        TipoNecesidad necesidad =
+                switch (tipoProducto) {
+                    case ALIMENTO -> TipoNecesidad.NUTRICION;
+                    case HIDRATACION, HIGIENE -> TipoNecesidad.HIDRATACION;
+                    case DESPARASITANTE, MEDICAMENTO -> TipoNecesidad.DESPARASITACION;
+                    case VACUNA -> TipoNecesidad.VACUNACION;
+                    case ESTERILIZACION -> TipoNecesidad.ESTERILIZACION;
+                    default -> null;
+                };
+
+        if (necesidad == null) {
+            return;
+        }
+
+        List<Receta> recetas =
+                recetaRepository
+                        .findByPerroIdPerro(perro.getIdPerro());
+
+        for (Receta receta : recetas) {
+
+            if (receta.getEstado() != EstadoReceta.PENDIENTE
+                    || receta.getTipoNecesidad() != necesidad) {
+
+                continue;
+            }
+
+            receta.setEstado(EstadoReceta.DESCARTADA);
+            receta.setFechaLectura(LocalDateTime.now());
+            recetaRepository.save(receta);
+
+            notificacionRepository
+                    .findByRecetaIn(List.of(receta))
+                    .forEach(n -> {
+
+                        n.setLeida(true);
+
+                        notificacionRepository.save(n);
+                    });
+
+            avisarTiendaRecetaResuelta(receta);
+        }
     }
 
 

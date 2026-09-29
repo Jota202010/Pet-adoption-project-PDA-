@@ -25,6 +25,10 @@ public class BarraService {
     private final RecetaService recetaService;
     private final BarrasConfig config;
 
+    /** Prefijos de descripción con los que se registran las dosis (los usa el tope de dosis). */
+    public static final String DESC_MEDICAMENTO = "Medicamento: ";
+    public static final String DESC_DESPARASITANTE = "Desparasitación registrada";
+
     public NivelBarra calcularNivel(int valor) {
         if (valor <= 25) return NivelBarra.CRITICO;
         if (valor <= 50) return NivelBarra.BAJO;
@@ -76,6 +80,7 @@ public class BarraService {
         perro.setSalud(nuevo);
         perro.setUltimaVacuna(LocalDateTime.now());
         perro.setVacunado(true);
+        actualizarNivelSaludPorBarra(perro);
         perroRepository.save(perro);
 
         registrarEvento(perro, TipoBarra.SALUD, TipoEvento.VACUNA,
@@ -134,13 +139,67 @@ public class BarraService {
 
         perro.setSalud(nuevo);
         perro.setUltimaDesparasitacion(LocalDateTime.now());
+        actualizarNivelSaludPorBarra(perro);
         perroRepository.save(perro);
 
         registrarEvento(perro, TipoBarra.SALUD, TipoEvento.DESPARASITANTE,
-                nuevo - anterior, nuevo, "Desparasitación registrada");
+                nuevo - anterior, nuevo, DESC_DESPARASITANTE);
 
         recetaService.resolverPendientesSiCorresponde(perro);
         recetaService.generarRecetaSiNecesario(perro);
+    }
+
+    /**
+     * Interacción "Dar medicamento" — sube la salud (+20) y, si el perro
+     * estaba enfermo/crítico, actualiza su nivel de salud según la barra
+     * (ver {@link #actualizarNivelSaludPorBarra(Perro)}).
+     */
+    @Transactional
+    public void registrarMedicamento(Integer idPerro, String nombreMedicamento) {
+        Perro perro = obtenerPerro(idPerro);
+        int anterior = perro.getSalud();
+        int nuevo = limitar(anterior + 20);
+
+        perro.setSalud(nuevo);
+        actualizarNivelSaludPorBarra(perro);
+        perroRepository.save(perro);
+
+        registrarEvento(perro, TipoBarra.SALUD, TipoEvento.DESPARASITANTE,
+                nuevo - anterior, nuevo, DESC_MEDICAMENTO + nombreMedicamento);
+
+        recetaService.resolverPendientesSiCorresponde(perro);
+        recetaService.generarRecetaSiNecesario(perro);
+    }
+
+    /**
+     * Techo de salud que le corresponde al perro SOLO por vacunación y
+     * esterilización (100 si tiene ambas). Cuando la barra llega a este
+     * valor se considera "barra completa".
+     */
+    public int techoSaludPorChequeos(Perro perro) {
+        int techo = 100;
+        if (Boolean.FALSE.equals(perro.getVacunado()))      techo = Math.min(techo, 80);
+        if (Boolean.FALSE.equals(perro.getEsterilizado()))  techo = Math.min(techo, 90);
+        return techo;
+    }
+
+    /**
+     * Actualiza el nivel de salud (SANO / ENFERMO / CRITICO) del perro
+     * según su barra, después de un tratamiento:
+     *  - CRITICO sube a ENFERMO cuando la salud supera 30.
+     *  - ENFERMO / CRITICO pasan a SANO al completar la barra.
+     * No modifica el estado de publicación.
+     */
+    private void actualizarNivelSaludPorBarra(Perro perro) {
+        int salud = perro.getSalud();
+        Perro.NivelSalud nivel = perro.getNivelSalud();
+        if (nivel == null || nivel == Perro.NivelSalud.SANO) return;
+
+        if (salud >= techoSaludPorChequeos(perro)) {
+            perro.setNivelSalud(Perro.NivelSalud.SANO);
+        } else if (nivel == Perro.NivelSalud.CRITICO && salud > 30) {
+            perro.setNivelSalud(Perro.NivelSalud.ENFERMO);
+        }
     }
 
     /**
@@ -156,6 +215,7 @@ public class BarraService {
         Perro perro = obtenerPerro(idPerro);
 
         perro.setEsterilizado(true);
+        actualizarNivelSaludPorBarra(perro);
         perroRepository.save(perro);
 
         registrarEvento(perro, TipoBarra.SALUD, TipoEvento.ESTERILIZACION,
@@ -196,19 +256,12 @@ public class BarraService {
     public void aplicarDesgastePorTiempo(Perro perro) {
         LocalDateTime ahora = LocalDateTime.now();
 
-        // Modo demo: si está activo, el tiempo real transcurrido se
-        // multiplica por este factor antes de compararlo con los
-        // umbrales de desgaste (útil para pruebas/demostraciones).
-        int factor = config.isAcelerarTiempo()
-                ? Math.max(config.getFactorAceleracion(), 1)
-                : 1;
-
         boolean huboCambios = false;
 
-        huboCambios |= procesarDesgasteNutricion(perro, ahora, factor);
-        huboCambios |= procesarDesgasteHidratacion(perro, ahora, factor);
-        huboCambios |= procesarDesgasteSalud(perro, ahora, factor);
-        huboCambios |= procesarDesgasteEnergia(perro, ahora, factor);
+        huboCambios |= procesarDesgasteNutricion(perro, ahora);
+        huboCambios |= procesarDesgasteHidratacion(perro, ahora);
+        huboCambios |= procesarDesgasteSalud(perro, ahora);
+        huboCambios |= procesarDesgasteEnergia(perro, ahora);
 
         if (huboCambios) {
             perroRepository.save(perro);
@@ -216,7 +269,7 @@ public class BarraService {
         }
     }
 
-    private boolean procesarDesgasteNutricion(Perro perro, LocalDateTime ahora, int factor) {
+    private boolean procesarDesgasteNutricion(Perro perro, LocalDateTime ahora) {
         LocalDateTime referencia = perro.getUltimaComida();
         if (referencia == null) return false;
 
@@ -224,18 +277,18 @@ public class BarraService {
         if (horasReales <= 0) return false;
 
         long periodo = config.getNutricionDesgasteHoras();
-        long intervalos = (horasReales * factor) / periodo;
+        long intervalos = horasReales / periodo;
         if (intervalos <= 0) return false;
 
         int cambio = (int) (intervalos * config.getNutricionDesgastePorcentaje());
         cambiarNutricion(perro, -cambio, "Desgaste por tiempo");
 
-        long horasConsumidas = Math.max((intervalos * periodo) / factor, 1);
+        long horasConsumidas = Math.max(intervalos * periodo, 1);
         perro.setUltimaComida(referencia.plusHours(horasConsumidas));
         return true;
     }
 
-    private boolean procesarDesgasteHidratacion(Perro perro, LocalDateTime ahora, int factor) {
+    private boolean procesarDesgasteHidratacion(Perro perro, LocalDateTime ahora) {
         LocalDateTime referencia = perro.getUltimaHidratacion();
         if (referencia == null) return false;
 
@@ -243,18 +296,18 @@ public class BarraService {
         if (horasReales <= 0) return false;
 
         long periodo = config.getHidratacionDesgasteHoras();
-        long intervalos = (horasReales * factor) / periodo;
+        long intervalos = horasReales / periodo;
         if (intervalos <= 0) return false;
 
         int cambio = (int) (intervalos * config.getHidratacionDesgastePorcentaje());
         cambiarHidratacion(perro, -cambio, "Desgaste por tiempo");
 
-        long horasConsumidas = Math.max((intervalos * periodo) / factor, 1);
+        long horasConsumidas = Math.max(intervalos * periodo, 1);
         perro.setUltimaHidratacion(referencia.plusHours(horasConsumidas));
         return true;
     }
 
-    private boolean procesarDesgasteSalud(Perro perro, LocalDateTime ahora, int factor) {
+    private boolean procesarDesgasteSalud(Perro perro, LocalDateTime ahora) {
         // Nota: reutiliza "última vacuna" como referencia de envejecimiento
         // general, igual que en el diseño original — no afecta las
         // comprobaciones de "¿está vacunado?" en otros lugares, que solo
@@ -266,18 +319,18 @@ public class BarraService {
         if (horasReales <= 0) return false;
 
         long periodo = config.getSaludDesgasteDias() * 24L;
-        long intervalos = (horasReales * factor) / periodo;
+        long intervalos = horasReales / periodo;
         if (intervalos <= 0) return false;
 
         int cambio = (int) (intervalos * config.getSaludDesgastePorcentaje());
         cambiarSalud(perro, -cambio, "Envejecimiento natural");
 
-        long horasConsumidas = Math.max((intervalos * periodo) / factor, 1);
+        long horasConsumidas = Math.max(intervalos * periodo, 1);
         perro.setUltimaVacuna(referencia.plusHours(horasConsumidas));
         return true;
     }
 
-    private boolean procesarDesgasteEnergia(Perro perro, LocalDateTime ahora, int factor) {
+    private boolean procesarDesgasteEnergia(Perro perro, LocalDateTime ahora) {
         LocalDateTime referencia = perro.getUltimoJuego();
         if (referencia == null) return false;
 
@@ -285,13 +338,13 @@ public class BarraService {
         if (horasReales <= 0) return false;
 
         long periodo = config.getEnergiaDesgasteHoras();
-        long intervalos = (horasReales * factor) / periodo;
+        long intervalos = horasReales / periodo;
         if (intervalos <= 0) return false;
 
         int cambio = (int) (intervalos * config.getEnergiaDesgastePorcentaje());
         cambiarEnergia(perro, -cambio, "Desgaste por tiempo (falta de juego)");
 
-        long horasConsumidas = Math.max((intervalos * periodo) / factor, 1);
+        long horasConsumidas = Math.max(intervalos * periodo, 1);
         perro.setUltimoJuego(referencia.plusHours(horasConsumidas));
         return true;
     }
@@ -387,7 +440,11 @@ public class BarraService {
         if (perro.getNivelSalud() != null) {
             switch (perro.getNivelSalud()) {
                 case ENFERMO:
-                    saludMaxima = Math.min(saludMaxima, 60);
+                    // Enfermo no puede tener la barra completa: al llegar
+                    // a 100 (o al techo) el nivel pasa a SANO en
+                    // actualizarNivelSaludPorBarra. Antes el techo era 60
+                    // y por eso el medicamento nunca hacía subir la barra.
+                    saludMaxima = Math.min(saludMaxima, 99);
                     break;
                 case CRITICO:
                     saludMaxima = Math.min(saludMaxima, 30);

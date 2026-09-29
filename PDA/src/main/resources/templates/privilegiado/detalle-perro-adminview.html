@@ -301,7 +301,7 @@
                   th:attr="data-tipo=${p.tipo},data-cantidad=${p.cantidad},data-idperro=${perro.idPerro},data-idproducto=${p.idProducto},data-nombre=${p.nombre}">
               <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
               <button class="pv-btn-dar" type="submit"
-                      th:disabled="${p.tipo.name() == 'HIGIENE'} ? (${p.cantidad < 3}) : (${p.cantidad == 0})">
+                      th:disabled="${p.tipo.name() == 'HIGIENE' ? p.cantidad < 3 : (p.cantidad == 0 or (p.tipo.name() == 'VACUNA' and perro.vacunado) or (p.tipo.name() == 'ESTERILIZACION' and perro.esterilizado))}">
                 <th:block th:switch="${p.tipo.name()}">
                   <th:block th:case="'HIGIENE'">
                     <span th:if="${p.cantidad >= 3}">🛁 Bañar a <span th:text="${perro.nombre}"></span></span>
@@ -313,7 +313,13 @@
                     <span th:if="${p.cantidad == 0}">Sin stock</span>
                   </th:block>
                   <th:block th:case="'ESTERILIZACION'">
-                    <span th:if="${p.cantidad > 0}">✂️ Esterilizar a <span th:text="${perro.nombre}"></span></span>
+                    <span th:if="${p.cantidad > 0 and !perro.esterilizado}">✂️ Esterilizar a <span th:text="${perro.nombre}"></span></span>
+                    <span th:if="${p.cantidad > 0 and perro.esterilizado}">✅ Ya esterilizado</span>
+                    <span th:if="${p.cantidad == 0}">Sin stock</span>
+                  </th:block>
+                  <th:block th:case="'VACUNA'">
+                    <span th:if="${p.cantidad > 0 and !perro.vacunado}">🐶 Dar a <span th:text="${perro.nombre}"></span></span>
+                    <span th:if="${p.cantidad > 0 and perro.vacunado}">✅ Ya vacunado</span>
                     <span th:if="${p.cantidad == 0}">Sin stock</span>
                   </th:block>
                   <th:block th:case="*">
