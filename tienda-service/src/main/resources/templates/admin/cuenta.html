@@ -278,7 +278,8 @@
 
                     <td>
 
-                        <span class="badge badge-tienda"
+                        <span class="badge"
+                              th:classappend="${t.cuentaOrigen.tipo.name() == 'TIENDA'} ? 'badge-tienda' : 'badge-refugio'"
                               th:text="${t.cuentaOrigen.tipo}">
 
                             TIENDA
@@ -290,7 +291,8 @@
 
                     <td>
 
-                        <span class="badge badge-refugio"
+                        <span class="badge"
+                              th:classappend="${t.cuentaDestino.tipo.name() == 'TIENDA'} ? 'badge-tienda' : 'badge-refugio'"
                               th:text="${t.cuentaDestino.tipo}">
 
                             REFUGIO
@@ -392,7 +394,5 @@
     </p>
 
 </footer>
-
-
 </body>
 </html>

@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 /**
  * Resultado de la liquidación calculado 100 % en el backend.
  *
- * totalBruto = ventasMes - yaLiquidado
+ * totalBruto = ventasTotales - yaLiquidado
  * comisiones = totalBruto * porcentajeComision / 100
  * totalARecibir (neto) = totalBruto - comisiones
  */
@@ -18,10 +18,10 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class LiquidacionDTO {
 
-    /** Total vendido en el mes en curso. */
-    private BigDecimal ventasMes;
+    /** Total vendido hasta hoy (todas las ventas registradas). */
+    private BigDecimal ventasTotales;
 
-    /** Parte de las ventas del mes que ya fue liquidada al Refugio. */
+    /** Parte de las ventas que ya fue liquidada al Refugio. */
     private BigDecimal yaLiquidado;
 
     /** Ventas pendientes de liquidar (base sobre la que se cobra la comisión). */

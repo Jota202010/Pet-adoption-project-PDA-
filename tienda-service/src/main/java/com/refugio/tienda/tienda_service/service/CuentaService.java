@@ -126,11 +126,8 @@ public class CuentaService {
          * importar el día en que se hizo la venta. Así, lo que se venda
          * después de liquidar no se pierde: aparece en la siguiente
          * liquidación, sea mañana o dentro de varios días.
-         *
-         * (El campo se llama "ventasMes" en el DTO por compatibilidad,
-         * pero contiene el total de ventas registradas.)
          */
-        BigDecimal ventasMes = pedidoRepository
+        BigDecimal ventasTotales = pedidoRepository
                 .findAll()
                 .stream()
                 .map(p -> p.getTotal() == null
@@ -151,7 +148,7 @@ public class CuentaService {
         yaLiquidado = (yaLiquidado == null ? BigDecimal.ZERO : yaLiquidado)
                 .setScale(ESCALA, RoundingMode.HALF_UP);
 
-        BigDecimal totalBruto = ventasMes
+        BigDecimal totalBruto = ventasTotales
                 .subtract(yaLiquidado)
                 .max(BigDecimal.ZERO);
 
@@ -169,7 +166,7 @@ public class CuentaService {
         BigDecimal neto = totalBruto.subtract(comision);
 
         return LiquidacionDTO.builder()
-                .ventasMes(ventasMes)
+                .ventasTotales(ventasTotales)
                 .yaLiquidado(yaLiquidado)
                 .totalBruto(totalBruto)
                 .porcentajeComision(porcentajeComision)

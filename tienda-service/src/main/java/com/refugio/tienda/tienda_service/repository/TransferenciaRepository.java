@@ -47,7 +47,7 @@ public interface TransferenciaRepository extends JpaRepository<Transferencia, In
 
     /**
      * Suma el valor BRUTO liquidado de todos los tiempos entre dos tipos
-     * de cuenta (sin límite de mes). Para registros antiguos (sin
+     * de cuenta (sin límite de fechas). Para registros antiguos (sin
      * monto_bruto) usa "monto". Devuelve null si no hay registros.
      */
     @Query("""
