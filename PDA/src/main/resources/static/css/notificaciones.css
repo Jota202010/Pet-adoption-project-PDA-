@@ -309,7 +309,7 @@ body {
 
 .producto-sugerido {
     display: grid;
-    grid-template-columns: 42px 1fr auto auto auto;
+    grid-template-columns: 42px 1fr auto auto;
     align-items: center;
     gap: 10px;
     padding: 11px;
@@ -367,7 +367,6 @@ body {
     font-weight: 900;
 }
 
-.btn-anadir-receta,
 .btn-accion-categoria {
     border: none;
     border-radius: 8px;
@@ -378,11 +377,6 @@ body {
     font-weight: 900;
 }
 
-.btn-anadir-receta {
-    background: #dbeafe;
-    color: #1e40af;
-}
-
 .btn-accion-categoria {
     background: #eef2f7;
     color: #334155;
@@ -391,23 +385,6 @@ body {
 .btn-accion-categoria.accion-realizada {
     background: #dcfce7;
     color: #166534;
-}
-
-.btn-crear-receta-productos {
-    margin-top: 15px;
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    background: #172a46;
-    color: #fff;
-    font-family: inherit;
-    font-weight: 900;
-    cursor: pointer;
-}
-
-.btn-crear-receta-productos:hover {
-    background: #243b5c;
 }
 
 .receta-actions {
@@ -466,7 +443,6 @@ body {
         grid-column: 3;
     }
 
-    .btn-anadir-receta,
     .btn-accion-categoria {
         grid-column: 2 / 4;
         width: 100%;

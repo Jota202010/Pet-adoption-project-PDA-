@@ -230,22 +230,7 @@
                     </div>
 
 
-                    <form th:action="@{/admin/notificaciones/{id}/crear-receta(
-                            id=${noti.idNotificacion}
-                          )}"
-                          method="post"
-                          class="productos-form">
-
-
-                        <input type="hidden"
-                               th:name="${_csrf.parameterName}"
-                               th:value="${_csrf.token}"/>
-
-
-                        <input type="hidden"
-                               class="productos-seleccionados"
-                               name="productosSeleccionados"
-                               value="[]"/>
+                    <div class="productos-form">
 
 
                         <div th:if="${noti.receta.productosParseados != null and
@@ -296,18 +281,8 @@
 
                                 <button type="button"
                                         class="btn-accion-producto btn-accion-categoria"
-                                        th:text="${prod['accion']}">
-
-                                    🍖 Dar a Sebass
-
-                                </button>
-
-
-                                <button type="button"
-                                        class="btn-anadir-receta">
-
-                                    + Añadir a receta
-
+                                        aria-pressed="false">
+                                    Seleccionar
                                 </button>
 
                             </div>
@@ -323,16 +298,7 @@
                             Productos sugeridos
 
                         </p>
-
-
-                        <button type="submit"
-                                class="btn-crear-receta-productos">
-
-                            📝 Crear Receta con estos productos
-
-                        </button>
-
-                    </form>
+                    </div>
 
                 </div>
 
@@ -460,15 +426,6 @@ document.addEventListener(
                             seleccionados
                         );
 
-                    const hidden =
-                        card.querySelector(
-                            '.productos-seleccionados'
-                        );
-
-                    if (hidden) {
-                        hidden.value = json;
-                    }
-
                     const general =
                         card.querySelector(
                             '.productos-general'
@@ -529,26 +486,27 @@ document.addEventListener(
                 }
 
 
-                card.querySelectorAll(
-                    '.btn-anadir-receta'
-                ).forEach(function (boton, index) {
+                function quitarProducto(elemento) {
 
-                    boton.addEventListener(
-                        'click',
-                        function () {
-
-                            agregarProducto(
-                                productos[index]
-                            );
-
-                            boton.textContent =
-                                '✓ Añadido';
-
+                    const pos = seleccionados.findIndex(
+                        function (p) {
+                            return p.producto ===
+                                elemento.dataset.producto;
                         }
                     );
-                });
 
+                    if (pos !== -1) {
+                        seleccionados.splice(pos, 1);
+                    }
 
+                    elemento.classList.remove(
+                        'producto-seleccionado'
+                    );
+
+                    actualizarCampos();
+                }
+
+                // Un solo botón por producto: marca o desmarca
                 card.querySelectorAll(
                     '.btn-accion-categoria'
                 ).forEach(function (boton, index) {
@@ -557,17 +515,22 @@ document.addEventListener(
                         'click',
                         function () {
 
-                            agregarProducto(
-                                productos[index]
-                            );
-
-                            boton.classList.add(
+                            const activo = boton.classList.toggle(
                                 'accion-realizada'
                             );
 
-                            boton.textContent =
-                                '✓ Seleccionado';
+                            boton.setAttribute(
+                                'aria-pressed',
+                                activo ? 'true' : 'false'
+                            );
 
+                            if (activo) {
+                                agregarProducto(productos[index]);
+                                boton.textContent = '✓ Seleccionado';
+                            } else {
+                                quitarProducto(productos[index]);
+                                boton.textContent = 'Seleccionar';
+                            }
                         }
                     );
                 });

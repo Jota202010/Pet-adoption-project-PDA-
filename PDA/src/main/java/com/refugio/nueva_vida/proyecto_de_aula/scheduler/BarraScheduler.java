@@ -21,7 +21,10 @@ public class BarraScheduler {
     private final BarraService barraService;
 
 
-    @Scheduled(cron = "0 0 * * * *")
+    // Cada cuánto se revisan las barras. Se cambia en application.properties
+    // (refugio.barras.revision-cron). Por defecto: cada minuto.
+    // Debe correr al menos tan seguido como el desgaste más corto.
+    @Scheduled(cron = "${refugio.barras.revision-cron:0 * * * * *}")
     public void actualizarTodasLasBarras() {
 
         List<Perro> perros =

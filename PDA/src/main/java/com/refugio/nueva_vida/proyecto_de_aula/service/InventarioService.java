@@ -28,8 +28,8 @@ public class InventarioService {
 
     private static final int BARRA_MAXIMA = 100;
 
-    /** El baño completo (mojar + espumar + aclarar) gasta 3 unidades de higiene. */
-    private static final int UNIDADES_POR_BANO = 3;
+    /** El baño completo (mojar + espumar + aclarar) gasta 2 unidades de higiene. */
+    private static final int UNIDADES_POR_BANO = 2;
 
     /** Tope de dosis dentro de la ventana de {@value #VENTANA_DOSIS_HORAS} horas. */
     private static final int MAX_DOSIS_MEDICAMENTO = 3;
